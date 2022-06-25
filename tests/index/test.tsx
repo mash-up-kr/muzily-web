@@ -1,14 +1,12 @@
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import MainPage from "~/pages/index";
 
 describe("MainPage", () => {
   it("renders a heading", () => {
     const { container } = render(<MainPage />);
-    const heading = screen.getByRole("heading", {
-      name: /welcome to next\.js!/i,
-    });
+    const { textContent } = container;
 
-    expect(heading).toBeInTheDocument();
+    expect(textContent).toBe("MainPage");
     expect(container).toMatchSnapshot();
   });
 });
