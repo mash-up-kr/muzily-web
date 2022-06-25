@@ -82,5 +82,6 @@
         "alphabetize": { "order": "asc", "caseInsensitive": true }
       }
     ]
-  }
+  },
+  "ignorePatterns": ["jest.config.js", "jest.setup.js"]
 }

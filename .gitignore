@@ -36,3 +36,6 @@ yarn-error.log*
 
 # lint-staged
 .eslintcache
+
+# test
+__snapshots__
