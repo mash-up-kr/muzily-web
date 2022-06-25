@@ -1,9 +1,9 @@
 import { render, screen } from "@testing-library/react";
-import Home from "~/pages/index";
+import MainPage from "~/pages/index";
 
-describe("Home", () => {
+describe("MainPage", () => {
   it("renders a heading", () => {
-    const { container } = render(<Home />);
+    const { container } = render(<MainPage />);
     const heading = screen.getByRole("heading", {
       name: /welcome to next\.js!/i,
     });
