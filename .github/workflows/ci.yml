@@ -1,4 +1,4 @@
-name: Jest CI
+name: Jest CI 테스트
 
 on:
   pull_request:
@@ -6,7 +6,7 @@ on:
       - "*"
 
 jobs:
-  build:
+  ci-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
