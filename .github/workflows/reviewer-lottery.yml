@@ -1,0 +1,13 @@
+name: "랜덤 리뷰어 지정"
+on:
+  pull_request_target:
+    types: [opened, ready_for_review, reopened]
+
+jobs:
+  assign-random-reviewer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: uesteibar/reviewer-lottery@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,20 @@
+groups:
+  # 개발서버일 경우 한 명에게만 리뷰 요청이 들어갑니다.
+  # 초기 멤버 외 요청일 경우 모든 초기 멤버들에게 요청이 들어갑니다.
+  - name: development
+    reviewers: 4
+    internal_reviewers: 1 # PR 요청 유저가 같은 그룹일 시 다른 인원을 지정
+    usernames:
+      - manudeli
+      - swimjiy
+      - Young-mason
+      - kor-Chipmunk
+
+  # 운영서버일 경우 모든 인원에게 리뷰 요청이 들어갑니다.
+  - name: production
+    reviewers: 4
+    usernames:
+      - manudeli
+      - swimjiy
+      - Young-mason
+      - kor-Chipmunk
