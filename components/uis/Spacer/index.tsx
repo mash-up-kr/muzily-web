@@ -1,6 +1,6 @@
-import React from "react";
 import type { CSSProperties, ReactNode } from "react";
 import styled from "@emotion/styled";
+import { motion } from "framer-motion";
 import type gaps from "~/theme/emotionTheme/gaps";
 
 interface Props {
@@ -11,21 +11,7 @@ interface Props {
   children: ReactNode;
 }
 
-const Spacer = ({
-  type = "vertical",
-  gap,
-  justify,
-  align,
-  children,
-}: Props) => {
-  return (
-    <StyledSpacer type={type} gap={gap} align={align} justify={justify}>
-      {children}
-    </StyledSpacer>
-  );
-};
-
-const StyledSpacer = styled.div<Props>`
+const Spacer = styled(motion.div)<Props>`
   display: flex;
   flex-direction: ${({ type }) => type === "vertical" && "column"};
   justify-content: ${({ justify }) => justify};
