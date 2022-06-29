@@ -1,19 +1,17 @@
-import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
+import React, { useState } from "react";
+import styled from "@emotion/styled";
 import type { YouTubePlayer } from "react-youtube";
 import YouTube from "react-youtube";
-
-// import "./styles.css";
 
 const VIDEO_LIST = [
   {
     id: "4q4vpQCIZ6w",
-    artist: "-",
+    artist: "유튜브",
     title: "재즈 플레이리스트1",
   },
   {
     id: "2HQag9B4nN0",
-    artist: "-",
+    artist: "유튜브",
     title: "재즈 플레이리스트2",
   },
   {
@@ -26,89 +24,128 @@ const VIDEO_LIST = [
     artist: "아이유",
     title: "Palette",
   },
+  {
+    id: "Jh4QFaPmdss",
+    artist: "여자아이들",
+    title: "Tomboy",
+  },
 ];
 
-const VIDEOS = ["4q4vpQCIZ6w", "2HQag9B4nN0"];
-
 function YouTubeComponentExample() {
-  const [player, setPlayer] = useState<YouTubePlayer>();
+  const [player, setPlayer] = useState<YouTubePlayer>(null);
   const [videoId, setVideoId] = useState(VIDEO_LIST[0].id);
-  const [width, setWidth] = useState(1);
   const [hidden, setHidden] = useState(false);
-  const [autoplay, setAutoplay] = useState(true);
-  const [mute, setMute] = useState(true);
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     setMute(false);
-  //   }, 3000);
-  // }, [])
+  /* TODO @(Young-mason) 인덱스 캐싱하기 */
+  const handleChangeNext = () => {
+    const currentIndex = findVideoIndex(videoId);
+    if (currentIndex === VIDEO_LIST.length - 1) {
+      return alert("끝입니다");
+    }
+    setVideoId(VIDEO_LIST[currentIndex + 1].id);
+  };
+
+  const handleChangePrev = () => {
+    const currentIndex = findVideoIndex(videoId);
+    if (currentIndex === 0) {
+      return alert("처음입니다");
+    }
+    setVideoId(VIDEO_LIST[currentIndex - 1].id);
+  };
 
   return (
-    <div className="App">
-      {/* <div style={{ display: "flex", marginBottom: "1em" }}>
+    <Container>
+      <div style={{ display: "flex", marginBottom: "1em" }}>
         <button type="button" onClick={() => player?.seekTo(120, true)}>
-          Seek to 2 minutes
+          2분 0초 이동
         </button>
-        <button
-          type="button"
-          onClick={() => setVideoIndex((videoIndex + 1) % VIDEOS.length)}
-        >
-          Change video
-        </button>
-        <label>
-          <input
-            type="range"
-            min="300"
-            max="1080"
-            value={width}
-            onChange={(event) => setWidth(event.currentTarget.valueAsNumber)}
-          />
-          Width ({width}px)
-        </label>
-        <button type="button" onClick={() => setHidden(!hidden)}>
-          {hidden ? "Show" : "Hide"}
-        </button>
-        <label>
-          <input
-            type="checkbox"
-            checked={autoplay}
-            onChange={(event) => setAutoplay(event.currentTarget.checked)}
-          />
-          Autoplaying
-        </label>
-      </div> */}
 
-      <div>
-        {VIDEO_LIST.map((el) => (
-          <div key={el.id}>
-            <div>{el.artist}</div>
-            <div>{el.title}</div>
-            <button onClick={() => setVideoId(el.id)}>재생하기</button>
-          </div>
-        ))}
+        <button id="play" type="button" onClick={() => player?.playVideo()}>
+          재생
+        </button>
+        <button type="button" onClick={() => player?.pauseVideo()}>
+          정지
+        </button>
+        <button type="button" onClick={handleChangeNext}>
+          다음
+        </button>
+        <button type="button" onClick={handleChangePrev}>
+          이전
+        </button>
+        <button type="button" onClick={() => setHidden((prev) => !prev)}>
+          {hidden ? "보이기" : "숨기기"}
+        </button>
       </div>
-      {hidden ? (
-        "mysterious"
-      ) : (
+
+      <YoutubeWrapper hidden={hidden}>
         <YouTube
+          id="iframe"
           videoId={videoId}
           opts={{
-            width,
-            height: width * (9 / 16),
+            width: 300,
+            height: 200,
             playerVars: {
-              // autoplay: autoplay ? 1 : 0,
               autoplay: 1,
-              // mute: mute ? 1 : 0,
-              // controls: 0,
+              controls: 1,
             },
           }}
-          className="container"
           onReady={(event) => setPlayer(event.target)}
+          onEnd={() => {
+            const currentIndex = findVideoIndex(videoId);
+
+            if (currentIndex === VIDEO_LIST.length - 1) {
+              return alert("끝!!");
+            }
+
+            setVideoId(VIDEO_LIST[currentIndex + 1].id);
+          }}
         />
-      )}
-    </div>
+      </YoutubeWrapper>
+
+      <MusicList>
+        {VIDEO_LIST.map((el) => (
+          <MusicItem key={el.id}>
+            <Artist>{el.artist}</Artist>
+            <Title>{el.title}</Title>
+            <button
+              onClick={() => {
+                setVideoId(el.id);
+              }}
+            >
+              재생하기
+            </button>
+            <div>{el.id === videoId && "재생중"}</div>
+          </MusicItem>
+        ))}
+      </MusicList>
+    </Container>
   );
 }
 
 export default YouTubeComponentExample;
+
+function findVideoIndex(id: string) {
+  return VIDEO_LIST.findIndex((el) => el.id === id);
+}
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const YoutubeWrapper = styled.div<{ hidden: boolean }>`
+  visibility: ${(p) => p.hidden && "hidden"};
+`;
+
+const MusicList = styled.div``;
+
+const MusicItem = styled.div`
+  display: flex;
+  padding: 15px;
+  gap: 16px;
+`;
+
+const Title = styled.div``;
+
+const Artist = styled.div``;
