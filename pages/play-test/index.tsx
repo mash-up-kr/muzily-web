@@ -89,7 +89,10 @@ function YouTubeComponentExample() {
               controls: 1,
             },
           }}
-          onReady={(event) => setPlayer(event.target)}
+          onReady={(event) => {
+            setPlayer(event.target);
+            event.target.playVideo();
+          }}
           onEnd={() => {
             const currentIndex = findVideoIndex(videoId);
 
