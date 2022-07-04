@@ -1,12 +1,14 @@
 import React from "react";
 import type { NextPage } from "next";
-import { LottieEmojiSlider } from "~/components/domains";
+import animationData from "~/assets/smile.json";
+import { LottieSlider } from "~/components/domains";
 
 const RoomPage: NextPage = () => {
   return (
     <div>
       RoomPage
-      <LottieEmojiSlider
+      <LottieSlider
+        customHandle={LottieSlider.makeCustomHandle({ animationData })}
         trigger={({ show }) => <button onClick={show}>emoji</button>}
         onTapEnd={(e) => console.log(e)}
       />

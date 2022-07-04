@@ -1,1 +1,1 @@
-export { default as LottieEmojiSlider } from "./LottieEmojiSlider";
+export { default as LottieSlider } from "./LottieSlider";
