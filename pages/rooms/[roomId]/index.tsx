@@ -11,33 +11,35 @@ const DESC = "곡을 추가하거나 좋아요를 해보세요!";
 const RoomPage: NextPage = () => {
   return (
     <Layout>
-      <StyledHeader>
-        <StyledTitle>{TITLE}</StyledTitle>
-        <StyledDesc>{DESC}</StyledDesc>
-      </StyledHeader>
+      <StyledContainer>
+        <StyledHeader>
+          <StyledTitle>{TITLE}</StyledTitle>
+          <StyledDesc>{DESC}</StyledDesc>
+        </StyledHeader>
 
-      <StyledContentWrapper>
-        <NowPlaying noPlaylist />
+        <StyledContentWrapper>
+          <NowPlaying noPlaylist />
+          <NowPlaying noPlaylist />
+          <NowPlaying noPlaylist />
+        </StyledContentWrapper>
 
-        {/* <NowPlaying noPlaylist />
-        <NowPlaying noPlaylist /> */}
-      </StyledContentWrapper>
-
-      <StyledIconWrapper>
-        <IconButton iconName="star" iconText="곡 추가" />
-        <IconButton iconName="heart" iconText="이모지" />
-        <IconButton iconName="union" iconText="무드 변경" />
-      </StyledIconWrapper>
+        <StyledIconWrapper>
+          <IconButton iconName="star" iconText="곡 추가" />
+          <IconButton iconName="heart" iconText="이모지" />
+          <IconButton iconName="union" iconText="무드 변경" />
+        </StyledIconWrapper>
+      </StyledContainer>
     </Layout>
   );
 };
 
-// const StyledContainer = styled.div`
-/* height: 100%;
+const StyledContainer = styled.div`
+  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; */
-// `;
+  justify-content: space-between;
+  padding: 20px 0;
+`;
 
 const StyledHeader = styled.div``;
 
@@ -62,12 +64,14 @@ const StyledIconWrapper = styled.div`
   display: flex;
   gap: 36px;
   margin-top: 22px;
+  justify-content: center;
 `;
 
 const StyledContentWrapper = styled.div`
   display: flex;
   width: 100%;
-  overflow-x: auto;
+  gap: 20px;
+  justify-content: center;
 `;
 
 export default RoomPage;

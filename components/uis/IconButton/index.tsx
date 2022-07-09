@@ -37,7 +37,7 @@ const StyledIconWrapper = styled.div`
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: rgba(136, 109, 109, 0.1);
+  background: rgba(255, 255, 255, 0.1);
 
   display: flex;
   justify-content: center;

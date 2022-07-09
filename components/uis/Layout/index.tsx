@@ -17,13 +17,11 @@ function Layout({ children, screenColor }: LayoutProps) {
 const StyledContainer = styled.div`
   display: flex;
   justify-content: center;
-  width: 100%;
   background-color: grey;
 `;
 
 const StyledScreen = styled.div<{ screenColor?: string }>`
-  min-width: 375px;
-  max-width: 450px;
+  max-width: 375px;
   height: 100vh;
   background-color: ${(p) => p.screenColor || "#030303"};
   padding: 0 20px;
