@@ -1,13 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
-import styled from "@emotion/styled";
-import QR from "~/components/uis/QR";
+import { useRouter } from "next/router";
+import QRCodeWithLogo from "~/components/uis/QRCodeWithLogo";
 
 const RoomQRPage: NextPage = () => {
+  const [inviteURL, setInviteURL] = useState("");
+  const router = useRouter();
+  const { roomId } = router.query;
+
+  useEffect(() => {
+    setInviteURL(
+      `${window.location.protocol}//${window.location.host}/rooms/${roomId}/invite`
+    );
+  });
+
   return (
     <div>
       <p>아래 QR 이미지를 공유해보세요.</p>
-      <QR></QR>
+      <QRCodeWithLogo
+        data-testid="QRCodeWithLogo"
+        url={inviteURL}
+      ></QRCodeWithLogo>
     </div>
   );
 };
