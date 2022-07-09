@@ -24,7 +24,7 @@ const StyledScreen = styled.div<{ screenColor?: string }>`
   max-width: 375px;
   width: 100%;
   height: 100vh;
-  background-color: ${(p) => p.screenColor || "#030303"};
+  background: ${(p) => p.screenColor || "#030303"};
   padding: 0 20px;
   color: #fff;
   position: relative;
