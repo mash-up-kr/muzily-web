@@ -26,6 +26,7 @@ const StyledScreen = styled.div<{ screenColor?: string }>`
   background-color: ${(p) => p.screenColor || "#030303"};
   padding: 0 20px;
   color: #fff;
+  position: relative;
 `;
 
 export default Layout;

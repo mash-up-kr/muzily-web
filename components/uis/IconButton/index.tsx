@@ -6,12 +6,18 @@ interface IconButtonProps {
   type?: "round";
   iconName: string; // 파일명에서 .svg
   iconText?: string;
+  onClick?: () => void;
 }
 
-function IconButton({ type = "round", iconName, iconText }: IconButtonProps) {
+function IconButton({
+  type = "round",
+  iconName,
+  iconText,
+  onClick,
+}: IconButtonProps) {
   return (
     <StyledContainer>
-      <StyledIconWrapper>
+      <StyledIconWrapper onClick={onClick}>
         <Image
           src={`/images/${iconName}.svg`}
           alt="icon"
