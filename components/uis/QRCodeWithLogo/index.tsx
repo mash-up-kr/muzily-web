@@ -1,3 +1,4 @@
+import React from "react";
 import { QRCode } from "react-qrcode-logo";
 
 interface QRCodeWithLogoProps {
