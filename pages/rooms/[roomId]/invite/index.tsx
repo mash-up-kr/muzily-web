@@ -174,9 +174,11 @@ const StyledPlayListStatusSpan = styled.span`
 `;
 
 const BottomGifImage = styled.img`
+  position: absolute;
   left: 0;
-  top: 100%;
+  bottom: 0;
   width: 100%;
+  float: left;
 `;
 
 export default RoomInvitePage;
