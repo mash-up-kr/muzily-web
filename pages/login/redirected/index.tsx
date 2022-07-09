@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
+import { MemberInfoContext } from "~/contexts";
 import { useAuthRedirected } from "~/features/auth/redirected";
+import { useLocalToken } from "~/hooks/domains";
 
 const LoginRedirectedPage: NextPage = () => {
   const router = useRouter();
@@ -16,13 +18,31 @@ const LoginRedirectedPage: NextPage = () => {
 export default LoginRedirectedPage;
 
 const GetServiceToken = () => {
+  const [localToken, setLocalToken] = useLocalToken();
   const router = useRouter();
 
-  const authRedirected = useAuthRedirected({
+  const { refetchMemberInfo } = MemberInfoContext.use();
+
+  const { isLoading, isError, isSuccess, data } = useAuthRedirected({
     code: `${router.query.code}`,
   });
 
-  if (authRedirected.isSuccess) {
+  useEffect(() => {
+    if (isSuccess) {
+      setLocalToken(data.data.token);
+      refetchMemberInfo();
+    }
+  }, [isSuccess, setLocalToken, data, refetchMemberInfo]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error</div>;
+  }
+
+  if (isSuccess) {
     router.replace("/");
   }
 

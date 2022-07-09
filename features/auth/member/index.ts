@@ -7,19 +7,23 @@ type AccountConnectType = "CONNECTED" | "ANONYMOUS";
 const defaultEndPoint = process.env
   .NEXT_PUBLIC_SERVER_DEFAULT_END_POINT as string;
 
+const tokenKey = process.env.NEXT_PUBLIC_LOCAL_TOKEN_KEY as string;
+
 export const useAuthMember = () => {
   const [localToken, setLocalToken] = useLocalToken();
 
   return useQuery(["auth", "member"], async () => {
-    let usingToken = localToken;
+    let localStorageToken = JSON.parse(
+      localStorage.getItem(tokenKey) || JSON.stringify("")
+    ) as string | null;
 
-    if (!localToken) {
+    if (!localStorageToken) {
       const { data } = await axios.post<{ token: string }>(
         `${defaultEndPoint}/api/v1/auth/anonymous`
       );
 
-      usingToken = `Bearer ${data.token}`;
-      setLocalToken(usingToken);
+      setLocalToken(data.token);
+      localStorageToken = data.token;
     }
 
     return axios.get<{
@@ -27,7 +31,7 @@ export const useAuthMember = () => {
       nickname: string;
       profileUrl: string;
     }>(`${defaultEndPoint}/api/v1/members`, {
-      headers: { Authorization: usingToken },
+      headers: { Authorization: `Bearer ${localStorageToken}` },
     });
   });
 };

@@ -1,19 +1,21 @@
 import { createContext, useContext } from "react";
 import { useAuthMember } from "~/features/auth/member";
 
-const MemberContext = createContext(
-  null as ReturnType<typeof useAuthMember>["data"] | null
-);
+const MemberInfoContext = createContext({
+  memberInfo: null as ReturnType<typeof useAuthMember>["data"] | null,
+  refetchMemberInfo: (() => {}) as ReturnType<typeof useAuthMember>["refetch"],
+});
 
 interface Props {
   children: React.ReactNode;
 }
 
 const MemberInfoProvider = ({ children }: Props) => {
-  const { isLoading, isError, isSuccess, data } = useAuthMember();
+  const { isLoading, isFetching, isError, isSuccess, data, refetch } =
+    useAuthMember();
 
-  if (isLoading) {
-    return <div>Loading</div>;
+  if (isFetching || isLoading) {
+    return <div>Loading, Fetching</div>;
   }
   if (isError) {
     return <div>Error</div>;
@@ -21,19 +23,21 @@ const MemberInfoProvider = ({ children }: Props) => {
 
   if (isSuccess) {
     return (
-      <MemberContext.Provider value={data}>
+      <MemberInfoContext.Provider
+        value={{ memberInfo: data, refetchMemberInfo: refetch }}
+      >
         {data.data.accountConnectType}
         {data.data.nickname}
         {data.data.profileUrl}
         {children}
-      </MemberContext.Provider>
+      </MemberInfoContext.Provider>
     );
   }
 
   return null;
 };
 
-const useMemberInfoContext = () => useContext(MemberContext);
+const useMemberInfoContext = () => useContext(MemberInfoContext);
 
 export default {
   Provider: MemberInfoProvider,
