@@ -24,7 +24,7 @@
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-lottie-player": "^1.4.3",
-    "react-qr-code": "^2.0.7",
+    "react-qrcode-logo": "^2.7.0",
     "react-query": "^3.39.1",
     "react-youtube": "^9.0.2",
     "recoil": "^0.7.4",

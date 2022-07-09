@@ -1,26 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
-import styled from "@emotion/styled";
-import QRCode from "react-qr-code";
+import { useRouter } from "next/router";
+import QRCodeWithLogo from "~/components/uis/QRCodeWithLogo";
 
 const RoomQRPage: NextPage = () => {
+  const [inviteURL, setInviteURL] = useState("");
+  const router = useRouter();
+  const { roomId } = router.query;
+
+  useEffect(() => {
+    setInviteURL(
+      `${window.location.protocol}//${window.location.host}/rooms/${roomId}/invite`
+    );
+  });
+
   return (
     <div>
       <p>아래 QR 이미지를 공유해보세요.</p>
-      <QRCodeContainer data-testid="QRCodeContainer">
-        <QRCode
-          data-testid="QRCode"
-          value="https://musictogether.netlify.app/"
-          size={128}
-        />
-      </QRCodeContainer>
+      <QRCodeWithLogo
+        data-testid="QRCodeWithLogo"
+        url={inviteURL}
+      ></QRCodeWithLogo>
     </div>
   );
 };
-
-const QRCodeContainer = styled.div`
-  background: white;
-  padding: 16px;
-`;
 
 export default RoomQRPage;
