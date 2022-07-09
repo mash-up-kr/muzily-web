@@ -1,26 +1,15 @@
 import React from "react";
 import type { NextPage } from "next";
 import styled from "@emotion/styled";
-import QRCode from "react-qr-code";
+import QR from "~/components/uis/QR";
 
 const RoomQRPage: NextPage = () => {
   return (
     <div>
       <p>아래 QR 이미지를 공유해보세요.</p>
-      <QRCodeContainer data-testid="QRCodeContainer">
-        <QRCode
-          data-testid="QRCode"
-          value="https://musictogether.netlify.app/"
-          size={128}
-        />
-      </QRCodeContainer>
+      <QR></QR>
     </div>
   );
 };
-
-const QRCodeContainer = styled.div`
-  background: white;
-  padding: 16px;
-`;
 
 export default RoomQRPage;
