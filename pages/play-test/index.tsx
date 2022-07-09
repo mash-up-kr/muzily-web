@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import styled from "@emotion/styled";
 import type { YouTubePlayer } from "react-youtube";
 import YouTube from "react-youtube";
+import { Thumbnail } from "~/components/domains";
 
 const VIDEO_LIST = [
   {
@@ -121,6 +122,8 @@ function YouTubeComponentExample() {
           </MusicItem>
         ))}
       </MusicList>
+
+      <Thumbnail />
     </Container>
   );
 }
