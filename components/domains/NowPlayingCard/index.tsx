@@ -4,13 +4,17 @@ import styled from "@emotion/styled";
 
 interface NowPlayingCardProps {
   noPlaylist?: boolean;
+  musicData: any;
 }
 
-function NowPlayingCard({ noPlaylist = false }: NowPlayingCardProps) {
+function NowPlayingCard({
+  noPlaylist = false,
+  musicData,
+}: NowPlayingCardProps) {
   // 재생 중인 노래 없는경우
   if (noPlaylist) {
     return (
-      <StyledContainer>
+      <StyledContainer noPlaylist>
         <Title>Now Playing</Title>
         <Content>
           <NoPlaylistText>{`재생 중인\n노래가 없어요`}</NoPlaylistText>
@@ -29,18 +33,25 @@ function NowPlayingCard({ noPlaylist = false }: NowPlayingCardProps) {
   }
   // 재생 중인 노래 있는경우
   else {
-    return <div>asdsd</div>;
+    return (
+      <StyledContainer>
+        <Title>Now Playing</Title>
+        <Content></Content>
+      </StyledContainer>
+    );
   }
 }
 
-const StyledContainer = styled.div`
+const StyledContainer = styled.div<{ noPlaylist?: boolean }>`
   cursor: pointer;
   width: 220px;
   height: 314px;
 
-  background: #007aff;
+  background: ${(p) => (p.noPlaylist ? "#007aff" : "#fff")};
   border-radius: 20px;
   padding: 20px;
+
+  flex-shrink: 0;
 `;
 
 const Title = styled.h3`

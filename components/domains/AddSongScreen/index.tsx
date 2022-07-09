@@ -1,20 +1,25 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
 import YouTube from "react-youtube";
-import { BottomButton } from "~/components/uis";
+import { BottomButton, TopBar, TopBarIconButton } from "~/components/uis";
 
 interface AddSongScreenProps {
   onClickBackButton: () => void;
 }
 
-function AddSongScreen(props: AddSongScreenProps) {
+function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
   const [youtubeLink, setYoutubeLink] = useState("");
 
   const youtubeId = getYoutubeId(youtubeLink);
 
   return (
     <StyledContainer>
-      <button onClick={props.onClickBackButton}>뒤로가기</button>
+      <TopBar
+        leftIconButton={
+          <TopBarIconButton iconName="arrow-left" onClick={onClickBackButton} />
+        }
+      />
+      {/* <button onClick={props.onClickBackButton}>뒤로가기</button> */}
       <StyledHeadingText>
         {`추가하고 싶은 곡의\n링크를 입력해주세요!`}
       </StyledHeadingText>
@@ -73,7 +78,7 @@ const StyledHeadingText = styled.h3`
   letter-spacing: -0.253163px;
   color: #ffffff;
 
-  margin: 0;
+  margin: 20px 0 0;
   white-space: pre-wrap;
 `;
 

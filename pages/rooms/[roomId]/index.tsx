@@ -1,16 +1,52 @@
 import React, { useState } from "react";
 import type { NextPage } from "next";
 import styled from "@emotion/styled";
-import { NowPlaying } from "~/components/domains";
+import YouTube from "react-youtube";
+import { NowPlayingCard } from "~/components/domains";
 import AddSongScreen from "~/components/domains/AddSongScreen";
+import PlaylistCard from "~/components/domains/PlaylistCard";
+import PlaylistScreen from "~/components/domains/PlaylistScreen";
 import { Layout } from "~/components/uis";
 import IconButton from "~/components/uis/IconButton";
 
 const TITLE = "매쇼~쉬는탐";
 const DESC = "곡을 추가하거나 좋아요를 해보세요!";
 
+export const VIDEO_LIST = [
+  {
+    id: "4q4vpQCIZ6w",
+    artist: "유튜브",
+    title: "재즈 플레이리스트1",
+  },
+  {
+    id: "2HQag9B4nN0",
+    artist: "유튜브",
+    title: "재즈 플레이리스트2",
+  },
+  {
+    id: "D1PvIWdJ8xo",
+    artist: "아이유",
+    title: "Blueming",
+  },
+  {
+    id: "d9IxdwEFk1c",
+    artist: "아이유",
+    title: "Palette",
+  },
+  {
+    id: "Jh4QFaPmdss",
+    artist: "여자아이들",
+    title: "Tomboy",
+  },
+];
+
 const RoomPage: NextPage = () => {
   const [openAddSongScreen, setOpenAddSongScreen] = useState(false);
+  const [openPlaylistScreen, setOpenPlaylistScreen] = useState(false);
+
+  const [player, setPlayer] = useState(null);
+  const [playingIndex, setPlayingIndex] = useState(0);
+
   console.log(openAddSongScreen);
 
   return (
@@ -22,9 +58,12 @@ const RoomPage: NextPage = () => {
         </StyledHeader>
 
         <StyledContentWrapper>
-          <NowPlaying noPlaylist />
-          <NowPlaying noPlaylist />
-          <NowPlaying noPlaylist />
+          <NowPlayingCard
+            noPlaylist={!VIDEO_LIST.length}
+            musicData={VIDEO_LIST[playingIndex]}
+          />
+          <NowPlayingCard noPlaylist musicData={VIDEO_LIST[playingIndex]} />
+          <PlaylistCard onClick={() => setOpenPlaylistScreen(true)} />
         </StyledContentWrapper>
 
         <StyledIconWrapper>
@@ -41,6 +80,40 @@ const RoomPage: NextPage = () => {
       {openAddSongScreen && (
         <AddSongScreen onClickBackButton={() => setOpenAddSongScreen(false)} />
       )}
+
+      {openPlaylistScreen && (
+        <PlaylistScreen
+          onClickBackButton={() => setOpenPlaylistScreen(false)}
+          videoList={VIDEO_LIST}
+          playingIndex={playingIndex}
+        />
+      )}
+
+      {/* <YoutubeWrapper hidden>
+        <YouTube
+          id="iframe"
+          videoId={VIDEO_LIST[playingIndex].id}
+          opts={{
+            width: 300,
+            height: 200,
+            playerVars: {
+              autoplay: 1,
+              controls: 1,
+            },
+          }}
+          onReady={(event) => {
+            setPlayer(event.target);
+            event.target.playVideo();
+          }}
+          onEnd={() => {
+            if (playingIndex === VIDEO_LIST.length - 1) {
+              return alert("끝!!");
+            }
+
+            setPlayingIndex((prev) => prev + 1);
+          }}
+        />
+      </YoutubeWrapper> */}
     </Layout>
   );
 };
@@ -83,7 +156,11 @@ const StyledContentWrapper = styled.div`
   display: flex;
   width: 100%;
   gap: 20px;
-  justify-content: center;
+  overflow-x: auto;
+`;
+
+const YoutubeWrapper = styled.div<{ hidden: boolean }>`
+  visibility: ${(p) => p.hidden && "hidden"};
 `;
 
 export default RoomPage;
