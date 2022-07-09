@@ -1,28 +1,42 @@
 import React from "react";
 import type { NextPage } from "next";
 import styled from "@emotion/styled";
+import { Layout, TopBar, TopBarIconButton } from "~/components/uis";
 
 const RoomInvitePage: NextPage = () => {
   return (
-    <StyledContainer>
-      <StyledScreen screenColor="black">
-        <StyledInviteContainer>
-          <StyledMuzilyTitle>
-            <StyledLightSpan>함께 만드는 플레이리스트, </StyledLightSpan>
-            <StyledBoldSpan>MUZILY</StyledBoldSpan>
-          </StyledMuzilyTitle>
-          <StyledRoomTitle>매쇼~쉬는탐</StyledRoomTitle>
-          <StyledRoomStatusContainer>
-            <StyledUserNumberStatusSpan>98</StyledUserNumberStatusSpan>
-            <StyledPlayListStatusSpan>24</StyledPlayListStatusSpan>
-          </StyledRoomStatusContainer>
-          <StyledRoomJoinButton>방 입장하기</StyledRoomJoinButton>
-        </StyledInviteContainer>
-        <BottomGifImage src="/images/invite.gif"></BottomGifImage>
-      </StyledScreen>
-    </StyledContainer>
+    <Layout screenColor="black">
+      <TopBar
+        leftIconButton={<TopBarIconButton iconName="star" />}
+        rightIconButton={<StyledTopBarRightItem>로그인</StyledTopBarRightItem>}
+      />
+      <StyledInviteContainer>
+        <StyledMuzilyTitle>
+          <StyledLightSpan>함께 만드는 플레이리스트, </StyledLightSpan>
+          <StyledBoldSpan>MUZILY</StyledBoldSpan>
+        </StyledMuzilyTitle>
+        <StyledRoomTitle>매쇼~쉬는탐</StyledRoomTitle>
+        <StyledRoomStatusContainer>
+          <StyledUserNumberStatusSpan>98</StyledUserNumberStatusSpan>
+          <StyledPlayListStatusSpan>24</StyledPlayListStatusSpan>
+        </StyledRoomStatusContainer>
+        <StyledRoomJoinButton>방 입장하기</StyledRoomJoinButton>
+      </StyledInviteContainer>
+      <BottomGifImage src="/images/invite.gif"></BottomGifImage>
+    </Layout>
   );
 };
+
+const StyledTopBarRightItem = styled.div`
+  color: #007aff;
+  font-weight: 700;
+  font-size: 17px;
+  font-height: 155%;
+  letter-spacing: -0.478073px;
+
+  display: flex;
+  align-items: center;
+`;
 
 const StyledLightSpan = styled.span`
   font-weight: 500;
@@ -36,22 +50,6 @@ const StyledBoldSpan = styled.span`
   font-size: 14px;
   line-height: 22.4px;
   color: #d9d9d9;
-`;
-
-const StyledContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  background-color: grey;
-`;
-
-const StyledScreen = styled.div<{ screenColor?: string }>`
-  max-width: 375px;
-  width: 100%;
-  height: 100vh;
-  background-color: ${(p) => p.screenColor || "#030303"};
-  padding: 0 0px;
-  color: #fff;
-  position: relative;
 `;
 
 const StyledInviteContainer = styled.div`
