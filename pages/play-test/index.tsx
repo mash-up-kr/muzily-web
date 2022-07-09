@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import type { YouTubePlayer } from "react-youtube";
 import YouTube from "react-youtube";
@@ -9,26 +9,31 @@ const VIDEO_LIST = [
     id: "4q4vpQCIZ6w",
     artist: "유튜브",
     title: "재즈 플레이리스트1",
+    thumbnail: "https://i.ytimg.com/vi/4q4vpQCIZ6w/hqdefault.jpg",
   },
   {
     id: "2HQag9B4nN0",
     artist: "유튜브",
     title: "재즈 플레이리스트2",
+    thumbnail: "https://i.ytimg.com/vi/2HQag9B4nN0/hqdefault.jpg",
   },
   {
     id: "D1PvIWdJ8xo",
     artist: "아이유",
     title: "Blueming",
+    thumbnail: "https://i.ytimg.com/vi/D1PvIWdJ8xo/hqdefault.jpg",
   },
   {
     id: "d9IxdwEFk1c",
     artist: "아이유",
     title: "Palette",
+    thumbnail: "https://i.ytimg.com/vi/d9IxdwEFk1c/hqdefault.jpg",
   },
   {
     id: "Jh4QFaPmdss",
     artist: "여자아이들",
     title: "Tomboy",
+    thumbnail: "https://i.ytimg.com/vi/Jh4QFaPmdss/hqdefault.jpg",
   },
 ];
 
@@ -36,6 +41,8 @@ function YouTubeComponentExample() {
   const [player, setPlayer] = useState<YouTubePlayer>(null);
   const [videoId, setVideoId] = useState(VIDEO_LIST[0].id);
   const [hidden, setHidden] = useState(false);
+
+  const currentIndex = findVideoIndex(videoId);
 
   /* TODO @(Young-mason) 인덱스 캐싱하기 */
   const handleChangeNext = () => {
@@ -123,7 +130,7 @@ function YouTubeComponentExample() {
         ))}
       </MusicList>
 
-      <Thumbnail />
+      <Thumbnail src={VIDEO_LIST[currentIndex].thumbnail} />
     </Container>
   );
 }

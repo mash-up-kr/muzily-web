@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { ColorExtractor } from "react-color-extractor";
 
@@ -11,10 +11,11 @@ const SAMPLE_IMGS = [
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZ-ycxT0Qaaa7aAiAzeLnUiemaeIYweCz--JDOwoUEFAC65ZVxbDlvqEDbV-SJrkqCZoU&usqp=CAU",
 ];
 
-function Thumbnail() {
+function Thumbnail({ src }) {
   const [colors, setColors] = useState([]);
 
-  const i = 4;
+  // MEMO(@Young-mason) thumbnail 테스트용. i값 바꿔가면서 확인 가능하고, 추후 src props 사용해야함
+  const i = 3;
 
   return (
     <div>
