@@ -6,14 +6,24 @@ interface Props {
   shareURL: string;
   children?: ReactNode;
   style?: CSSProperties;
+  disabled: boolean;
 }
 
 type ButtonEvent = React.MouseEvent<HTMLButtonElement>;
 
-const WebShareButton = ({ shareURL, children = "공유하기", style }: Props) => {
+const WebShareButton = ({
+  shareURL,
+  children = "공유하기",
+  style,
+  disabled,
+}: Props) => {
   const [file, setFile] = useState<File>();
 
-  const handleButtonClick = (e: ButtonEvent) => {
+  const handleButtonClick = async (e: ButtonEvent) => {
+    if (disabled === true) {
+      return false;
+    }
+
     if (!navigator.share) {
       alert("공유하기가 지원되지 않는 환경입니다.");
       e.stopPropagation();
@@ -36,14 +46,23 @@ const WebShareButton = ({ shareURL, children = "공유하기", style }: Props) =
       setFile(newFile);
     });
 
-    navigator.share({
-      url: shareURL,
-      files: file ? [file] : [],
-    });
+    try {
+      await navigator.share({
+        url: shareURL,
+        files: file ? [file] : [],
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
-    <StyledButton type="button" style={style} onClick={handleButtonClick}>
+    <StyledButton
+      type="button"
+      style={style}
+      onClick={handleButtonClick}
+      disabled={disabled}
+    >
       {children}
     </StyledButton>
   );
