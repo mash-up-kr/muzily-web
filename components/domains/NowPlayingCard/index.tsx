@@ -1,15 +1,18 @@
 import React from "react";
 import Image from "next/image";
 import styled from "@emotion/styled";
+import Thumbnail from "../Thumbnail";
 
 interface NowPlayingCardProps {
   noPlaylist?: boolean;
   musicData: any;
+  player?: any;
 }
 
 function NowPlayingCard({
   noPlaylist = false,
   musicData,
+  player,
 }: NowPlayingCardProps) {
   // 재생 중인 노래 없는경우
   if (noPlaylist) {
@@ -36,7 +39,31 @@ function NowPlayingCard({
     return (
       <StyledContainer>
         <Title>Now Playing</Title>
-        <Content></Content>
+        {/* <Content> */}
+        <Thumbnail src={musicData.thumbnail} />
+        {/* </Content> */}
+
+        <Controller>
+          <Image
+            src="/images/play-back.svg"
+            alt="play-back"
+            width={20}
+            height={20}
+          />
+          <Image
+            src="/images/pause-button.svg"
+            alt="play-back"
+            width={60}
+            height={60}
+            onClick={() => player.pauseVideo()}
+          />
+          <Image
+            src="/images/play-next.svg"
+            alt="play-next"
+            width={20}
+            height={20}
+          />
+        </Controller>
       </StyledContainer>
     );
   }
@@ -44,6 +71,7 @@ function NowPlayingCard({
 
 const StyledContainer = styled.div<{ noPlaylist?: boolean }>`
   cursor: pointer;
+  position: relative;
   width: 220px;
   height: 314px;
 
@@ -79,6 +107,14 @@ const SubText = styled.div`
   line-height: 17px;
   letter-spacing: -0.04em;
   color: rgba(255, 255, 255, 0.65);
+`;
+
+const Controller = styled.div`
+  width: 100%;
+  height: 90%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 export default NowPlayingCard;

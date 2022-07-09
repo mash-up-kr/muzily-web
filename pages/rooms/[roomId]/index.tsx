@@ -12,31 +12,36 @@ import IconButton from "~/components/uis/IconButton";
 const TITLE = "매쇼~쉬는탐";
 const DESC = "곡을 추가하거나 좋아요를 해보세요!";
 
-export const VIDEO_LIST = [
+const VIDEO_LIST = [
   {
     id: "4q4vpQCIZ6w",
     artist: "유튜브",
     title: "재즈 플레이리스트1",
+    thumbnail: "https://i.ytimg.com/vi/4q4vpQCIZ6w/hqdefault.jpg",
   },
   {
     id: "2HQag9B4nN0",
     artist: "유튜브",
     title: "재즈 플레이리스트2",
+    thumbnail: "https://i.ytimg.com/vi/2HQag9B4nN0/hqdefault.jpg",
   },
   {
     id: "D1PvIWdJ8xo",
     artist: "아이유",
     title: "Blueming",
+    thumbnail: "https://i.ytimg.com/vi/D1PvIWdJ8xo/hqdefault.jpg",
   },
   {
     id: "d9IxdwEFk1c",
     artist: "아이유",
     title: "Palette",
+    thumbnail: "https://i.ytimg.com/vi/d9IxdwEFk1c/hqdefault.jpg",
   },
   {
     id: "Jh4QFaPmdss",
     artist: "여자아이들",
     title: "Tomboy",
+    thumbnail: "https://i.ytimg.com/vi/Jh4QFaPmdss/hqdefault.jpg",
   },
 ];
 
@@ -61,6 +66,7 @@ const RoomPage: NextPage = () => {
           <NowPlayingCard
             noPlaylist={!VIDEO_LIST.length}
             musicData={VIDEO_LIST[playingIndex]}
+            player={player}
           />
           <NowPlayingCard noPlaylist musicData={VIDEO_LIST[playingIndex]} />
           <PlaylistCard onClick={() => setOpenPlaylistScreen(true)} />
@@ -86,10 +92,11 @@ const RoomPage: NextPage = () => {
           onClickBackButton={() => setOpenPlaylistScreen(false)}
           videoList={VIDEO_LIST}
           playingIndex={playingIndex}
+          setPlayingIndex={setPlayingIndex}
         />
       )}
 
-      {/* <YoutubeWrapper hidden>
+      <YoutubeWrapper hidden>
         <YouTube
           id="iframe"
           videoId={VIDEO_LIST[playingIndex].id}
@@ -113,7 +120,7 @@ const RoomPage: NextPage = () => {
             setPlayingIndex((prev) => prev + 1);
           }}
         />
-      </YoutubeWrapper> */}
+      </YoutubeWrapper>
     </Layout>
   );
 };

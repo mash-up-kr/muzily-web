@@ -6,12 +6,14 @@ interface PlaylistScreenProps {
   onClickBackButton: () => void;
   videoList: any[];
   playingIndex: number;
+  setPlayingIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function PlaylistScreen({
   onClickBackButton,
   videoList,
   playingIndex,
+  setPlayingIndex,
 }: PlaylistScreenProps) {
   return (
     <StyledContainer>
@@ -25,7 +27,11 @@ function PlaylistScreen({
 
       <MusicList>
         {videoList.map((el, i) => (
-          <MusicItem key={el.id} active={i === playingIndex}>
+          <MusicItem
+            key={el.id}
+            active={i === playingIndex}
+            onClick={() => setPlayingIndex(i)}
+          >
             <Title>{el.title}</Title>
             <Artist active={i === playingIndex}>{el.artist}</Artist>
             {/* {i === playingIndex && "재생중"} */}
