@@ -1,9 +1,11 @@
 import { createContext, useContext } from "react";
 import { useRouter } from "next/router";
+import styled from "@emotion/styled";
 import { useAuthMember } from "~/features/auth/member";
+import type { Member } from "~/types/members";
 
 const MemberInfoContext = createContext({
-  memberInfo: null as ReturnType<typeof useAuthMember>["data"] | null,
+  memberInfo: null as Member | null,
   refetchMemberInfo: (() => {}) as ReturnType<typeof useAuthMember>["refetch"],
 });
 
@@ -30,11 +32,13 @@ const MemberInfoProvider = ({ children }: Props) => {
   if (isSuccess) {
     return (
       <MemberInfoContext.Provider
-        value={{ memberInfo: data, refetchMemberInfo: refetch }}
+        value={{ memberInfo: data.data, refetchMemberInfo: refetch }}
       >
-        {data.data.accountConnectType}
-        {data.data.nickname}
-        {data.data.profileUrl}
+        <S.MemberDataTempContainer>
+          {data.data.accountConnectType}
+          {data.data.nickname}
+          {data.data.profileUrl}
+        </S.MemberDataTempContainer>
         {children}
       </MemberInfoContext.Provider>
     );
@@ -48,4 +52,10 @@ const useMemberInfoContext = () => useContext(MemberInfoContext);
 export default {
   Provider: MemberInfoProvider,
   use: useMemberInfoContext,
+};
+
+const S = {
+  MemberDataTempContainer: styled.div`
+    background-color: #ffd500;
+  `,
 };

@@ -10,8 +10,9 @@ import {
   TopBar,
   TopBarIconButton,
 } from "~/components/uis";
+import { withRouteGaurd } from "~/hocs";
 
-const RoomCreatePage: NextPage = () => {
+const RoomCreatePage: NextPage = withRouteGaurd("private", () => {
   const [value, setValue] = useState("");
   const router = useRouter();
 
@@ -51,7 +52,7 @@ const RoomCreatePage: NextPage = () => {
       />
     </Layout>
   );
-};
+});
 
 const StyledContainer = styled.div`
   display: flex;
