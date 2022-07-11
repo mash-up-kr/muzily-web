@@ -9,14 +9,14 @@ interface ChatContent {
   chat: string;
 }
 
-interface IStompCallbackMessage {
+interface StompCallbackMessage {
   type: "CHAT" | "ERROR";
   code: string;
   message: string;
   data: ChatContent | null;
 }
 
-interface IChat {
+interface Chat {
   chat: string;
 }
 
@@ -47,13 +47,13 @@ if (typeof WebSocket !== "function") {
 }
 
 const SocketTestPage: NextPage = () => {
-  const [chat, setChat] = useState<IChat[]>([]);
+  const [chat, setChat] = useState<Chat[]>([]);
   const [value, setValue] = useState("");
 
   const subscribe = () => {
     client.subscribe(`/sub/v1/rooms/${ROOM_ID}`, (message: IMessage) => {
       if (message.body) {
-        const newMessage: IStompCallbackMessage = JSON.parse(message.body);
+        const newMessage: StompCallbackMessage = JSON.parse(message.body);
         console.log("newMessage", newMessage);
         if (newMessage.type === "CHAT" && newMessage.data?.chat !== undefined) {
           chat.push(newMessage.data);
@@ -66,7 +66,7 @@ const SocketTestPage: NextPage = () => {
     client.subscribe("/user/queue/errors", (message: IMessage) => {
       console.error("error message", message);
       if (message.body) {
-        const newMessage: IStompCallbackMessage = JSON.parse(message.body);
+        const newMessage: StompCallbackMessage = JSON.parse(message.body);
         if (newMessage.type === "ERROR") {
           console.error(newMessage.message);
         }
