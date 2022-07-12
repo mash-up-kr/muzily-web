@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { MemberInfoContext } from "~/contexts";
+import { MemberInfo } from "~/contexts";
 import { useAuthRedirected } from "~/features/auth/redirected";
 import { useLocalToken } from "~/hooks/domains";
 
@@ -21,7 +21,7 @@ const GetServiceToken = () => {
   const [localToken, setLocalToken] = useLocalToken();
   const router = useRouter();
 
-  const { refetchMemberInfo } = MemberInfoContext.use();
+  const { refetchMemberInfo } = MemberInfo.use();
 
   const { isLoading, isError, isSuccess, data } = useAuthRedirected({
     code: `${router.query.code}`,

@@ -1,1 +1,1 @@
-export { default as MemberInfoContext } from "./MemberInfoContext";
+export { default as MemberInfo } from "./MemberInfo";
