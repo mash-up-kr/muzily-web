@@ -2,9 +2,9 @@ import React from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { KakaoLoginButton } from "~/components/domains";
-import { withRouteGaurd } from "~/hocs";
+import { withRouteGuard } from "~/hocs";
 
-const LoginPage: NextPage = withRouteGaurd("prevented", () => {
+const LoginPage: NextPage = withRouteGuard({ UNCONNECTED: true }, "/", () => {
   return (
     <div>
       <Head>

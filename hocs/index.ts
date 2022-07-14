@@ -1,1 +1,1 @@
-export { default as withRouteGaurd } from "./withRouteGaurd";
+export { default as withRouteGuard } from "./withRouteGuard";

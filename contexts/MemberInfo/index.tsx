@@ -35,9 +35,9 @@ const MemberInfoProvider = ({ children }: Props) => {
         value={{ memberInfo: data.data, refetchMemberInfo: refetch }}
       >
         <S.MemberDataTempContainer>
-          {data.data.accountConnectType}
-          {data.data.nickname}
-          {data.data.profileUrl}
+          <div>accountConnectType: {data.data.accountConnectType}</div>
+          <div>nickname: {data.data.nickname}</div>
+          <div>profileUrl: {data.data.profileUrl}</div>
         </S.MemberDataTempContainer>
         {children}
       </MemberInfoContext.Provider>

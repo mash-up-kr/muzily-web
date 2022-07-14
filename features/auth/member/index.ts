@@ -1,8 +1,7 @@
 import axios from "axios";
 import { useQuery } from "react-query";
 import { useLocalToken } from "~/hooks/domains";
-
-type AccountConnectType = "CONNECTED" | "ANONYMOUS";
+import type { Member } from "~/types/members";
 
 const defaultEndPoint = process.env
   .NEXT_PUBLIC_SERVER_DEFAULT_END_POINT as string;
@@ -27,7 +26,7 @@ export const useAuthMember = () => {
     }
 
     return axios.get<{
-      accountConnectType: AccountConnectType;
+      accountConnectType: Member["accountConnectType"];
       nickname: string;
       profileUrl: string;
     }>(`${defaultEndPoint}/api/v1/members`, {

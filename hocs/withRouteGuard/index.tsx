@@ -1,9 +1,11 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { MemberInfo } from "~/contexts";
+import type { Member } from "~/types/members";
 
 const withRouteGuard = <P extends object>(
-  option: "prevented" | "private",
+  access: { [accountConnectType in Member["accountConnectType"]]?: boolean },
+  replaceUrl: Parameters<ReturnType<typeof useRouter>["replace"]>[0],
   Page: NextPage<P>
 ) => {
   return (props: P) => {
@@ -16,14 +18,8 @@ const withRouteGuard = <P extends object>(
 
     const { accountConnectType } = memberInfo;
 
-    if (option === "prevented" && accountConnectType === "CONNECTED") {
-      router.replace("/");
-
-      return null;
-    }
-
-    if (option === "private" && accountConnectType !== "CONNECTED") {
-      router.replace("/login");
+    if (!access[accountConnectType]) {
+      router.replace(replaceUrl);
 
       return null;
     }

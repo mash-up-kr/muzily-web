@@ -1,5 +1,5 @@
 export interface Member {
-  accountConnectType: "CONNECTED" | "ANONYMOUS";
+  accountConnectType: "CONNECTED" | "UNCONNECTED";
   nickname: string;
   profileUrl: string;
 }
