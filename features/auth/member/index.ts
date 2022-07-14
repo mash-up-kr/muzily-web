@@ -12,9 +12,9 @@ export const useAuthMember = () => {
   const [localToken, setLocalToken] = useLocalToken();
 
   return useQuery(["auth", "member"], async () => {
-    let localStorageToken = JSON.parse(
-      localStorage.getItem(tokenKey) || JSON.stringify("")
-    ) as string | null;
+    let localStorageToken: string | null = JSON.parse(
+      localStorage.getItem(tokenKey) ?? "null"
+    );
 
     if (!localStorageToken) {
       const { data } = await axios.post<{ token: string }>(
