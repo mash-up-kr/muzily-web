@@ -1,14 +1,14 @@
-import React, { useEffect } from "react";
+import React from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { MemberInfo } from "~/contexts";
 import { useAuthRedirected } from "~/features/auth/redirected";
-import { useLocalToken } from "~/hooks/domains";
 
 const LoginRedirectedPage: NextPage = () => {
   const router = useRouter();
+  const { memberInfo } = MemberInfo.use();
 
-  if (router.query.code) {
+  if (router.query.code && memberInfo.accountConnectType === "UNCONNECTED") {
     return <GetServiceToken />;
   }
 
@@ -18,21 +18,7 @@ const LoginRedirectedPage: NextPage = () => {
 export default LoginRedirectedPage;
 
 const GetServiceToken = () => {
-  const [localToken, setLocalToken] = useLocalToken();
-  const router = useRouter();
-
-  const { refetchMemberInfo } = MemberInfo.use();
-
-  const { isLoading, isError, isSuccess, data } = useAuthRedirected({
-    code: `${router.query.code}`,
-  });
-
-  useEffect(() => {
-    if (isSuccess) {
-      setLocalToken(data.token);
-      refetchMemberInfo();
-    }
-  }, [isSuccess, setLocalToken, data, refetchMemberInfo]);
+  const { isLoading, isError } = useAuthRedirected();
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -40,10 +26,6 @@ const GetServiceToken = () => {
 
   if (isError) {
     return <div>Error</div>;
-  }
-
-  if (isSuccess) {
-    router.replace("/");
   }
 
   return null;
