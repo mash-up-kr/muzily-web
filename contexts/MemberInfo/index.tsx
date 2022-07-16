@@ -1,8 +1,10 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import { useAuthMember } from "~/features/auth/member";
 import type { Member } from "~/types/members";
+
+let count = 0;
 
 const MemberInfoContext = createContext({
   memberInfo: null as Member | null,
@@ -18,26 +20,28 @@ const MemberInfoProvider = ({ children }: Props) => {
   const { isLoading, isFetching, isError, isSuccess, data, refetch } =
     useAuthMember();
 
+  useEffect(() => {
+    if (isError && count === 0) {
+      alert("인증에 실패했습니다. 다시 로그인해주세요");
+      localStorage.clear();
+      router.replace("/login");
+      count += 1;
+    }
+  }, [isError]);
+
   if (isFetching || isLoading) {
     return <div>Loading, Fetching</div>;
-  }
-  if (isError) {
-    alert("인증에 실패했습니다. 다시 로그인해주세요");
-    localStorage.clear();
-    router.push("/login");
-
-    return <div>Error</div>;
   }
 
   if (isSuccess) {
     return (
       <MemberInfoContext.Provider
-        value={{ memberInfo: data.data, refetchMemberInfo: refetch }}
+        value={{ memberInfo: data, refetchMemberInfo: refetch }}
       >
         <S.MemberDataTempContainer>
-          <div>accountConnectType: {data.data.accountConnectType}</div>
-          <div>nickname: {data.data.nickname}</div>
-          <div>profileUrl: {data.data.profileUrl}</div>
+          <div>accountConnectType: {data.accountConnectType}</div>
+          <div>nickname: {data.nickname}</div>
+          <div>profileUrl: {data.profileUrl}</div>
         </S.MemberDataTempContainer>
         {children}
       </MemberInfoContext.Provider>

@@ -25,12 +25,13 @@ export const useAuthMember = () => {
       localStorageToken = data.token;
     }
 
-    return axios.get<{
-      accountConnectType: Member["accountConnectType"];
-      nickname: string;
-      profileUrl: string;
-    }>(`${defaultEndPoint}/api/v1/members`, {
-      headers: { Authorization: `Bearer ${localStorageToken}` },
-    });
+    const { data } = await axios.get<Member>(
+      `${defaultEndPoint}/api/v1/members`,
+      {
+        headers: { Authorization: `Bearer ${localStorageToken}` },
+      }
+    );
+
+    return data;
   });
 };

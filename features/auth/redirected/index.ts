@@ -6,10 +6,15 @@ const defaultEndPoint = process.env
 
 export const useAuthRedirected = ({ code }: { code: string }) => {
   return useQuery(["auth", "code"], async () => {
-    return axios.post<{ token: string }>(`${defaultEndPoint}/api/v1/auth`, {
-      code,
-      redirectUri: process.env.NEXT_PUBLIC_KAKAO_LOGIN_REDIRECT_URI,
-      socialType: "KAKAO",
-    });
+    const { data } = await axios.post<{ token: string }>(
+      `${defaultEndPoint}/api/v1/auth`,
+      {
+        code,
+        redirectUri: process.env.NEXT_PUBLIC_KAKAO_LOGIN_REDIRECT_URI,
+        socialType: "KAKAO",
+      }
+    );
+
+    return data;
   });
 };

@@ -29,7 +29,7 @@ const GetServiceToken = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      setLocalToken(data.data.token);
+      setLocalToken(data.token);
       refetchMemberInfo();
     }
   }, [isSuccess, setLocalToken, data, refetchMemberInfo]);
