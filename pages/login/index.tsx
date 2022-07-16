@@ -2,8 +2,9 @@ import React from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { KakaoLoginButton } from "~/components/domains";
+import { withRouteGuard } from "~/hocs";
 
-const LoginPage: NextPage = () => {
+const LoginPage: NextPage = withRouteGuard({ UNCONNECTED: true }, "/", () => {
   return (
     <div>
       <Head>
@@ -22,6 +23,6 @@ const LoginPage: NextPage = () => {
       </KakaoLoginButton>
     </div>
   );
-};
+});
 
 export default LoginPage;

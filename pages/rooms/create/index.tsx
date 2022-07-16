@@ -10,48 +10,53 @@ import {
   TopBar,
   TopBarIconButton,
 } from "~/components/uis";
+import { withRouteGuard } from "~/hocs";
 
-const RoomCreatePage: NextPage = () => {
-  const [value, setValue] = useState("");
-  const router = useRouter();
+const RoomCreatePage: NextPage = withRouteGuard(
+  { CONNECTED: true },
+  "/login",
+  () => {
+    const [value, setValue] = useState("");
+    const router = useRouter();
 
-  return (
-    <Layout screenColor="linear-gradient(#000, 90%, #01356E)">
-      <TopBar leftIconButton={<TopBarIconButton iconName="arrow-left" />}>
-        방 만들기
-      </TopBar>
-      <StyledContainer>
-        <StyledTitle>나만의 방 이름을 만들어보세요!</StyledTitle>
-        <StyledInput
-          value={value}
-          maxLength={12}
-          onChange={(e) => setValue(e.target.value)}
-          placeholder="방 이름"
-        />
-        <StyledNoticeTextWrapper gap={4}>
-          <Image
-            src={`/images/info-circle-mono.svg`}
-            alt="icon"
-            width={14}
-            height={14}
+    return (
+      <Layout screenColor="linear-gradient(#000, 90%, #01356E)">
+        <TopBar leftIconButton={<TopBarIconButton iconName="arrow-left" />}>
+          방 만들기
+        </TopBar>
+        <StyledContainer>
+          <StyledTitle>나만의 방 이름을 만들어보세요!</StyledTitle>
+          <StyledInput
+            value={value}
+            maxLength={12}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder="방 이름"
           />
-          <StyledNoticeText>
-            최대 빈칸 포함 12자까지 입력 가능해요.
-            <br />
-            이후에 언제든지 변경할 수 있습니다:)
-          </StyledNoticeText>
-        </StyledNoticeTextWrapper>
-      </StyledContainer>
-      <BottomButton
-        label="다음"
-        onClick={() =>
-          router.push("/rooms/create/mood", { query: { roomName: value } })
-        }
-        disabled={value.length === 0}
-      />
-    </Layout>
-  );
-};
+          <StyledNoticeTextWrapper gap={4}>
+            <Image
+              src={`/images/info-circle-mono.svg`}
+              alt="icon"
+              width={14}
+              height={14}
+            />
+            <StyledNoticeText>
+              최대 빈칸 포함 12자까지 입력 가능해요.
+              <br />
+              이후에 언제든지 변경할 수 있습니다:)
+            </StyledNoticeText>
+          </StyledNoticeTextWrapper>
+        </StyledContainer>
+        <BottomButton
+          label="다음"
+          onClick={() =>
+            router.push("/rooms/create/mood", { query: { roomName: value } })
+          }
+          disabled={value.length === 0}
+        />
+      </Layout>
+    );
+  }
+);
 
 const StyledContainer = styled.div`
   display: flex;
