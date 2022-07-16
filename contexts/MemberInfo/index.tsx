@@ -7,7 +7,7 @@ import type { Member } from "~/types/members";
 let count = 0;
 
 const MemberInfoContext = createContext({
-  memberInfo: null as Member | null,
+  memberInfo: {} as Member,
   refetchMemberInfo: (() => {}) as ReturnType<typeof useAuthMember>["refetch"],
 });
 
