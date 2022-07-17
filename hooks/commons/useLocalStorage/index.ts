@@ -10,7 +10,10 @@ const useLocalStorage = (
 
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
-      console.error(error);
+      // 서버사이드에서 실행되지 않도록 처리
+      if (typeof document !== "undefined") {
+        console.error(error);
+      }
 
       return initialValue;
     }
