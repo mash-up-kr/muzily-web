@@ -69,6 +69,7 @@ const StyledContainer = styled.div`
 
   background-color: #030303;
   padding: 0 20px;
+  z-index: 10;
 `;
 
 const StyledHeadingText = styled.h3`

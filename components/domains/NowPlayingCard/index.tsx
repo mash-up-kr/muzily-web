@@ -1,18 +1,23 @@
 import React from "react";
 import Image from "next/image";
 import styled from "@emotion/styled";
+import type { Music } from "~/types/musics";
 import Thumbnail from "../Thumbnail";
 
 interface NowPlayingCardProps {
   noPlaylist?: boolean;
-  musicData: any;
+  musicData: Music;
   player?: any;
+  onClickNext: () => void;
+  onClickPrev: () => void;
 }
 
 function NowPlayingCard({
   noPlaylist = false,
   musicData,
   player,
+  onClickNext,
+  onClickPrev,
 }: NowPlayingCardProps) {
   // 재생 중인 노래 없는경우
   if (noPlaylist) {
@@ -35,38 +40,42 @@ function NowPlayingCard({
     );
   }
   // 재생 중인 노래 있는경우
-  else {
-    return (
-      <StyledContainer>
-        <Title>Now Playing</Title>
-        {/* <Content> */}
-        <Thumbnail src={musicData.thumbnail} />
-        {/* </Content> */}
+  const musicText = `${musicData.artist} - ${musicData.title}`;
 
-        <Controller>
-          <Image
-            src="/images/play-back.svg"
-            alt="play-back"
-            width={20}
-            height={20}
-          />
-          <Image
-            src="/images/pause-button.svg"
-            alt="play-back"
-            width={60}
-            height={60}
-            onClick={() => player.pauseVideo()}
-          />
-          <Image
-            src="/images/play-next.svg"
-            alt="play-next"
-            width={20}
-            height={20}
-          />
-        </Controller>
-      </StyledContainer>
-    );
-  }
+  return (
+    <StyledContainer>
+      <Title>Now Playing</Title>
+      {/* <Content> */}
+      <Thumbnail src={musicData.thumbnail} colors={musicData.colors} />
+      {/* </Content> */}
+
+      <Controller>
+        <Image
+          src="/images/play-back.svg"
+          alt="play-back"
+          width={20}
+          height={20}
+          onClick={onClickPrev}
+        />
+        <Image
+          src="/images/pause-button.svg"
+          alt="play-back"
+          width={60}
+          height={60}
+          onClick={() => player.pauseVideo()}
+        />
+        <Image
+          src="/images/play-next.svg"
+          alt="play-next"
+          width={20}
+          height={20}
+          onClick={onClickNext}
+        />
+      </Controller>
+
+      <StyledMusicText>{musicText}</StyledMusicText>
+    </StyledContainer>
+  );
 }
 
 const StyledContainer = styled.div<{ noPlaylist?: boolean }>`
@@ -87,6 +96,11 @@ const Title = styled.h3`
   font-weight: 800;
   font-size: 14px;
   line-height: 17px;
+  color: #fff;
+
+  position: absolute;
+  top: 20px;
+  z-index: 1;
 `;
 
 const Content = styled.div`
@@ -113,8 +127,35 @@ const Controller = styled.div`
   width: 100%;
   height: 90%;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 25px;
+`;
+
+const StyledMusicText = styled.div`
+  color: #fff;
+  z-index: 1;
+  position: absolute;
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 145%;
+  letter-spacing: -0.544648px;
+
+  /* white-space: nowrap; */
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+  /* max-height: 75px; */
+
+  padding: 0 20px;
+  bottom: 30px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export default NowPlayingCard;

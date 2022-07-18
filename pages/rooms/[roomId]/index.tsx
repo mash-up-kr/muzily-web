@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import type { NextPage } from "next";
+import type { NextPage, NextPageContext } from "next";
 import styled from "@emotion/styled";
+import Vibrant from "node-vibrant";
 import YouTube from "react-youtube";
 import { NowPlayingCard } from "~/components/domains";
 import AddSongScreen from "~/components/domains/AddSongScreen";
@@ -8,22 +9,29 @@ import PlaylistCard from "~/components/domains/PlaylistCard";
 import PlaylistScreen from "~/components/domains/PlaylistScreen";
 import { Layout } from "~/components/uis";
 import IconButton from "~/components/uis/IconButton";
+import type { Music } from "~/types/musics";
 
 const TITLE = "매쇼~쉬는탐";
 const DESC = "곡을 추가하거나 좋아요를 해보세요!";
 
-const VIDEO_LIST = [
+const MUSIC_LIST = [
   {
-    id: "4q4vpQCIZ6w",
-    artist: "유튜브",
-    title: "재즈 플레이리스트1",
-    thumbnail: "https://i.ytimg.com/vi/4q4vpQCIZ6w/hqdefault.jpg",
+    id: "DYrY1E4-9NI",
+    artist: "BIG Naughty",
+    title: "Beyond Love (Feat. 10CM)",
+    thumbnail: "https://i.ytimg.com/vi/DYrY1E4-9NI/hqdefault.jpg",
   },
   {
-    id: "2HQag9B4nN0",
-    artist: "유튜브",
-    title: "재즈 플레이리스트2",
-    thumbnail: "https://i.ytimg.com/vi/2HQag9B4nN0/hqdefault.jpg",
+    id: "f6YDKF0LVWw",
+    artist: "NAYEON",
+    title: "POP!",
+    thumbnail: "https://i.ytimg.com/vi/f6YDKF0LVWw/hqdefault.jpg",
+  },
+  {
+    id: "l-jZOXa7gQY",
+    artist: "IVE",
+    title: "LOVE DIVE",
+    thumbnail: "https://i.ytimg.com/vi/l-jZOXa7gQY/hqdefault.jpg",
   },
   {
     id: "D1PvIWdJ8xo",
@@ -45,14 +53,31 @@ const VIDEO_LIST = [
   },
 ];
 
-const RoomPage: NextPage = () => {
+interface RoomPageProps {
+  data: Music[];
+}
+
+const RoomPage: NextPage<RoomPageProps> = (props) => {
   const [openAddSongScreen, setOpenAddSongScreen] = useState(false);
   const [openPlaylistScreen, setOpenPlaylistScreen] = useState(false);
 
   const [player, setPlayer] = useState(null);
   const [playingIndex, setPlayingIndex] = useState(0);
 
-  console.log(openAddSongScreen);
+  const handleClickPlayNext = () => {
+    if (playingIndex === props.data.length - 1) {
+      return alert("마지막곡 입니다");
+    }
+
+    setPlayingIndex((prev) => prev + 1);
+  };
+
+  const handleClickPlayBack = () => {
+    if (playingIndex === 0) {
+      return alert("처음 곡입니다");
+    }
+    setPlayingIndex((prev) => prev - 1);
+  };
 
   return (
     <Layout>
@@ -64,11 +89,12 @@ const RoomPage: NextPage = () => {
 
         <StyledContentWrapper>
           <NowPlayingCard
-            noPlaylist={!VIDEO_LIST.length}
-            musicData={VIDEO_LIST[playingIndex]}
+            noPlaylist={!props.data.length}
+            musicData={props.data[playingIndex]}
             player={player}
+            onClickNext={handleClickPlayNext}
+            onClickPrev={handleClickPlayBack}
           />
-          <NowPlayingCard noPlaylist musicData={VIDEO_LIST[playingIndex]} />
           <PlaylistCard onClick={() => setOpenPlaylistScreen(true)} />
         </StyledContentWrapper>
 
@@ -90,7 +116,7 @@ const RoomPage: NextPage = () => {
       {openPlaylistScreen && (
         <PlaylistScreen
           onClickBackButton={() => setOpenPlaylistScreen(false)}
-          videoList={VIDEO_LIST}
+          videoList={MUSIC_LIST}
           playingIndex={playingIndex}
           setPlayingIndex={setPlayingIndex}
         />
@@ -99,7 +125,7 @@ const RoomPage: NextPage = () => {
       <YoutubeWrapper hidden>
         <YouTube
           id="iframe"
-          videoId={VIDEO_LIST[playingIndex].id}
+          videoId={MUSIC_LIST[playingIndex].id}
           opts={{
             width: 300,
             height: 200,
@@ -113,7 +139,7 @@ const RoomPage: NextPage = () => {
             event.target.playVideo();
           }}
           onEnd={() => {
-            if (playingIndex === VIDEO_LIST.length - 1) {
+            if (playingIndex === MUSIC_LIST.length - 1) {
               return alert("끝!!");
             }
 
@@ -169,5 +195,25 @@ const StyledContentWrapper = styled.div`
 const YoutubeWrapper = styled.div<{ hidden: boolean }>`
   visibility: ${(p) => p.hidden && "hidden"};
 `;
+
+RoomPage.getInitialProps = async (ctx: NextPageContext) => {
+  const list = [...MUSIC_LIST];
+
+  const data: RoomPageProps["data"] = await Promise.all(
+    list.map(async (el) => {
+      const palette = await Vibrant.from(el.thumbnail).getPalette();
+      const colors = Object.values(palette).map((swatches) => swatches?.hex);
+
+      return {
+        ...el,
+        colors,
+      };
+    })
+  );
+
+  return {
+    data,
+  };
+};
 
 export default RoomPage;
