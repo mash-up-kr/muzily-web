@@ -30,7 +30,6 @@ const StyledIconWrapper = styled.button`
   height: 24px;
   background-color: transparent;
   border: none;
-  padding: 0;
 `;
 
 export default TopBarIconButton;
