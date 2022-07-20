@@ -1,28 +1,38 @@
 import React, { useState } from "react";
 import { Spacer, TypingText } from "~/components/uis";
 
-const hashTags = [
-  "# 가게에서 손님과",
-  "# 시원한 드라이브를 위해",
-  "# 캠프가서 자유롭게",
-  "# 사랑하는 연인과",
-];
-
 const TypingAnimationTestPage = () => {
-  const [index, setIndex] = useState(0);
+  const [typingTime, setTypingTime] = useState(100);
+  const [isTypingText, setIsTypingText] = useState(true);
 
   return (
     <Spacer justify="center" align="center" style={{ height: "50vh" }}>
-      <TypingText
-        typingSpeed={50}
-        typingEndDelay={1000}
-        onTypingEnd={() =>
-          setIndex((prev) => (prev + 1 === hashTags.length ? 0 : prev + 1))
-        }
-        style={{ fontSize: 30, fontWeight: "bold" }}
-      >
-        {hashTags[index]}
-      </TypingText>
+      {isTypingText && (
+        <TypingText
+          textList={[
+            "# 가게에서 손님과",
+            "# 시원한 드라이브를 위해",
+            "# 캠프가서 자유롭게",
+            "# 사랑하는 연인과",
+          ]}
+          typingTime={typingTime}
+          typingEndDelay={1000}
+          style={{ fontSize: 30, fontWeight: "bold" }}
+          onTypingEnd={async ({ textListIndex, typingEndCount }) => {
+            console.log({ typingTime, textListIndex, typingEndCount });
+
+            if (textListIndex === 3) {
+              // 1. 점점 타이핑의 속도가 빨라지도록 typingTime를 조절해볼까요?
+              setTypingTime((prev) => prev / 2);
+            }
+
+            // 2. 혹은 100번 타이핑이 되면 이 Typing Text가 없어지면 어떨까요?
+            if (typingEndCount === 100) {
+              setIsTypingText(false);
+            }
+          }}
+        />
+      )}
     </Spacer>
   );
 };

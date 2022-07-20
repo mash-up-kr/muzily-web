@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import React, {
+  useRef,
   createContext,
   useContext,
   useEffect,
@@ -12,53 +13,81 @@ import { useIntervalFn } from "~/hooks/commons";
 type ContextProps = {
   charIndex: number;
   nextCharIndex: () => void;
-  typingSpeed: number;
+  typingTime: number;
 };
 
 const TypingTextContext = createContext({} as ContextProps);
 const useTypingTextContext = () => useContext(TypingTextContext);
 
-type Props = {
+interface Props {
+  textList: string[];
+  defaultTextListIndex?: number;
+  // 한 문장 타이핑이 끝나고 기다리는 시간 (ms)
   typingEndDelay?: number;
-  typingSpeed?: ContextProps["typingSpeed"];
-  onTypingEnd?: () => Promise<void> | void;
+  // 한 타이핑 시간 (ms)
+  typingTime?: ContextProps["typingTime"];
+  // 한 문장의 타이핑 끝났을 때 실행되는 이벤트
+  onTypingEnd?: (typingInfo: {
+    textListIndex: number;
+    typingEndCount: number;
+  }) => Promise<void> | void;
   style?: CSSProperties;
-  children: string;
-};
+}
 
 const TypingText = ({
+  textList,
+  defaultTextListIndex = 0,
   typingEndDelay = 0,
-  typingSpeed = 100,
+  typingTime = 100,
   onTypingEnd,
   style,
-  children,
 }: Props) => {
+  const typingEndCount = useRef(0);
+  const [textListIndex, setTextListIndex] = useState(defaultTextListIndex);
   const [charIndex, setCharIndex] = useState(0);
   const [isShow, setIsShow] = useState(true);
 
   const charsArray = useMemo(
-    () => getCharChoJungJongTable(children),
-    [children]
+    () => getCharChoJungJongTable(textList[textListIndex]),
+    [textList, textListIndex]
   );
 
   const nextCharIndex = () => setCharIndex(charIndex + 1);
 
   useEffect(() => {
     setIsShow(true);
-    if (charIndex === children.length) {
-      setTimeout(() => {
-        setCharIndex(() => 0);
-        onTypingEnd?.();
-        setIsShow(false);
-      }, typingSpeed + typingEndDelay);
+
+    if (charIndex === textList[textListIndex].length) {
+      setTimeout(async () => {
+        typingEndCount.current += 1;
+        setTextListIndex((prev) =>
+          prev + 1 === textList.length ? 0 : prev + 1
+        );
+
+        onTypingEnd?.({
+          textListIndex,
+          typingEndCount: typingEndCount.current,
+        });
+        if (textList.length > 1) {
+          setCharIndex(() => 0);
+          setIsShow(false);
+        }
+      }, typingTime + typingEndDelay);
     }
-  }, [charIndex, children, onTypingEnd, typingSpeed, typingEndDelay]);
+  }, [
+    charIndex,
+    textList,
+    textListIndex,
+    onTypingEnd,
+    typingTime,
+    typingEndDelay,
+  ]);
 
   return (
     <TypingTextContext.Provider
-      value={{ charIndex, nextCharIndex, typingSpeed }}
+      value={{ charIndex, nextCharIndex, typingTime }}
     >
-      <AnimatePresence key={children}>
+      <AnimatePresence key={textListIndex}>
         {isShow && (
           <motion.div
             initial={{ opacity: 1, y: 40 }}
@@ -85,7 +114,7 @@ interface TypingCharProps {
 
 const TypingChar = ({ order, children }: TypingCharProps) => {
   const [index, setIndex] = useState(-1);
-  const { charIndex, nextCharIndex, typingSpeed } = useTypingTextContext();
+  const { charIndex, nextCharIndex, typingTime } = useTypingTextContext();
 
   const [runInterval, clearInterval] = useIntervalFn(() => {
     const nextIndex = index + 1;
@@ -95,7 +124,7 @@ const TypingChar = ({ order, children }: TypingCharProps) => {
       clearInterval();
       nextCharIndex();
     }
-  }, typingSpeed);
+  }, typingTime);
 
   useEffect(() => {
     if (charIndex === order) {
@@ -156,30 +185,6 @@ const cCho = [
   "ㅌ",
   "ㅍ",
   "ㅎ",
-];
-
-const cJung = [
-  "ㅏ",
-  "ㅐ",
-  "ㅑ",
-  "ㅒ",
-  "ㅓ",
-  "ㅔ",
-  "ㅕ",
-  "ㅖ",
-  "ㅗ",
-  "ㅘ",
-  "ㅙ",
-  "ㅚ",
-  "ㅛ",
-  "ㅜ",
-  "ㅝ",
-  "ㅞ",
-  "ㅟ",
-  "ㅠ",
-  "ㅡ",
-  "ㅢ",
-  "ㅣ",
 ];
 
 const cJong = [
