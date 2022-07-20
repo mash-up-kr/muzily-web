@@ -20,7 +20,10 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+button,
+input,
+select {
   margin: 0;
   padding: 0;
   font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto,
@@ -41,12 +44,6 @@ h6 {
 
 ul {
   list-style: none;
-}
-
-button,
-input,
-select {
-  margin: 0;
 }
 
 html {
