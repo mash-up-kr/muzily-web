@@ -31,6 +31,9 @@ const TypingAnimationTestPage = () => {
               setIsTypingText(false);
             }
           }}
+          onTap={async ({ textTapped, textListIndex, typingEndCount }) => {
+            console.log({ textTapped, textListIndex, typingEndCount });
+          }}
         />
       )}
     </Spacer>

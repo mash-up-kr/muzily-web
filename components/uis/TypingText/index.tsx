@@ -7,6 +7,8 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import { css } from "@emotion/react";
+import styled from "@emotion/styled";
 import { AnimatePresence, motion } from "framer-motion";
 import { useIntervalFn } from "~/hooks/commons";
 
@@ -19,6 +21,11 @@ type ContextProps = {
 const TypingTextContext = createContext({} as ContextProps);
 const useTypingTextContext = () => useContext(TypingTextContext);
 
+type TypingInfo = {
+  textListIndex: number;
+  typingEndCount: number;
+};
+
 interface Props {
   textList: string[];
   defaultTextListIndex?: number;
@@ -27,10 +34,12 @@ interface Props {
   // 한 타이핑 시간 (ms)
   typingTime?: ContextProps["typingTime"];
   // 한 문장의 타이핑 끝났을 때 실행되는 이벤트
-  onTypingEnd?: (typingInfo: {
-    textListIndex: number;
-    typingEndCount: number;
-  }) => Promise<void> | void;
+  onTypingEnd?: (typingInfo: TypingInfo) => Promise<void> | void;
+  onTap?: (
+    tapEvent: {
+      textTapped: Props["textList"][number];
+    } & TypingInfo
+  ) => Promise<void> | void;
   style?: CSSProperties;
 }
 
@@ -40,6 +49,7 @@ const TypingText = ({
   typingEndDelay = 0,
   typingTime = 100,
   onTypingEnd,
+  onTap,
   style,
 }: Props) => {
   const typingEndCount = useRef(0);
@@ -89,23 +99,40 @@ const TypingText = ({
     >
       <AnimatePresence key={textListIndex}>
         {isShow && (
-          <motion.div
+          <MotionSentence
             initial={{ opacity: 1, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -40 }}
             style={style}
+            cursor={onTap ? "pointer" : "default"}
+            whileTap={{ scale: 0.9 }}
+            onTap={() =>
+              onTap?.({
+                textTapped: textList[textListIndex],
+                textListIndex,
+                typingEndCount: typingEndCount.current,
+              })
+            }
           >
             {charsArray.map((chars, index) => (
               <TypingChar key={index} order={index}>
                 {chars}
               </TypingChar>
             ))}
-          </motion.div>
+          </MotionSentence>
         )}
       </AnimatePresence>
     </TypingTextContext.Provider>
   );
 };
+
+const MotionSentence = styled(motion.div)<{ cursor: "pointer" | "default" }>`
+  ${({ cursor }) =>
+    css`
+      cursor: ${cursor};
+      user-select: none;
+    `}
+`;
 
 interface TypingCharProps {
   order: number;
@@ -132,7 +159,7 @@ const TypingChar = ({ order, children }: TypingCharProps) => {
     }
   }, [charIndex, order, runInterval]);
 
-  return <span>{children[index]}</span>;
+  return <>{children[index]}</>;
 };
 
 export default TypingText;
