@@ -22,10 +22,10 @@ function NowPlayingCard({
   // 재생 중인 노래 없는경우
   if (noPlaylist) {
     return (
-      <StyledContainer noPlaylist>
-        <Title>Now Playing</Title>
-        <Content>
-          <NoPlaylistText>{`재생 중인\n노래가 없어요`}</NoPlaylistText>
+      <S.Container noPlaylist>
+        <S.Title>Now Playing</S.Title>
+        <S.Content>
+          <S.NoPlaylistText>{`재생 중인\n노래가 없어요`}</S.NoPlaylistText>
 
           <Image
             src="/images/no-music-emoji.svg"
@@ -34,22 +34,22 @@ function NowPlayingCard({
             height={160}
           />
 
-          <SubText>지금 바로 추가해보세요</SubText>
-        </Content>
-      </StyledContainer>
+          <S.SubText>지금 바로 추가해보세요</S.SubText>
+        </S.Content>
+      </S.Container>
     );
   }
   // 재생 중인 노래 있는경우
   const musicText = `${musicData.artist} - ${musicData.title}`;
 
   return (
-    <StyledContainer>
-      <Title>Now Playing</Title>
-      {/* <Content> */}
+    <S.Container>
+      <S.Title>Now Playing</S.Title>
+      {/* <S.Content> */}
       <Thumbnail src={musicData.thumbnail} colors={musicData.colors} />
-      {/* </Content> */}
+      {/* </S.Content> */}
 
-      <Controller>
+      <S.Controller>
         <Image
           src="/images/play-back.svg"
           alt="play-back"
@@ -71,91 +71,90 @@ function NowPlayingCard({
           height={20}
           onClick={onClickNext}
         />
-      </Controller>
+      </S.Controller>
 
-      <StyledMusicText>{musicText}</StyledMusicText>
-    </StyledContainer>
+      <S.MusicText>{musicText}</S.MusicText>
+    </S.Container>
   );
 }
 
-const StyledContainer = styled.div<{ noPlaylist?: boolean }>`
-  cursor: pointer;
-  position: relative;
-  width: 220px;
-  height: 314px;
+const S = {
+  Container: styled.div<{ noPlaylist?: boolean }>`
+    cursor: pointer;
+    position: relative;
+    width: 220px;
+    height: 314px;
 
-  background: ${(p) => (p.noPlaylist ? "#007aff" : "#fff")};
-  border-radius: 20px;
-  padding: 20px;
+    background: ${(p) => (p.noPlaylist ? "#007aff" : "#fff")};
+    border-radius: 20px;
+    padding: 20px;
 
-  flex-shrink: 0;
-`;
+    flex-shrink: 0;
+  `,
 
-const Title = styled.h3`
-  margin: 0;
-  font-weight: 800;
-  font-size: 14px;
-  line-height: 17px;
-  color: #fff;
+  Title: styled.h3`
+    margin: 0;
+    font-weight: 800;
+    font-size: 14px;
+    line-height: 17px;
+    color: #fff;
 
-  position: absolute;
-  top: 20px;
-  z-index: 1;
-`;
+    position: absolute;
+    top: 20px;
+    z-index: 1;
+  `,
+  Content: styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+  `,
 
-const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 30px;
-`;
+  NoPlaylistText: styled.div`
+    text-align: center;
+    white-space: pre-wrap;
+  `,
 
-const NoPlaylistText = styled.div`
-  text-align: center;
-  white-space: pre-wrap;
-`;
+  SubText: styled.div`
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    letter-spacing: -0.04em;
+    color: rgba(255, 255, 255, 0.65);
+  `,
 
-const SubText = styled.div`
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 17px;
-  letter-spacing: -0.04em;
-  color: rgba(255, 255, 255, 0.65);
-`;
+  Controller: styled.div`
+    width: 100%;
+    height: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+  `,
 
-const Controller = styled.div`
-  width: 100%;
-  height: 90%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 25px;
-`;
+  MusicText: styled.div`
+    color: #fff;
+    z-index: 1;
+    position: absolute;
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 145%;
+    letter-spacing: -0.544648px;
 
-const StyledMusicText = styled.div`
-  color: #fff;
-  z-index: 1;
-  position: absolute;
-  font-weight: 600;
-  font-size: 17px;
-  line-height: 145%;
-  letter-spacing: -0.544648px;
+    left: 0;
+    bottom: 0;
 
-  /* white-space: nowrap; */
-  left: 0;
-  bottom: 0;
+    width: 100%;
 
-  width: 100%;
-  /* max-height: 75px; */
+    padding: 0 20px;
+    bottom: 30px;
 
-  padding: 0 20px;
-  bottom: 30px;
-
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  `,
+};
 
 export default NowPlayingCard;

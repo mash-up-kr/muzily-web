@@ -3,5 +3,5 @@ export interface Music {
   artist: string;
   title: string;
   thumbnail: string;
-  colors: (string | undefined)[];
+  colors?: string[];
 }

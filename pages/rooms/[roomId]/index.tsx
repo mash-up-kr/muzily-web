@@ -14,7 +14,7 @@ import type { Music } from "~/types/musics";
 const TITLE = "매쇼~쉬는탐";
 const DESC = "곡을 추가하거나 좋아요를 해보세요!";
 
-const MUSIC_LIST = [
+const VIDEO_LIST = [
   {
     id: "DYrY1E4-9NI",
     artist: "BIG Naughty",
@@ -81,13 +81,13 @@ const RoomPage: NextPage<RoomPageProps> = (props) => {
 
   return (
     <Layout>
-      <StyledContainer>
-        <StyledHeader>
-          <StyledTitle>{TITLE}</StyledTitle>
-          <StyledDesc>{DESC}</StyledDesc>
-        </StyledHeader>
+      <S.Container>
+        <S.Header>
+          <S.Title>{TITLE}</S.Title>
+          <S.Desc>{DESC}</S.Desc>
+        </S.Header>
 
-        <StyledContentWrapper>
+        <S.ContentWrapper>
           <NowPlayingCard
             noPlaylist={!props.data.length}
             musicData={props.data[playingIndex]}
@@ -96,9 +96,9 @@ const RoomPage: NextPage<RoomPageProps> = (props) => {
             onClickPrev={handleClickPlayBack}
           />
           <PlaylistCard onClick={() => setOpenPlaylistScreen(true)} />
-        </StyledContentWrapper>
+        </S.ContentWrapper>
 
-        <StyledIconWrapper>
+        <S.IconWrapper>
           <IconButton
             iconName="star"
             iconText="곡 추가"
@@ -106,8 +106,8 @@ const RoomPage: NextPage<RoomPageProps> = (props) => {
           />
           <IconButton iconName="heart" iconText="이모지" />
           <IconButton iconName="union" iconText="무드 변경" />
-        </StyledIconWrapper>
-      </StyledContainer>
+        </S.IconWrapper>
+      </S.Container>
 
       {openAddSongScreen && (
         <AddSongScreen onClickBackButton={() => setOpenAddSongScreen(false)} />
@@ -116,16 +116,16 @@ const RoomPage: NextPage<RoomPageProps> = (props) => {
       {openPlaylistScreen && (
         <PlaylistScreen
           onClickBackButton={() => setOpenPlaylistScreen(false)}
-          videoList={MUSIC_LIST}
+          videoList={VIDEO_LIST}
           playingIndex={playingIndex}
           setPlayingIndex={setPlayingIndex}
         />
       )}
 
-      <YoutubeWrapper hidden>
+      <S.YoutubeWrapper hidden>
         <YouTube
           id="iframe"
-          videoId={MUSIC_LIST[playingIndex].id}
+          videoId={VIDEO_LIST[playingIndex].id}
           opts={{
             width: 300,
             height: 200,
@@ -139,75 +139,78 @@ const RoomPage: NextPage<RoomPageProps> = (props) => {
             event.target.playVideo();
           }}
           onEnd={() => {
-            if (playingIndex === MUSIC_LIST.length - 1) {
+            if (playingIndex === VIDEO_LIST.length - 1) {
               return alert("끝!!");
             }
 
             setPlayingIndex((prev) => prev + 1);
           }}
         />
-      </YoutubeWrapper>
+      </S.YoutubeWrapper>
     </Layout>
   );
 };
 
-const StyledContainer = styled.div`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 20px 0;
-`;
-
-const StyledHeader = styled.div``;
-
-const StyledTitle = styled.h1`
-  font-weight: 700;
-  font-size: 28px;
-  line-height: 155%;
-  margin: 10px 0 0;
-`;
-
-const StyledDesc = styled.h4`
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 145%;
-  letter-spacing: -0.02em;
-  color: #6b6b6b;
-  margin: 8px 0 0;
-  margin-bottom: 34px;
-`;
-
-const StyledIconWrapper = styled.div`
-  display: flex;
-  gap: 36px;
-  margin-top: 22px;
-  justify-content: center;
-`;
-
-const StyledContentWrapper = styled.div`
-  display: flex;
-  width: 100%;
-  gap: 20px;
-  overflow-x: auto;
-`;
-
-const YoutubeWrapper = styled.div<{ hidden: boolean }>`
-  visibility: ${(p) => p.hidden && "hidden"};
-`;
+const S = {
+  Container: styled.div`
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px 0;
+  `,
+  Header: styled.div``,
+  Title: styled.h1`
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 155%;
+    margin: 10px 0 0;
+  `,
+  Desc: styled.h4`
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 145%;
+    letter-spacing: -0.02em;
+    color: #6b6b6b;
+    margin: 8px 0 0;
+    margin-bottom: 34px;
+  `,
+  IconWrapper: styled.div`
+    display: flex;
+    gap: 36px;
+    margin-top: 22px;
+    justify-content: center;
+  `,
+  ContentWrapper: styled.div`
+    display: flex;
+    width: 100%;
+    gap: 20px;
+    overflow-x: auto;
+  `,
+  YoutubeWrapper: styled.div<{ hidden: boolean }>`
+    visibility: ${(p) => p.hidden && "hidden"};
+  `,
+};
 
 RoomPage.getInitialProps = async (ctx: NextPageContext) => {
-  const list = [...MUSIC_LIST];
-
+  const list = [...VIDEO_LIST];
   const data: RoomPageProps["data"] = await Promise.all(
     list.map(async (el) => {
-      const palette = await Vibrant.from(el.thumbnail).getPalette();
-      const colors = Object.values(palette).map((swatches) => swatches?.hex);
+      try {
+        const palette = await Vibrant.from(el.thumbnail).getPalette();
+        const colors = Object.values(palette).map(
+          (swatches) => swatches?.hex || ""
+        );
 
-      return {
-        ...el,
-        colors,
-      };
+        return {
+          ...el,
+          colors,
+        };
+      } catch (error) {
+        console.error(error);
+
+        return el;
+      }
     })
   );
 
