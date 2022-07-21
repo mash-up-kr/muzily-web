@@ -88,12 +88,10 @@ const StyledContainer = styled.div`
 const StyledTitle = styled.h3`
   display: flex;
   align-items: center;
-  margin: 0;
   font-size: 18px;
 `;
 
 const StyledSubTitle = styled.p`
-  margin: 0;
   margin-top: 17px;
   font-size: 16px;
   color: #8b95a1;
