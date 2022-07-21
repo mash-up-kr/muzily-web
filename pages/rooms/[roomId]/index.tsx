@@ -54,10 +54,10 @@ const VIDEO_LIST = [
 ];
 
 interface RoomPageProps {
-  data: Music[];
+  musicData: Music[];
 }
 
-const RoomPage: NextPage<RoomPageProps> = (props) => {
+const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
   const [openAddSongScreen, setOpenAddSongScreen] = useState(false);
   const [openPlaylistScreen, setOpenPlaylistScreen] = useState(false);
 
@@ -65,7 +65,7 @@ const RoomPage: NextPage<RoomPageProps> = (props) => {
   const [playingIndex, setPlayingIndex] = useState(0);
 
   const handleClickPlayNext = () => {
-    if (playingIndex === props.data.length - 1) {
+    if (playingIndex === musicData.length - 1) {
       return alert("마지막곡 입니다");
     }
 
@@ -89,8 +89,8 @@ const RoomPage: NextPage<RoomPageProps> = (props) => {
 
         <S.ContentWrapper>
           <NowPlayingCard
-            noPlaylist={!props.data.length}
-            musicData={props.data[playingIndex]}
+            noPlaylist={!musicData.length}
+            musicData={musicData[playingIndex]}
             player={player}
             onClickNext={handleClickPlayNext}
             onClickPrev={handleClickPlayBack}
@@ -194,7 +194,7 @@ const S = {
 
 RoomPage.getInitialProps = async (ctx: NextPageContext) => {
   const list = [...VIDEO_LIST];
-  const data: RoomPageProps["data"] = await Promise.all(
+  const musicData: Music[] = await Promise.all(
     list.map(async (el) => {
       try {
         const palette = await Vibrant.from(el.thumbnail).getPalette();
@@ -215,7 +215,7 @@ RoomPage.getInitialProps = async (ctx: NextPageContext) => {
   );
 
   return {
-    data,
+    musicData,
   };
 };
 
