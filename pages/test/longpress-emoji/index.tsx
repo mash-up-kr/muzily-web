@@ -1,27 +1,42 @@
 import { motion } from "framer-motion";
-import { LongPressCancelable } from "~/components/domains";
+import { LongPress } from "~/components/domains";
 
 const LongPressEmojiTestPage = () => {
   return (
-    <LongPressCancelable
+    <LongPress
+      threshold={10000}
       trigger={({ register, isProcessing, percentage }) => (
         <motion.button
-          {...register}
-          initial={{ scale: 1 }}
-          animate={isProcessing ? { scale: 1.9 } : { scale: 1 }}
+          {...register()}
+          initial={{ scale: 1, rotate: 0 }}
+          animate={
+            isProcessing
+              ? percentage >= 80
+                ? {
+                    scale: 2.2,
+                    rotate: [
+                      0, 5, 5, -5, -5, 5, 5, -5, -5, 5, 5, -5, -5, 5, -5, 5, -5,
+                      5, -5, 5, -5, 5, -5, 5, -5, 5, -5, 5, -5, 5, -5, 5, -5, 5,
+                      -5, 5, -5, 0,
+                    ],
+                  }
+                : { scale: 2.9 }
+              : { scale: 1 }
+          }
           transition={{
             duration: isProcessing ? 4 : 0.1,
             ease: isProcessing ? "easeInOut" : "easeOut",
           }}
+          style={{ padding: 16, userSelect: "none" }}
         >
-          emoji isAnimating: {isProcessing ? "true" : "false"} , percentage:
-          {percentage}%
+          <p>isAnimating: {isProcessing ? "true" : "false"}</p>
+          <p>percentage:{percentage}%</p>
         </motion.button>
       )}
-      onFire={async ({ percentage }) => {
+      onPressOut={({ percentage }) => {
         console.log(`emoji api call emoji power ${percentage}%`);
       }}
-      onTooLongPressed={async () => {
+      onTooLongPress={async () => {
         console.log("tooLongPressed emoji canceled");
       }}
     />
