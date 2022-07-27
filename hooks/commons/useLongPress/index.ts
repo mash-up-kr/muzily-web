@@ -170,7 +170,6 @@ export default function useLongPress<
       onMove?.(event, { context });
       if (cancelOnMovement && startPosition.current) {
         const currentPosition = getCurrentPosition(event);
-        /* istanbul ignore else */
         if (currentPosition) {
           const moveThreshold =
             cancelOnMovement === true ? 25 : cancelOnMovement;
