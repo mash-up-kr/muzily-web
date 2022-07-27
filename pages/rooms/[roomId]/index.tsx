@@ -24,10 +24,12 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
 
   const [player, setPlayer] = useState(null);
   const [playingIndex, setPlayingIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
 
+  // TODO(@Young-mason): debouncing 처리 필요
   const handleClickPlayNext = () => {
     if (playingIndex === musicData.length - 1) {
-      return alert("마지막곡 입니다");
+      return null;
     }
 
     setPlayingIndex((prev) => prev + 1);
@@ -35,7 +37,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
 
   const handleClickPlayBack = () => {
     if (playingIndex === 0) {
-      return alert("처음 곡입니다");
+      return null;
     }
     setPlayingIndex((prev) => prev - 1);
   };
@@ -55,8 +57,14 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
             player={player}
             onClickNext={handleClickPlayNext}
             onClickPrev={handleClickPlayBack}
+            isPlaying={isPlaying}
           />
-          <PlaylistCard onClick={() => setOpenPlaylistScreen(true)} />
+          <PlaylistCard
+            onClickMoreButton={() => setOpenPlaylistScreen(true)}
+            onClickNext={handleClickPlayNext}
+            onClickPrev={handleClickPlayBack}
+            playingIndex={playingIndex}
+          />
         </S.ContentWrapper>
 
         <S.IconWrapper>
@@ -95,6 +103,8 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
               controls: 1,
             },
           }}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
           onReady={(event) => {
             setPlayer(event.target);
             event.target.playVideo();
@@ -144,7 +154,9 @@ const S = {
   `,
   ContentWrapper: styled.div`
     display: flex;
+    align-items: center;
     width: 100%;
+    height: 100%;
     gap: 20px;
     overflow-x: auto;
   `,

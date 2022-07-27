@@ -10,6 +10,7 @@ interface NowPlayingCardProps {
   player?: any;
   onClickNext: () => void;
   onClickPrev: () => void;
+  isPlaying: boolean;
 }
 
 function NowPlayingCard({
@@ -18,6 +19,7 @@ function NowPlayingCard({
   player,
   onClickNext,
   onClickPrev,
+  isPlaying,
 }: NowPlayingCardProps) {
   // 재생 중인 노래 없는경우
   if (noPlaylist) {
@@ -39,16 +41,14 @@ function NowPlayingCard({
       </S.Container>
     );
   }
-  // 재생 중인 노래 있는경우
   const musicText = `${musicData.artist} - ${musicData.title}`;
 
   return (
     <S.Container>
       <S.Title>Now Playing</S.Title>
-      {/* <S.Content> */}
       <Thumbnail src={musicData.thumbnail} colors={musicData.colors} />
-      {/* </S.Content> */}
 
+      {/* TODO(@Young-mason): 컨트롤러는 방장에게만 보이도록 처리해야함 */}
       <S.Controller>
         <Image
           src="/images/play-back.svg"
@@ -57,13 +57,24 @@ function NowPlayingCard({
           height={20}
           onClick={onClickPrev}
         />
-        <Image
-          src="/images/pause-button.svg"
-          alt="play-back"
-          width={60}
-          height={60}
-          onClick={() => player.pauseVideo()}
-        />
+        {isPlaying ? (
+          <Image
+            src="/images/pause-button.svg"
+            alt="play-back"
+            width={60}
+            height={60}
+            onClick={() => player.pauseVideo()}
+          />
+        ) : (
+          <Image
+            // 임시
+            src="/images/play.svg"
+            alt="play"
+            width={60}
+            height={60}
+            onClick={() => player.playVideo()}
+          />
+        )}
         <Image
           src="/images/play-next.svg"
           alt="play-next"
