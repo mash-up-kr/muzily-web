@@ -7,8 +7,8 @@ import type {
 import axios from "axios";
 import { HTTP_METHOD } from "~/consts/api";
 
-const tokenKey = process.env.NEXT_PUBLIC_LOCAL_TOKEN_KEY as string;
 const handleRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
+  const tokenKey = process.env.NEXT_PUBLIC_LOCAL_TOKEN_KEY as string;
   const localStorageToken: string | null = JSON.parse(
     localStorage.getItem(tokenKey) ?? "null"
   );
