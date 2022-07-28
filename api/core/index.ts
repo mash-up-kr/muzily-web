@@ -7,20 +7,19 @@ import type {
 import axios from "axios";
 import { HTTP_METHOD } from "~/consts/api";
 
-const handleRequest = (config: AxiosRequestConfig) => {
-  if (typeof window !== "undefined") {
-    const tokenKey = process.env.NEXT_PUBLIC_LOCAL_TOKEN_KEY as string;
-    const TOKEN = localStorage.getItem(tokenKey);
+const tokenKey = process.env.NEXT_PUBLIC_LOCAL_TOKEN_KEY as string;
+const handleRequest = (config: AxiosRequestConfig): AxiosRequestConfig => {
+  const localStorageToken: string | null = JSON.parse(
+    localStorage.getItem(tokenKey) ?? "null"
+  );
 
-    if (TOKEN !== null) {
-      return {
-        ...config,
-        Authorization: `Bearer ${TOKEN}`,
-      };
-    } else {
-      return config;
-    }
-  }
+  return {
+    ...config,
+    headers: {
+      ...config.headers,
+      Authorization: `Bearer ${localStorageToken}`,
+    },
+  };
 };
 
 const axiosInstance: AxiosInstance = axios.create({
@@ -40,9 +39,6 @@ const createApiMethod =
   (config: AxiosRequestConfig): Promise<any> => {
     return _axiosInstance({
       ...handleRequest(config),
-      headers: {
-        ..._axiosInstance.defaults.headers.options,
-      },
       method,
     })
       .then((res) => handleResponse(res))
