@@ -11,7 +11,7 @@ interface Props {
 const KakaoLoginButton = ({
   restApiKey,
   redirectUri,
-  children = "카카오 로그인",
+  children = "",
   style,
 }: Props) => {
   const router = useRouter();
