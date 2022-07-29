@@ -3,17 +3,7 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { Layout, TopBar, TopBarIconButton } from "~/components/uis";
 import { withRouteGuard } from "~/hocs";
-import {
-  StyledTopBarRightItem,
-  StyledInviteContainer,
-  StyeldForm,
-  StyledRoomTextContainer,
-  StyledRoomInputText,
-  StyledSpacer,
-  StyledHeader,
-  StyledCreateRoomButton,
-  StyledDescripion,
-} from "./styled";
+import * as S from "./styled";
 
 const SignupPage: NextPage = withRouteGuard(
   { UNCONNECTED: true },
@@ -35,29 +25,31 @@ const SignupPage: NextPage = withRouteGuard(
         <TopBar
           leftIconButton={<TopBarIconButton iconName="star" />}
           rightIconButton={
-            <StyledTopBarRightItem>로그인</StyledTopBarRightItem>
+            <S.StyledTopBarRightItem>로그인</S.StyledTopBarRightItem>
           }
         />
-        <StyeldForm onSubmit={onSubmit}>
-          <StyledInviteContainer>
-            <StyledRoomTextContainer>
-              <StyledRoomInputText
+        <S.StyeldForm onSubmit={onSubmit}>
+          <S.StyledInviteContainer>
+            <S.StyledRoomTextContainer>
+              <S.StyledRoomInputText
                 type="text"
                 onChange={(e) => setRoomTitle(e.target.value)}
-              ></StyledRoomInputText>
-            </StyledRoomTextContainer>
-            <StyledSpacer></StyledSpacer>
-            <StyledHeader>
+              ></S.StyledRoomInputText>
+            </S.StyledRoomTextContainer>
+            <S.StyledSpacer></S.StyledSpacer>
+            <S.StyledHeader>
               함께 만드는
               <br />
               모두의 플레이리스트
-            </StyledHeader>
-            <StyledCreateRoomButton type="submit">
+            </S.StyledHeader>
+            <S.StyledCreateRoomButton type="submit">
               방 만들기
-            </StyledCreateRoomButton>
-            <StyledDescripion>지금 바로 3초만에 만들어보세요!</StyledDescripion>
-          </StyledInviteContainer>
-        </StyeldForm>
+            </S.StyledCreateRoomButton>
+            <S.StyledDescripion>
+              지금 바로 3초만에 만들어보세요!
+            </S.StyledDescripion>
+          </S.StyledInviteContainer>
+        </S.StyeldForm>
       </Layout>
     );
   }
