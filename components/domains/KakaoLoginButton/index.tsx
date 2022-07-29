@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import { useRouter } from "next/router";
+import { useTheme } from "@emotion/react";
 
 interface Props {
   restApiKey: string;
@@ -24,7 +25,7 @@ const KakaoLoginButton = ({
 
   const kakaoLoginButtonStyle = {
     ...style,
-    width: "335px",
+    width: "100%",
     height: "51px",
     background: "url('images/kakao_login_large_wide.png')",
     cursor: "pointer",
