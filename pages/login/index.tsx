@@ -1,10 +1,10 @@
 import React from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
+import styled from "@emotion/styled";
 import { KakaoLoginButton } from "~/components/domains";
 import { Layout, TopBar, TopBarIconButton } from "~/components/uis";
 import { withRouteGuard } from "~/hocs";
-import { StyledContainer, StyledHeader } from "./styled";
 
 const LoginPage: NextPage = withRouteGuard({ UNCONNECTED: true }, "/", () => {
   return (
@@ -17,11 +17,11 @@ const LoginPage: NextPage = withRouteGuard({ UNCONNECTED: true }, "/", () => {
 
       <Layout screenColor="linear-gradient(#000, 90%, #01356E)">
         <TopBar leftIconButton={<TopBarIconButton iconName="star" />} />
-        <StyledContainer>
-          <StyledHeader>
+        <S.StyledContainer>
+          <S.StyledHeader>
             방을 만드려면<br></br>
             로그인이 필요해요
-          </StyledHeader>
+          </S.StyledHeader>
           <KakaoLoginButton
             restApiKey={
               process.env.NEXT_PUBLIC_KAKAO_APP_KEY_REST_API_KEY as string
@@ -37,10 +37,26 @@ const LoginPage: NextPage = withRouteGuard({ UNCONNECTED: true }, "/", () => {
               border: "none",
             }}
           ></KakaoLoginButton>
-        </StyledContainer>
+        </S.StyledContainer>
       </Layout>
     </div>
   );
 });
+
+const S = {
+  StyledContainer: styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-top: 42px;
+    gap: 40px;
+  `,
+  StyledHeader: styled.div`
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 34.8px;
+    letter-spacing: -0.25px;
+    color: white;
+  `,
+};
 
 export default LoginPage;
