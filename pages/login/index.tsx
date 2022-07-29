@@ -29,13 +29,6 @@ const LoginPage: NextPage = withRouteGuard({ UNCONNECTED: true }, "/", () => {
             redirectUri={
               process.env.NEXT_PUBLIC_KAKAO_LOGIN_REDIRECT_URI as string
             }
-            style={{
-              width: "335px",
-              height: "51px",
-              background: "url('images/kakao_login_large_wide.png')",
-              cursor: "pointer",
-              border: "none",
-            }}
           ></KakaoLoginButton>
         </S.StyledContainer>
       </Layout>
