@@ -3,3 +3,8 @@ export interface Member {
   nickname: string;
   profileUrl: string;
 }
+
+export interface PutMemberReq {
+  nickname: string;
+  profileUrl: string;
+}

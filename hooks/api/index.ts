@@ -1,1 +1,2 @@
-export { default as useMember } from "./useMember";
+export { default as useMemberQuery } from "./useMemberQuery";
+export { default as usePutMemberMutation } from "./usePutMemberMutation";
