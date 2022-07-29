@@ -22,8 +22,21 @@ const KakaoLoginButton = ({
     );
   };
 
+  const kakaoLoginButtonStyle = {
+    ...style,
+    width: "335px",
+    height: "51px",
+    background: "url('images/kakao_login_large_wide.png')",
+    cursor: "pointer",
+    border: "none",
+  };
+
   return (
-    <button type="button" style={style} onClick={handleButtonClick}>
+    <button
+      type="button"
+      style={kakaoLoginButtonStyle}
+      onClick={handleButtonClick}
+    >
       {children}
     </button>
   );
