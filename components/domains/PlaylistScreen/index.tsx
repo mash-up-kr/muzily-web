@@ -1,20 +1,33 @@
 import React from "react";
 import styled from "@emotion/styled";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { TopBar, TopBarIconButton } from "~/components/uis";
+import type { Music } from "~/types/musics";
+import MusicItemCard from "./MusicItemCard";
 
 interface PlaylistScreenProps {
   onClickBackButton: () => void;
-  videoList: any[];
-  playingIndex: number;
-  setPlayingIndex: React.Dispatch<React.SetStateAction<number>>;
+  playList: Music[];
+  playingMusicId: string;
+  setPlayingMusicId: React.Dispatch<React.SetStateAction<string>>;
+  setPlayList: React.Dispatch<React.SetStateAction<Music[]>>;
 }
 
 function PlaylistScreen({
   onClickBackButton,
-  videoList,
-  playingIndex,
-  setPlayingIndex,
+  playList,
+  playingMusicId,
+  setPlayingMusicId,
+  setPlayList,
 }: PlaylistScreenProps) {
+  const moveCard = (from: number, to: number) => {
+    const arr = [...playList];
+    const item = arr.splice(from, 1);
+    const newArr = [...arr.slice(0, to), item[0], ...arr.slice(to)];
+    setPlayList(newArr);
+  };
+
   return (
     <StyledContainer>
       <TopBar
@@ -25,19 +38,20 @@ function PlaylistScreen({
         Playlist
       </TopBar>
 
-      <MusicList>
-        {videoList.map((el, i) => (
-          <MusicItem
-            key={el.id}
-            active={i === playingIndex}
-            onClick={() => setPlayingIndex(i)}
-          >
-            <Title>{el.title}</Title>
-            <Artist active={i === playingIndex}>{el.artist}</Artist>
-            {/* {i === playingIndex && "재생중"} */}
-          </MusicItem>
-        ))}
-      </MusicList>
+      <DndProvider backend={HTML5Backend}>
+        <MusicList>
+          {playList.map((el, i) => (
+            <MusicItemCard
+              item={el}
+              key={el.id}
+              active={el.id === playingMusicId}
+              index={i}
+              onClick={() => setPlayingMusicId(el.id)}
+              moveCard={moveCard}
+            />
+          ))}
+        </MusicList>
+      </DndProvider>
     </StyledContainer>
   );
 }
@@ -59,36 +73,6 @@ const MusicList = styled.div`
   flex-direction: column;
   gap: 16px;
   margin-top: 20px;
-`;
-
-const MusicItem = styled.div<{ active: boolean }>`
-  cursor: pointer;
-  padding: 16px 18px;
-  gap: 16px;
-  border-radius: 7px;
-  height: 70px;
-  /* display: flex; */
-  background-color: ${(p) => (p.active ? "#fff" : "#007aff")};
-  color: ${(p) => (p.active ? "#007aff" : "#fff")};
-`;
-
-const Title = styled.div`
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 155%;
-`;
-
-const Artist = styled.div<{ active: boolean }>`
-  font-weight: 400;
-  font-size: 12px;
-  line-height: 155%;
-
-  display: flex;
-  align-items: center;
-  letter-spacing: -0.420386px;
-
-  color: ${(p) =>
-    p.active ? "rgba(74, 74, 74, 0.74)" : "rgba(255, 255, 255, 0.54)"};
 `;
 
 export default PlaylistScreen;

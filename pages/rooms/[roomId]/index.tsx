@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import type { NextPage, NextPageContext } from "next";
 import styled from "@emotion/styled";
 import Vibrant from "node-vibrant";
@@ -22,24 +22,41 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
   const [openAddSongScreen, setOpenAddSongScreen] = useState(false);
   const [openPlaylistScreen, setOpenPlaylistScreen] = useState(false);
 
+  const [playList, setPlayList] = useState(musicData);
   const [player, setPlayer] = useState(null);
   const [playingIndex, setPlayingIndex] = useState(0);
+
+  const [playingMusicId, setPlayingMusicId] = useState(musicData[0].id);
+
   const [isPlaying, setIsPlaying] = useState(false);
+
+  const currentMusic = useMemo(
+    () => playList.find((item) => item.id === playingMusicId) || playList[0],
+    [playingMusicId, playList]
+  );
+
+  const getMusicIndex = (id: string) => {
+    const index = playList.findIndex((item) => item.id === id);
+
+    return index === -1 ? 0 : index;
+  };
 
   // TODO(@Young-mason): debouncing 처리 필요
   const handleClickPlayNext = () => {
-    if (playingIndex === musicData.length - 1) {
+    const playingIndex = getMusicIndex(playingMusicId);
+    if (playingIndex === playList.length - 1) {
       return null;
     }
 
-    setPlayingIndex((prev) => prev + 1);
+    setPlayingMusicId(playList[playingIndex + 1].id);
   };
 
   const handleClickPlayBack = () => {
+    const playingIndex = getMusicIndex(playingMusicId);
     if (playingIndex === 0) {
       return null;
     }
-    setPlayingIndex((prev) => prev - 1);
+    setPlayingMusicId(playList[playingIndex - 1].id);
   };
 
   return (
@@ -52,8 +69,8 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
 
         <S.ContentWrapper>
           <NowPlayingCard
-            noPlaylist={!musicData.length}
-            musicData={musicData[playingIndex]}
+            noPlaylist={!playList.length}
+            currentMusic={currentMusic}
             player={player}
             onClickNext={handleClickPlayNext}
             onClickPrev={handleClickPlayBack}
@@ -63,7 +80,9 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
             onClickMoreButton={() => setOpenPlaylistScreen(true)}
             onClickNext={handleClickPlayNext}
             onClickPrev={handleClickPlayBack}
-            playingIndex={playingIndex}
+            playList={playList}
+            currentMusic={currentMusic}
+            getMusicIndex={getMusicIndex}
           />
         </S.ContentWrapper>
 
@@ -84,17 +103,18 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
 
       {openPlaylistScreen && (
         <PlaylistScreen
+          setPlayList={setPlayList}
           onClickBackButton={() => setOpenPlaylistScreen(false)}
-          videoList={VIDEO_LIST}
-          playingIndex={playingIndex}
-          setPlayingIndex={setPlayingIndex}
+          playList={playList}
+          playingMusicId={playingMusicId}
+          setPlayingMusicId={setPlayingMusicId}
         />
       )}
 
       <S.YoutubeWrapper hidden>
         <YouTube
           id="iframe"
-          videoId={VIDEO_LIST[playingIndex].id}
+          videoId={currentMusic?.id}
           opts={{
             width: 300,
             height: 200,

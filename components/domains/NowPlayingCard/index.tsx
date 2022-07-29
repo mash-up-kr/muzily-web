@@ -6,7 +6,7 @@ import Thumbnail from "../Thumbnail";
 
 interface NowPlayingCardProps {
   noPlaylist?: boolean;
-  musicData: Music;
+  currentMusic: Music;
   player?: any;
   onClickNext: () => void;
   onClickPrev: () => void;
@@ -15,7 +15,7 @@ interface NowPlayingCardProps {
 
 function NowPlayingCard({
   noPlaylist = false,
-  musicData,
+  currentMusic,
   player,
   onClickNext,
   onClickPrev,
@@ -41,12 +41,12 @@ function NowPlayingCard({
       </S.Container>
     );
   }
-  const musicText = `${musicData.artist} - ${musicData.title}`;
+  const musicText = `${currentMusic.artist} - ${currentMusic.title}`;
 
   return (
     <S.Container>
       <S.Title>Now Playing</S.Title>
-      <Thumbnail src={musicData.thumbnail} colors={musicData.colors} />
+      <Thumbnail src={currentMusic.thumbnail} colors={currentMusic.colors} />
 
       {/* TODO(@Young-mason): 컨트롤러는 방장에게만 보이도록 처리해야함 */}
       <S.Controller>

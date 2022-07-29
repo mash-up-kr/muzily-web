@@ -1,12 +1,14 @@
 import React from "react";
 import styled from "@emotion/styled";
-import { VIDEO_LIST } from "~/assets/dummy";
+import type { Music } from "~/types/musics";
 
 interface PlaylistCardProps {
   onClickMoreButton: () => void;
-  playingIndex: number;
+  getMusicIndex: (id: string) => number;
+  currentMusic: Music;
   onClickNext: () => void;
   onClickPrev: () => void;
+  playList: Music[];
 }
 
 const NO_DATA_TEXT = [
@@ -16,11 +18,15 @@ const NO_DATA_TEXT = [
 
 function PlaylistCard({
   onClickMoreButton,
-  playingIndex,
+  currentMusic,
+  getMusicIndex,
   onClickNext,
   onClickPrev,
+  playList,
 }: PlaylistCardProps) {
-  const noData = !VIDEO_LIST || VIDEO_LIST.length === 0;
+  const noData = !playList || playList.length === 0;
+
+  const nextMusic = playList[getMusicIndex(currentMusic.id) + 1];
 
   return (
     <S.Container>
@@ -32,8 +38,8 @@ function PlaylistCard({
             <S.NoDataText>{NO_DATA_TEXT[0]}</S.NoDataText>
           ) : (
             <>
-              <div>{VIDEO_LIST[playingIndex].title}</div>
-              <S.Artist>{VIDEO_LIST[playingIndex].artist}</S.Artist>
+              <div>{currentMusic.title}</div>
+              <S.Artist>{currentMusic.artist}</S.Artist>
             </>
           )}
         </S.Content>
@@ -46,8 +52,8 @@ function PlaylistCard({
             <S.NoDataText>{NO_DATA_TEXT[1]}</S.NoDataText>
           ) : (
             <>
-              <div>{VIDEO_LIST[playingIndex + 1]?.title || "-"}</div>
-              <S.Artist>{VIDEO_LIST[playingIndex + 1]?.artist || "-"}</S.Artist>
+              <div>{nextMusic?.title || "-"}</div>
+              <S.Artist>{nextMusic?.artist || "-"}</S.Artist>
             </>
           )}
         </S.Content>
@@ -133,16 +139,4 @@ const S = {
   `,
 };
 
-const NoPlaylistText = styled.div`
-  text-align: center;
-  white-space: pre-wrap;
-`;
-
-const SubText = styled.div`
-  font-weight: 500;
-  font-size: 14px;
-  line-height: 17px;
-  letter-spacing: -0.04em;
-  color: rgba(255, 255, 255, 0.65);
-`;
 export default PlaylistCard;
