@@ -113,7 +113,7 @@ const S = {
     border-radius: 7px;
     /* display: flex; */
     color: ${(p) => (p.active ? "#007aff" : "#fff")};
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   `,
 
   Title: styled.div`
@@ -145,7 +145,7 @@ const S = {
     align-items: center;
     /* width: 100%;
     height: 100%; */
-    border-left: 0.7px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
   `,
 };
 

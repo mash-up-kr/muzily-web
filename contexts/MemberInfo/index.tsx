@@ -29,9 +29,9 @@ const MemberInfoProvider = ({ children }: Props) => {
     }
   }, [isError]);
 
-  if (isFetching || isLoading) {
-    return <div>Loading, Fetching</div>;
-  }
+  // if (isFetching || isLoading) {
+  //   return <div>Loading, Fetching</div>;
+  // }
 
   if (isSuccess) {
     return (

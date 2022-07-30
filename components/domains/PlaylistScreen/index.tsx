@@ -2,6 +2,7 @@ import React from "react";
 import styled from "@emotion/styled";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { TouchBackend } from "react-dnd-touch-backend";
 import { TopBar, TopBarIconButton } from "~/components/uis";
 import type { Music } from "~/types/musics";
 import MusicItemCard from "./MusicItemCard";
@@ -29,7 +30,7 @@ function PlaylistScreen({
   };
 
   return (
-    <StyledContainer>
+    <S.Container>
       <TopBar
         leftIconButton={
           <TopBarIconButton iconName="arrow-left" onClick={onClickBackButton} />
@@ -38,8 +39,13 @@ function PlaylistScreen({
         Playlist
       </TopBar>
 
-      <DndProvider backend={HTML5Backend}>
-        <MusicList>
+      <DndProvider
+        backend={TouchBackend}
+        options={{
+          enableMouseEvents: true,
+        }}
+      >
+        <S.MusicList>
           {playList.map((el, i) => (
             <MusicItemCard
               item={el}
@@ -50,29 +56,30 @@ function PlaylistScreen({
               moveCard={moveCard}
             />
           ))}
-        </MusicList>
+        </S.MusicList>
       </DndProvider>
-    </StyledContainer>
+    </S.Container>
   );
 }
 
-const StyledContainer = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+const S = {
+  Container: styled.div`
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 
-  background-color: #030303;
-  padding: 0 20px;
-  z-index: 10;
-`;
-
-const MusicList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 20px;
-`;
+    background-color: #030303;
+    padding: 0 20px;
+    z-index: 10;
+  `,
+  MusicList: styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 20px;
+  `,
+};
 
 export default PlaylistScreen;
