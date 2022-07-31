@@ -1,15 +1,12 @@
 import type { Method } from "axios";
 
-interface HttpMethod {
-  [key: string]: Method;
-}
-export const HTTP_METHOD: HttpMethod = {
+export const HTTP_METHOD = {
   GET: "get",
   POST: "post",
   PUT: "put",
   PATCH: "patch",
   DELETE: "delete",
-};
+} as const;
 
 export const HTTP_ERROR = {
   BAD_REQUEST: 400,
@@ -20,4 +17,4 @@ export const HTTP_ERROR = {
   INTERNAL_SERVER_ERROR: 500,
   NOT_IMPLEMENTED: 501,
   BAD_GATEWAY: 502,
-};
+} as const
