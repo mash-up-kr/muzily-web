@@ -3,10 +3,10 @@ import type { NextPage } from "next";
 import { useRecoilState } from "recoil";
 import { useMemberQuery, usePutMemberMutation } from "~/hooks/api";
 import { videoIdAtomState } from "~/store";
-import type { PutMemberReq } from "~/types/members";
+import type { Member } from "~/types/members";
 
 const TestReactQueryRecoilPage: NextPage = () => {
-  const [value, setValue] = useState<PutMemberReq>({
+  const [value, setValue] = useState<Pick<Member, "nickname" | "profileUrl">>({
     nickname: "",
     profileUrl: "",
   });
