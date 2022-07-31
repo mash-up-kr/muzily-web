@@ -37,9 +37,12 @@ const handleResponse = <T>(response: AxiosResponse<T>) => {
 
 const createApiMethod =
   (_axiosInstance: AxiosInstance, method: Method) =>
-  (config: AxiosRequestConfig): Promise<any> => {
+  (
+    url: AxiosRequestConfig["url"],
+    config?: Omit<AxiosRequestConfig, "url">
+  ): Promise<any> => {
     return _axiosInstance({
-      ...handleRequest(config),
+      ...handleRequest({ url, ...config }),
       method,
     })
       .then((res) => handleResponse(res))
