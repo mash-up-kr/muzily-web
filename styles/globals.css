@@ -1,5 +1,6 @@
 html,
 body,
+div,
 p,
 ol,
 ul,
@@ -23,7 +24,9 @@ h5,
 h6,
 button,
 input,
-select {
+select,
+span,
+strong {
   margin: 0;
   padding: 0;
   font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto,
