@@ -31,7 +31,7 @@ const commitizenConfig = {
     // used if allowCustomScopes is true
     customScope: "변경된 스코프는 무엇인가요?:",
     subject: "변화에 대한 짧고 간결한 설명을 적어주세요:\n",
-    body: '변화의 길고 자세한 설명을 적어주세요: (optional). "|"로 개행할 수 잇어요:\n',
+    body: '변화의 길고 자세한 설명을 적어주세요: (optional). "|"로 개행할 수 있어요:\n',
     breaking: "BREAKING CHANGES으로 추가할 내용이 있나요? (optional):\n",
     footer:
       "이 변화로 인해 ISSUES CLOSED으로 추가할 내용이 있나요? (optional). E.g.: #31, #34:\n",
