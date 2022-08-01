@@ -111,33 +111,35 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
         />
       )}
 
-      <S.YoutubeWrapper hidden>
-        <YouTube
-          id="iframe"
-          videoId={currentMusic?.id}
-          opts={{
-            width: 300,
-            height: 200,
-            playerVars: {
-              autoplay: 1,
-              controls: 1,
-            },
-          }}
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-          onReady={(event) => {
-            setPlayer(event.target);
-            event.target.playVideo();
-          }}
-          onEnd={() => {
-            if (playingIndex === VIDEO_LIST.length - 1) {
-              return alert("끝!!");
-            }
+      {currentMusic && (
+        <S.YoutubeWrapper hidden>
+          <YouTube
+            id="iframe"
+            videoId={currentMusic.id}
+            opts={{
+              width: 300,
+              height: 200,
+              playerVars: {
+                autoplay: 1,
+                controls: 1,
+              },
+            }}
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+            onReady={(event) => {
+              setPlayer(event.target);
+              event.target.playVideo();
+            }}
+            onEnd={() => {
+              if (playingIndex === VIDEO_LIST.length - 1) {
+                return alert("끝!!");
+              }
 
-            setPlayingIndex((prev) => prev + 1);
-          }}
-        />
-      </S.YoutubeWrapper>
+              setPlayingIndex((prev) => prev + 1);
+            }}
+          />
+        </S.YoutubeWrapper>
+      )}
     </Layout>
   );
 };
