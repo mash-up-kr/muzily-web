@@ -1,14 +1,17 @@
-import { createContext, useContext, useEffect } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 import { useRouter } from "next/router";
-import styled from "@emotion/styled";
 import { useAuthMember } from "~/features/auth/member";
 import type { Member } from "~/types/members";
 
 let count = 0;
 
 const MemberInfoContext = createContext({
-  memberInfo: {} as Member,
+  memberInfo: {} as Member | null,
   refetchMemberInfo: (() => {}) as ReturnType<typeof useAuthMember>["refetch"],
+  isLoading: false,
+  isFetching: false,
+  error: null as unknown | null, // TODO: unknown 정의하기
+  isError: false,
 });
 
 interface Props {
@@ -17,7 +20,7 @@ interface Props {
 
 const MemberInfoProvider = ({ children }: Props) => {
   const router = useRouter();
-  const { isLoading, isFetching, isError, isSuccess, data, refetch } =
+  const { isLoading, isFetching, error, isError, data, refetch } =
     useAuthMember();
 
   useEffect(() => {
@@ -29,23 +32,41 @@ const MemberInfoProvider = ({ children }: Props) => {
     }
   }, [isError]);
 
-  if (isFetching || isLoading) {
-    return <div>Loading, Fetching</div>;
+  return (
+    <MemberInfoContext.Provider
+      value={{
+        memberInfo: data || null,
+        refetchMemberInfo: refetch,
+        isLoading,
+        isFetching,
+        isError,
+        error,
+      }}
+    >
+      {children}
+    </MemberInfoContext.Provider>
+  );
+};
+
+interface MemberInfoOnlyProps {
+  fallback: React.ReactNode;
+  children: (props: {
+    memberInfo: Member;
+    refetchMemberInfo: ReturnType<
+      typeof useMemberInfoContext
+    >["refetchMemberInfo"];
+  }) => React.ReactElement;
+}
+
+const MemberInfoOnly = ({ fallback, children }: MemberInfoOnlyProps) => {
+  const { isLoading, memberInfo, refetchMemberInfo } = useMemberInfoContext();
+
+  if (isLoading) {
+    return <>{fallback}</>;
   }
 
-  if (isSuccess) {
-    return (
-      <MemberInfoContext.Provider
-        value={{ memberInfo: data, refetchMemberInfo: refetch }}
-      >
-        <S.MemberDataTempContainer>
-          <div>accountConnectType: {data.accountConnectType}</div>
-          <div>nickname: {data.nickname}</div>
-          <div>profileUrl: {data.profileUrl}</div>
-        </S.MemberDataTempContainer>
-        {children}
-      </MemberInfoContext.Provider>
-    );
+  if (memberInfo) {
+    return children({ memberInfo, refetchMemberInfo });
   }
 
   return null;
@@ -53,13 +74,10 @@ const MemberInfoProvider = ({ children }: Props) => {
 
 const useMemberInfoContext = () => useContext(MemberInfoContext);
 
-export default {
+const MemberInfo = {
   Provider: MemberInfoProvider,
   use: useMemberInfoContext,
+  Only: MemberInfoOnly,
 };
 
-const S = {
-  MemberDataTempContainer: styled.div`
-    background-color: #ffd500;
-  `,
-};
+export default MemberInfo;
