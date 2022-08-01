@@ -46,7 +46,7 @@
     "@types/sockjs-client": "^1.5.1",
     "@typescript-eslint/eslint-plugin": "^5.27.0",
     "@typescript-eslint/parser": "^5.27.0",
-    "cz-customizable": "^6.3.0",
+    "cz-customizable": "6.9.0",
     "eslint": "8.16.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
