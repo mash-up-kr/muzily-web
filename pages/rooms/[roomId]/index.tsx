@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import type { NextPage, NextPageContext } from "next";
 import styled from "@emotion/styled";
 import Vibrant from "node-vibrant";
 import YouTube from "react-youtube";
+import { VIDEO_LIST } from "~/assets/dummy";
 import { NowPlayingCard } from "~/components/domains";
 import AddSongScreen from "~/components/domains/AddSongScreen";
 import PlaylistCard from "~/components/domains/PlaylistCard";
@@ -13,46 +14,6 @@ import type { Music } from "~/types/musics";
 
 const TITLE = "매쇼~쉬는탐";
 const DESC = "곡을 추가하거나 좋아요를 해보세요!";
-
-const VIDEO_LIST = [
-  {
-    id: "DYrY1E4-9NI",
-    artist: "BIG Naughty",
-    title: "Beyond Love (Feat. 10CM)",
-    thumbnail: "https://i.ytimg.com/vi/DYrY1E4-9NI/hqdefault.jpg",
-  },
-  {
-    id: "f6YDKF0LVWw",
-    artist: "NAYEON",
-    title: "POP!",
-    thumbnail: "https://i.ytimg.com/vi/f6YDKF0LVWw/hqdefault.jpg",
-  },
-  {
-    id: "l-jZOXa7gQY",
-    artist: "IVE",
-    title: "LOVE DIVE",
-    thumbnail: "https://i.ytimg.com/vi/l-jZOXa7gQY/hqdefault.jpg",
-  },
-  {
-    id: "D1PvIWdJ8xo",
-    artist: "아이유",
-    title: "Blueming",
-    thumbnail: "https://i.ytimg.com/vi/D1PvIWdJ8xo/hqdefault.jpg",
-  },
-  {
-    id: "d9IxdwEFk1c",
-    artist: "아이유",
-    title: "Palette",
-    thumbnail: "https://i.ytimg.com/vi/d9IxdwEFk1c/hqdefault.jpg",
-  },
-  {
-    id: "Jh4QFaPmdss",
-    artist: "여자아이들",
-    title: "Tomboy",
-    thumbnail: "https://i.ytimg.com/vi/Jh4QFaPmdss/hqdefault.jpg",
-  },
-];
-
 interface RoomPageProps {
   musicData: Music[];
 }
@@ -61,22 +22,41 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
   const [openAddSongScreen, setOpenAddSongScreen] = useState(false);
   const [openPlaylistScreen, setOpenPlaylistScreen] = useState(false);
 
+  const [playList, setPlayList] = useState(musicData);
   const [player, setPlayer] = useState(null);
   const [playingIndex, setPlayingIndex] = useState(0);
 
+  const [playingMusicId, setPlayingMusicId] = useState(musicData[0].id);
+
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const currentMusic = useMemo(
+    () => playList.find((item) => item.id === playingMusicId) || playList[0],
+    [playingMusicId, playList]
+  );
+
+  const getMusicIndex = (id: string) => {
+    const index = playList.findIndex((item) => item.id === id);
+
+    return index === -1 ? 0 : index;
+  };
+
+  // TODO(@Young-mason): debouncing 처리 필요
   const handleClickPlayNext = () => {
-    if (playingIndex === musicData.length - 1) {
-      return alert("마지막곡 입니다");
+    const playingIndex = getMusicIndex(playingMusicId);
+    if (playingIndex === playList.length - 1) {
+      return null;
     }
 
-    setPlayingIndex((prev) => prev + 1);
+    setPlayingMusicId(playList[playingIndex + 1].id);
   };
 
   const handleClickPlayBack = () => {
+    const playingIndex = getMusicIndex(playingMusicId);
     if (playingIndex === 0) {
-      return alert("처음 곡입니다");
+      return null;
     }
-    setPlayingIndex((prev) => prev - 1);
+    setPlayingMusicId(playList[playingIndex - 1].id);
   };
 
   return (
@@ -89,13 +69,21 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
 
         <S.ContentWrapper>
           <NowPlayingCard
-            noPlaylist={!musicData.length}
-            musicData={musicData[playingIndex]}
+            noPlaylist={!playList.length}
+            currentMusic={currentMusic}
             player={player}
             onClickNext={handleClickPlayNext}
             onClickPrev={handleClickPlayBack}
+            isPlaying={isPlaying}
           />
-          <PlaylistCard onClick={() => setOpenPlaylistScreen(true)} />
+          <PlaylistCard
+            onClickMoreButton={() => setOpenPlaylistScreen(true)}
+            onClickNext={handleClickPlayNext}
+            onClickPrev={handleClickPlayBack}
+            playList={playList}
+            currentMusic={currentMusic}
+            getMusicIndex={getMusicIndex}
+          />
         </S.ContentWrapper>
 
         <S.IconWrapper>
@@ -115,38 +103,43 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
 
       {openPlaylistScreen && (
         <PlaylistScreen
+          setPlayList={setPlayList}
           onClickBackButton={() => setOpenPlaylistScreen(false)}
-          videoList={VIDEO_LIST}
-          playingIndex={playingIndex}
-          setPlayingIndex={setPlayingIndex}
+          playList={playList}
+          playingMusicId={playingMusicId}
+          setPlayingMusicId={setPlayingMusicId}
         />
       )}
 
-      <S.YoutubeWrapper hidden>
-        <YouTube
-          id="iframe"
-          videoId={VIDEO_LIST[playingIndex].id}
-          opts={{
-            width: 300,
-            height: 200,
-            playerVars: {
-              autoplay: 1,
-              controls: 1,
-            },
-          }}
-          onReady={(event) => {
-            setPlayer(event.target);
-            event.target.playVideo();
-          }}
-          onEnd={() => {
-            if (playingIndex === VIDEO_LIST.length - 1) {
-              return alert("끝!!");
-            }
+      {currentMusic && (
+        <S.YoutubeWrapper hidden>
+          <YouTube
+            id="iframe"
+            videoId={currentMusic.id}
+            opts={{
+              width: 300,
+              height: 200,
+              playerVars: {
+                autoplay: 1,
+                controls: 1,
+              },
+            }}
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
+            onReady={(event) => {
+              setPlayer(event.target);
+              event.target.playVideo();
+            }}
+            onEnd={() => {
+              if (playingIndex === VIDEO_LIST.length - 1) {
+                return alert("끝!!");
+              }
 
-            setPlayingIndex((prev) => prev + 1);
-          }}
-        />
-      </S.YoutubeWrapper>
+              setPlayingIndex((prev) => prev + 1);
+            }}
+          />
+        </S.YoutubeWrapper>
+      )}
     </Layout>
   );
 };
@@ -183,7 +176,9 @@ const S = {
   `,
   ContentWrapper: styled.div`
     display: flex;
+    align-items: center;
     width: 100%;
+    height: 100%;
     gap: 20px;
     overflow-x: auto;
   `,
