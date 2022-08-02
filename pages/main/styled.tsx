@@ -87,7 +87,6 @@ export const Descripion = styled.span`
   font-size: 14px;
   line-height: 22.4px;
   color: #d9d9d9;
-  font-family: "Pretendard";
   font-style: normal;
   font-weight: 500;
 `;
