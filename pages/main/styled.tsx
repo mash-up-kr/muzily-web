@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const StyledTopBarRightItem = styled.div`
+export const TopBarRightItem = styled.div`
   color: #007aff;
   font-weight: 700;
   font-size: 17px;
@@ -11,7 +11,7 @@ export const StyledTopBarRightItem = styled.div`
   align-items: center;
 `;
 
-export const StyledInviteContainer = styled.div`
+export const InviteContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -20,7 +20,7 @@ export const StyledInviteContainer = styled.div`
   gap: 6px;
 `;
 
-export const StyeldForm = styled.form`
+export const Form = styled.form`
   width: 100%;
   max-width: 100vw;
   min-height: 100vh;
@@ -35,7 +35,7 @@ export const StyeldForm = styled.form`
   padding-bottom: env(safe-area-inset-bottom);
 `;
 
-export const StyledRoomTextContainer = styled.div`
+export const RoomTextContainer = styled.div`
   width: 100%;
   height: 45px;
   padding: 4px 8px;
@@ -43,7 +43,7 @@ export const StyledRoomTextContainer = styled.div`
   border-radius: 7px;
 `;
 
-export const StyledRoomInputText = styled.input`
+export const RoomInputText = styled.input`
   width: 100%;
   height: 100%;
   background-color: #333;
@@ -52,12 +52,12 @@ export const StyledRoomInputText = styled.input`
   font-size: 26px;
 `;
 
-export const StyledSpacer = styled.div`
+export const Spacer = styled.div`
   width: 100%;
   height: 2px;
 `;
 
-export const StyledHeader = styled.div`
+export const Header = styled.div`
   font: "Apple SD Gothic Neo";
   font-weight: 700;
   font-size: 26px;
@@ -66,7 +66,7 @@ export const StyledHeader = styled.div`
   line-height: 43.2px;
 `;
 
-export const StyledCreateRoomButton = styled.button`
+export const CreateRoomButton = styled.button`
   margin-top: 58px;
   width: 149px;
   height: 51px;
@@ -82,7 +82,7 @@ export const StyledCreateRoomButton = styled.button`
   cursor: pointer;
 `;
 
-export const StyledDescripion = styled.span`
+export const Descripion = styled.span`
   margin-top: 18px;
   font-size: 14px;
   line-height: 22.4px;

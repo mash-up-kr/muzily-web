@@ -24,32 +24,26 @@ const SignupPage: NextPage = withRouteGuard(
       <Layout screenColor="black">
         <TopBar
           leftIconButton={<TopBarIconButton iconName="star" />}
-          rightIconButton={
-            <S.StyledTopBarRightItem>로그인</S.StyledTopBarRightItem>
-          }
+          rightIconButton={<S.TopBarRightItem>로그인</S.TopBarRightItem>}
         />
-        <S.StyeldForm onSubmit={onSubmit}>
-          <S.StyledInviteContainer>
-            <S.StyledRoomTextContainer>
-              <S.StyledRoomInputText
+        <S.Form onSubmit={onSubmit}>
+          <S.InviteContainer>
+            <S.RoomTextContainer>
+              <S.RoomInputText
                 type="text"
                 onChange={(e) => setRoomTitle(e.target.value)}
-              ></S.StyledRoomInputText>
-            </S.StyledRoomTextContainer>
-            <S.StyledSpacer></S.StyledSpacer>
-            <S.StyledHeader>
+              ></S.RoomInputText>
+            </S.RoomTextContainer>
+            <S.Spacer></S.Spacer>
+            <S.Header>
               함께 만드는
               <br />
               모두의 플레이리스트
-            </S.StyledHeader>
-            <S.StyledCreateRoomButton type="submit">
-              방 만들기
-            </S.StyledCreateRoomButton>
-            <S.StyledDescripion>
-              지금 바로 3초만에 만들어보세요!
-            </S.StyledDescripion>
-          </S.StyledInviteContainer>
-        </S.StyeldForm>
+            </S.Header>
+            <S.CreateRoomButton type="submit">방 만들기</S.CreateRoomButton>
+            <S.Descripion>지금 바로 3초만에 만들어보세요!</S.Descripion>
+          </S.InviteContainer>
+        </S.Form>
       </Layout>
     );
   }
