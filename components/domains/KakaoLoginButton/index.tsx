@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import { useRouter } from "next/router";
+import { useTheme } from "@emotion/react";
 
 interface Props {
   restApiKey: string;
@@ -11,7 +12,7 @@ interface Props {
 const KakaoLoginButton = ({
   restApiKey,
   redirectUri,
-  children = "카카오 로그인",
+  children = "",
   style,
 }: Props) => {
   const router = useRouter();
@@ -22,8 +23,21 @@ const KakaoLoginButton = ({
     );
   };
 
+  const kakaoLoginButtonStyle = {
+    ...style,
+    width: "100%",
+    height: "51px",
+    background: "url('images/kakao_login_large_wide.png')",
+    cursor: "pointer",
+    border: "none",
+  };
+
   return (
-    <button type="button" style={style} onClick={handleButtonClick}>
+    <button
+      type="button"
+      style={kakaoLoginButtonStyle}
+      onClick={handleButtonClick}
+    >
       {children}
     </button>
   );
