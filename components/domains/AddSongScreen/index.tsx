@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import axios from "axios";
 import YouTube from "react-youtube";
-import { VIDEO_LIST } from "~/assets/dummy";
+import { ADDING_LIST, VIDEO_LIST } from "~/assets/dummy";
 import {
   BottomButton,
   Spacer,
@@ -46,11 +46,33 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
   }, [youtubeLink]);
 
   const handleSubmit = async () => {
-    const res = await axios.get(
-      `${defaultEndPoint}/search/v1/youtube/video?videoId=${youtubeId}`
-    );
+    try {
+      const res = await axios.get(
+        `${defaultEndPoint}/search/v1/youtube/video?videoId=${youtubeId}`
+      );
 
-    console.log(res);
+      const testRes = await axios.get("/api/thumbnail", {
+        params: {
+          url: res.data.snippet.thumbnails.high.url,
+        },
+      });
+
+      const color = testRes.data.colors[0];
+
+      const socketData = {
+        videoId: res.data.id,
+        title: res.data.snippet.title,
+        duration: res.data.contentDetails.duration,
+        thumbnail: res.data.snippet.thumbnails.high.url,
+        channelName: "",
+        color,
+      };
+
+      // TODO(@Young-mason): 웹소켓 요청보내기
+      console.log(socketData);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -89,7 +111,11 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
               setIsError(true);
             }}
             onReady={(e) => {
-              console.log(e.target);
+              const data = e.target.getVideoData();
+              console.log(
+                "🚀 ~ file: index.tsx ~ line 124 ~ AddSongScreen ~ data",
+                data
+              );
               const videoId = e.target.getVideoData().video_id;
               if (videoId) {
                 setIsValid(true);
@@ -101,10 +127,10 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
 
       <S.ProposedMusicListCard>
         <S.CardHeader>
-          <strong>24건</strong>의 신청된 노래가 있어요
+          <strong>{ADDING_LIST.length}건</strong>의 신청된 노래가 있어요
         </S.CardHeader>
         <S.CardContent>
-          {VIDEO_LIST.map((item) => (
+          {ADDING_LIST.map((item) => (
             <S.CardItem key={item.id}>
               <Spacer type="vertical">
                 <S.MusicTitle>{item.title}</S.MusicTitle>

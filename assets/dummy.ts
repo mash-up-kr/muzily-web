@@ -36,3 +36,18 @@ export const VIDEO_LIST = [
     thumbnail: "https://i.ytimg.com/vi/Jh4QFaPmdss/hqdefault.jpg",
   },
 ];
+
+export const ADDING_LIST = [
+  {
+    id: "7MZck5JPYNU",
+    artist: "BIBI",
+    title: "Fedexx Girl (feat. CHANGMO) (Fedexx Girl (feat. 창모))",
+    thumbnail: "https://i.ytimg.com/vi/7MZck5JPYNU/hqdefault.jpg",
+  },
+  {
+    id: "fbXSkSxj2VI",
+    artist: "Paul Blanco - Topic",
+    title: "Summer (Feat. BE′O)",
+    thumbnail: "https://i.ytimg.com/vi/fbXSkSxj2VI/hqdefault.jpg",
+  },
+];
