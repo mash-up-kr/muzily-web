@@ -6,10 +6,21 @@ import { useAuthRedirected } from "~/features/auth/redirected";
 
 const LoginRedirectedPage: NextPage = () => {
   const router = useRouter();
-  const { memberInfo } = MemberInfo.use();
 
-  if (router.query.code && memberInfo.accountConnectType === "UNCONNECTED") {
-    return <GetServiceToken />;
+  if (router.query.code) {
+    return (
+      <MemberInfo.Only fallback={"loading"}>
+        {({ memberInfo }) => (
+          <>
+            {memberInfo.accountConnectType === "UNCONNECTED" ? (
+              <GetServiceToken />
+            ) : (
+              "memberInfo.accountConnectType가 UNCONNECTED가 아닙니다."
+            )}
+          </>
+        )}
+      </MemberInfo.Only>
+    );
   }
 
   return <div>router.query.code를 받아오는 중입니다.</div>;
