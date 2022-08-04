@@ -1,17 +1,18 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { TopBar, TopBarIconButton } from "~/components/uis";
+import { useModal } from "~/components/uis/Modal";
 import { useRoomStore } from "~/store";
 import MusicItemCard from "./MusicItemCard";
 
-function PlaylistScreen() {
+function PlaylistModal() {
   const {
     state: { playList, playingMusicId },
     actions,
   } = useRoomStore();
+  const { close } = useModal();
 
   const moveCard = (from: number, to: number) => {
     const arr = [...playList];
@@ -24,10 +25,7 @@ function PlaylistScreen() {
     <S.Container>
       <TopBar
         leftIconButton={
-          <TopBarIconButton
-            iconName="arrow-left"
-            onClick={() => actions.setOpenPlaylistScreen(false)}
-          />
+          <TopBarIconButton iconName="arrow-left" onClick={close} />
         }
       >
         Playlist
@@ -76,4 +74,4 @@ const S = {
   `,
 };
 
-export default PlaylistScreen;
+export default PlaylistModal;

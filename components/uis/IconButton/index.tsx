@@ -1,36 +1,32 @@
 import React from "react";
 import Image from "next/image";
 import styled from "@emotion/styled";
+import { motion } from "framer-motion";
 
-interface IconButtonProps {
+interface Props extends React.ComponentProps<typeof motion.div> {
   type?: "round";
-  iconName: string; // 파일명에서 .svg
-  iconText?: string;
+  iconName: string; // 파일명에서 .svg를 제거한 파일명
   onClick?: () => void;
 }
 
-function IconButton({
-  type = "round",
-  iconName,
-  iconText,
-  onClick,
-}: IconButtonProps) {
+function IconButton({ type = "round", iconName, onClick, ...props }: Props) {
+  const extension = ".svg";
+
   return (
-    <StyledContainer>
-      <StyledIconWrapper onClick={onClick}>
+    <StyledContainer {...props} onClick={onClick}>
+      <StyledIconWrapper style={{ pointerEvents: "none" }}>
         <Image
-          src={`/images/${iconName}.svg`}
+          src={`/images/${iconName}${extension}`}
           alt="icon"
           width={20}
           height={20}
         />
       </StyledIconWrapper>
-      {iconText && <StyledIconText>{iconText}</StyledIconText>}
     </StyledContainer>
   );
 }
 
-const StyledContainer = styled.div`
+const StyledContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -48,16 +44,6 @@ const StyledIconWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const StyledIconText = styled.span`
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 155%;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  letter-spacing: -0.498081px;
 `;
 
 export default IconButton;

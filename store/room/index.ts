@@ -6,8 +6,6 @@ import type { Music } from "~/types/musics";
 
 interface RoomState {
   playList: Music[];
-  openAddSongScreen: boolean;
-  openPlaylistScreen: boolean;
   playingMusicId: string;
   isPlaying: boolean;
 }
@@ -21,10 +19,6 @@ const roomAtomState = atom<RoomState>({
     // Playlist
     playList: [],
     playingMusicId: "",
-
-    // UI
-    openAddSongScreen: false,
-    openPlaylistScreen: false,
   },
 });
 
@@ -51,16 +45,6 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
       update((draft) => {
         draft.playList = musicData;
         draft.playingMusicId = musicData[0].id;
-      });
-    },
-    setOpenAddSongScreen(isOpen: boolean) {
-      update((draft) => {
-        draft.openAddSongScreen = isOpen;
-      });
-    },
-    setOpenPlaylistScreen(isOpen: boolean) {
-      update((draft) => {
-        draft.openPlaylistScreen = isOpen;
       });
     },
 

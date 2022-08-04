@@ -27,7 +27,7 @@ const commitizenConfig = {
   allowBreakingChanges: ["feat", "fix", "remove"],
   messages: {
     type: "커밋메시지의 타입을 설정해주세요:",
-    scope: "\n변경된 스코프는 무엇인가요? (optional):",
+    scope: "\n변경의 스코프는 무엇인가요? (optional):",
     // used if allowCustomScopes is true
     customScope: "변경된 스코프는 무엇인가요?:",
     subject: "변화에 대한 짧고 간결한 설명을 적어주세요:\n",
