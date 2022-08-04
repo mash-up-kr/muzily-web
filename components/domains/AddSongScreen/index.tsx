@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import axios from "axios";
 import YouTube from "react-youtube";
-import { ADDING_LIST, VIDEO_LIST } from "~/assets/dummy";
+import { ADDING_LIST } from "~/assets/dummy";
 import {
   BottomButton,
   Spacer,
   TopBar,
   TopBarIconButton,
 } from "~/components/uis";
+import { useRoomStore } from "~/store";
 
 const defaultEndPoint = process.env
   .NEXT_PUBLIC_SERVER_DEFAULT_END_POINT as string;
@@ -28,6 +29,11 @@ interface AddSongScreenProps {
   */
 
 function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
+  const {
+    state: { playList },
+    actions,
+  } = useRoomStore();
+
   const [youtubeLink, setYoutubeLink] = useState("");
 
   const [youtubeId, setYoutubeId] = useState("");

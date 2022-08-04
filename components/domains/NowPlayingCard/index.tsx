@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import styled from "@emotion/styled";
+import { useRoomStore } from "~/store";
 import type { Music } from "~/types/musics";
 import Thumbnail from "../Thumbnail";
 
@@ -8,19 +9,18 @@ interface NowPlayingCardProps {
   noPlaylist?: boolean;
   currentMusic: Music;
   player?: any;
-  onClickNext: () => void;
-  onClickPrev: () => void;
-  isPlaying: boolean;
 }
 
 function NowPlayingCard({
   noPlaylist = false,
   currentMusic,
   player,
-  onClickNext,
-  onClickPrev,
-  isPlaying,
 }: NowPlayingCardProps) {
+  const {
+    state: { isPlaying },
+    actions,
+  } = useRoomStore();
+
   // 재생 중인 노래 없는경우
   if (noPlaylist) {
     return (
@@ -55,7 +55,7 @@ function NowPlayingCard({
           alt="play-back"
           width={20}
           height={20}
-          onClick={onClickPrev}
+          onClick={actions.playPrevMusic}
         />
         {isPlaying ? (
           <Image
@@ -80,7 +80,7 @@ function NowPlayingCard({
           alt="play-next"
           width={20}
           height={20}
-          onClick={onClickNext}
+          onClick={actions.playNextMusic}
         />
       </S.Controller>
 

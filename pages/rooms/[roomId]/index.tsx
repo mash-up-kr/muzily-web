@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import type { NextPage, NextPageContext } from "next";
 import styled from "@emotion/styled";
 import Vibrant from "node-vibrant";
@@ -10,6 +10,7 @@ import PlaylistCard from "~/components/domains/PlaylistCard";
 import PlaylistScreen from "~/components/domains/PlaylistScreen";
 import { Layout } from "~/components/uis";
 import IconButton from "~/components/uis/IconButton";
+import { useRoomStore } from "~/store";
 import type { Music } from "~/types/musics";
 
 const TITLE = "매쇼~쉬는탐";
@@ -19,45 +20,21 @@ interface RoomPageProps {
 }
 
 const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
-  const [openAddSongScreen, setOpenAddSongScreen] = useState(false);
-  const [openPlaylistScreen, setOpenPlaylistScreen] = useState(false);
+  const {
+    state: { playingMusicId, playList, openAddSongScreen, openPlaylistScreen },
+    actions,
+  } = useRoomStore();
 
-  const [playList, setPlayList] = useState(musicData);
   const [player, setPlayer] = useState(null);
-  const [playingIndex, setPlayingIndex] = useState(0);
-
-  const [playingMusicId, setPlayingMusicId] = useState(musicData[0].id);
-
-  const [isPlaying, setIsPlaying] = useState(false);
 
   const currentMusic = useMemo(
     () => playList.find((item) => item.id === playingMusicId) || playList[0],
     [playingMusicId, playList]
   );
 
-  const getMusicIndex = (id: string) => {
-    const index = playList.findIndex((item) => item.id === id);
-
-    return index === -1 ? 0 : index;
-  };
-
-  // TODO(@Young-mason): debouncing 처리 필요
-  const handleClickPlayNext = () => {
-    const playingIndex = getMusicIndex(playingMusicId);
-    if (playingIndex === playList.length - 1) {
-      return null;
-    }
-
-    setPlayingMusicId(playList[playingIndex + 1].id);
-  };
-
-  const handleClickPlayBack = () => {
-    const playingIndex = getMusicIndex(playingMusicId);
-    if (playingIndex === 0) {
-      return null;
-    }
-    setPlayingMusicId(playList[playingIndex - 1].id);
-  };
+  useEffect(() => {
+    actions.init(musicData);
+  }, []);
 
   return (
     <Layout>
@@ -72,25 +49,15 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
             noPlaylist={!playList.length}
             currentMusic={currentMusic}
             player={player}
-            onClickNext={handleClickPlayNext}
-            onClickPrev={handleClickPlayBack}
-            isPlaying={isPlaying}
           />
-          <PlaylistCard
-            onClickMoreButton={() => setOpenPlaylistScreen(true)}
-            onClickNext={handleClickPlayNext}
-            onClickPrev={handleClickPlayBack}
-            playList={playList}
-            currentMusic={currentMusic}
-            getMusicIndex={getMusicIndex}
-          />
+          <PlaylistCard currentMusic={currentMusic} />
         </S.ContentWrapper>
 
         <S.IconWrapper>
           <IconButton
             iconName="star"
             iconText="곡 추가"
-            onClick={() => setOpenAddSongScreen((prev) => !prev)}
+            onClick={() => actions.setOpenAddSongScreen(!openAddSongScreen)}
           />
           <IconButton iconName="heart" iconText="이모지" />
           <IconButton iconName="union" iconText="무드 변경" />
@@ -98,18 +65,12 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
       </S.Container>
 
       {openAddSongScreen && (
-        <AddSongScreen onClickBackButton={() => setOpenAddSongScreen(false)} />
-      )}
-
-      {openPlaylistScreen && (
-        <PlaylistScreen
-          setPlayList={setPlayList}
-          onClickBackButton={() => setOpenPlaylistScreen(false)}
-          playList={playList}
-          playingMusicId={playingMusicId}
-          setPlayingMusicId={setPlayingMusicId}
+        <AddSongScreen
+          onClickBackButton={() => actions.setOpenAddSongScreen(false)}
         />
       )}
+
+      {openPlaylistScreen && <PlaylistScreen />}
 
       {currentMusic && (
         <S.YoutubeWrapper hidden>
@@ -124,18 +85,18 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
                 controls: 1,
               },
             }}
-            onPlay={() => setIsPlaying(true)}
-            onPause={() => setIsPlaying(false)}
+            onPlay={() => actions.setIsPlaying(true)}
+            onPause={() => actions.setIsPlaying(false)}
             onReady={(event) => {
               setPlayer(event.target);
               event.target.playVideo();
             }}
             onEnd={() => {
-              if (playingIndex === VIDEO_LIST.length - 1) {
+              if (playingMusicId === playList[playList.length - 1].id) {
                 return alert("끝!!");
               }
 
-              setPlayingIndex((prev) => prev + 1);
+              actions.playNextMusic();
             }}
           />
         </S.YoutubeWrapper>
