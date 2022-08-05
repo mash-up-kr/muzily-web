@@ -14,15 +14,15 @@ import {
 const MOOD_EXAMPLE = [
   {
     text: "# 조용~ 집중 빡 공부 모드",
-    iconName: "book",
+    iconName: "book-3d",
   },
   {
     text: "# 쉣댓 부레 엉덩이~! 흔들어버려",
-    iconName: "mirror",
+    iconName: "mirror-3d",
   },
   {
     text: "# 잔잔한 내적 댄스 유발",
-    iconName: "heart",
+    iconName: "heart-3d",
   },
 ];
 
