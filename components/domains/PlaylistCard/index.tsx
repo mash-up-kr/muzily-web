@@ -1,7 +1,9 @@
 import React from "react";
 import styled from "@emotion/styled";
+import { Modal } from "~/components/uis";
 import { useRoomStore } from "~/store";
 import type { Music } from "~/types/musics";
+import PlaylistModal from "../PlaylistModal";
 
 interface PlaylistCardProps {
   currentMusic: Music;
@@ -52,9 +54,12 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
       </S.MiddleCard>
 
       {/* 카드 하단 */}
-      <S.LowerCard onClick={() => actions.setOpenPlaylistScreen(true)}>
-        + 더보기
-      </S.LowerCard>
+      <Modal
+        trigger={({ open }) => (
+          <S.LowerCard onClick={open}>+ 더보기</S.LowerCard>
+        )}
+        modal={<PlaylistModal />}
+      />
     </S.Container>
   );
 }

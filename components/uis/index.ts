@@ -6,3 +6,4 @@ export { default as IconButton } from "./IconButton";
 export { default as TypingText } from "./TypingText";
 export { default as TopBar } from "./TopBar";
 export { default as TopBarIconButton } from "./TopBar/TopBarIconButton";
+export { default as Modal } from "./Modal";

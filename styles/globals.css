@@ -132,3 +132,24 @@ th {
     url("../public/fonts/Pretendard-Light.subset.woff2") format("woff2"),
     url("../public/fonts/Pretendard-Light.subset.woff") format("woff");
 }
+
+/* 터치시 하늘색 제거 */
+input,
+textarea,
+button,
+select,
+div,
+a {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+/* 모바일 브라우저 높이 */
+html,
+body {
+  height: 100%;
+}
+
+#__next {
+  height: 100%;
+  overflow: hidden;
+}
