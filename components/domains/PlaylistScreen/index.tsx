@@ -4,36 +4,30 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { TopBar, TopBarIconButton } from "~/components/uis";
-import type { Music } from "~/types/musics";
+import { useRoomStore } from "~/store";
 import MusicItemCard from "./MusicItemCard";
 
-interface PlaylistScreenProps {
-  onClickBackButton: () => void;
-  playList: Music[];
-  playingMusicId: string;
-  setPlayingMusicId: React.Dispatch<React.SetStateAction<string>>;
-  setPlayList: React.Dispatch<React.SetStateAction<Music[]>>;
-}
+function PlaylistScreen() {
+  const {
+    state: { playList, playingMusicId },
+    actions,
+  } = useRoomStore();
 
-function PlaylistScreen({
-  onClickBackButton,
-  playList,
-  playingMusicId,
-  setPlayingMusicId,
-  setPlayList,
-}: PlaylistScreenProps) {
   const moveCard = (from: number, to: number) => {
     const arr = [...playList];
     const item = arr.splice(from, 1);
     const newArr = [...arr.slice(0, to), item[0], ...arr.slice(to)];
-    setPlayList(newArr);
+    actions.setPlaylist(newArr);
   };
 
   return (
     <S.Container>
       <TopBar
         leftIconButton={
-          <TopBarIconButton iconName="arrow-left" onClick={onClickBackButton} />
+          <TopBarIconButton
+            iconName="arrow-left"
+            onClick={() => actions.setOpenPlaylistScreen(false)}
+          />
         }
       >
         Playlist
@@ -52,7 +46,7 @@ function PlaylistScreen({
               key={el.id}
               active={el.id === playingMusicId}
               index={i}
-              onClick={() => setPlayingMusicId(el.id)}
+              onClick={() => actions.setPlayingMusicId(el.id)}
               moveCard={moveCard}
             />
           ))}

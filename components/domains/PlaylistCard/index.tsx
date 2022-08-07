@@ -1,14 +1,10 @@
 import React from "react";
 import styled from "@emotion/styled";
+import { useRoomStore } from "~/store";
 import type { Music } from "~/types/musics";
 
 interface PlaylistCardProps {
-  onClickMoreButton: () => void;
-  getMusicIndex: (id: string) => number;
   currentMusic: Music;
-  onClickNext: () => void;
-  onClickPrev: () => void;
-  playList: Music[];
 }
 
 const NO_DATA_TEXT = [
@@ -16,22 +12,18 @@ const NO_DATA_TEXT = [
   "원하는 곡을\n플리에 추가해보세요.",
 ];
 
-function PlaylistCard({
-  onClickMoreButton,
-  currentMusic,
-  getMusicIndex,
-  onClickNext,
-  onClickPrev,
-  playList,
-}: PlaylistCardProps) {
+function PlaylistCard({ currentMusic }: PlaylistCardProps) {
+  const {
+    state: { playList },
+    actions,
+  } = useRoomStore();
   const noData = !playList || playList.length === 0;
-
-  const nextMusic = playList[getMusicIndex(currentMusic.id) + 1];
+  const nextMusic = playList[actions.getMusicIndex(currentMusic?.id) + 1];
 
   return (
     <S.Container>
       {/* 카드 상단 */}
-      <S.UpperCard onClick={onClickPrev}>
+      <S.UpperCard onClick={actions.playPrevMusic}>
         <S.Title>Playlist</S.Title>
         <S.Content>
           {noData ? (
@@ -46,7 +38,7 @@ function PlaylistCard({
       </S.UpperCard>
 
       {/* 카드 중간 */}
-      <S.MiddleCard onClick={onClickNext}>
+      <S.MiddleCard onClick={actions.playNextMusic}>
         <S.Content>
           {noData ? (
             <S.NoDataText>{NO_DATA_TEXT[1]}</S.NoDataText>
@@ -60,7 +52,9 @@ function PlaylistCard({
       </S.MiddleCard>
 
       {/* 카드 하단 */}
-      <S.LowerCard onClick={onClickMoreButton}>+ 더보기</S.LowerCard>
+      <S.LowerCard onClick={() => actions.setOpenPlaylistScreen(true)}>
+        + 더보기
+      </S.LowerCard>
     </S.Container>
   );
 }
