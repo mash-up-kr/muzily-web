@@ -1,7 +1,7 @@
 export interface Music {
   id: string;
-  artist: string;
   title: string;
   thumbnail: string;
+  duration?: number;
   colors?: string[];
 }

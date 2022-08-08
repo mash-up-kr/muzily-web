@@ -41,7 +41,7 @@ function NowPlayingCard({
       </S.Container>
     );
   }
-  const musicText = `${currentMusic.artist} - ${currentMusic.title}`;
+  const musicText = `${currentMusic.title}`;
 
   return (
     <S.Container>

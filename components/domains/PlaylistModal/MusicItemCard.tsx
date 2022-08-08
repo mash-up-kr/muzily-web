@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import Image from "next/image";
 import styled from "@emotion/styled";
 import { useDrag, useDrop, type XYCoord } from "react-dnd";
+import { getDurationText } from "~/store/room/utils";
 import type { Music } from "~/types/musics";
 
 interface MusicCardItemProps {
@@ -81,7 +82,9 @@ function MusicItemCard({
     <S.Container ref={(node) => drop(preview(node))} opacity={opacity}>
       <S.MusicItem key={item.id} active={active} onClick={onClick}>
         <S.Title>{item.title}</S.Title>
-        <S.Artist active={active}>{item.artist}</S.Artist>
+        <S.Duration active={active}>
+          {getDurationText(item.duration || 0)}
+        </S.Duration>
       </S.MusicItem>
 
       <S.Kebab active={active} ref={dragRef}>
@@ -106,12 +109,12 @@ const S = {
 
   MusicItem: styled.div<{ active: boolean }>`
     background-color: ${(p) => (p.active ? "#fff" : "#007aff")};
+    width: 50%;
     cursor: pointer;
     flex: 1;
     padding: 16px 18px;
     gap: 16px;
     border-radius: 7px;
-    /* display: flex; */
     color: ${(p) => (p.active ? "#007aff" : "#fff")};
     border: 1px solid rgba(255, 255, 255, 0.08);
   `,
@@ -120,9 +123,13 @@ const S = {
     font-weight: 600;
     font-size: 14px;
     line-height: 155%;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   `,
 
-  Artist: styled.div<{ active: boolean }>`
+  Duration: styled.div<{ active: boolean }>`
     font-weight: 400;
     font-size: 12px;
     line-height: 155%;

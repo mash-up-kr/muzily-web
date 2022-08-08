@@ -51,6 +51,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
             currentMusic={currentMusic}
             player={player}
           />
+
           <PlaylistCard currentMusic={currentMusic} />
         </S.ContentWrapper>
 

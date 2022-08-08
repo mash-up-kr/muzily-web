@@ -1,11 +1,13 @@
 import produce from "immer";
 import type { WritableDraft } from "immer/dist/internal";
-import { atom, useRecoilState } from "recoil";
+import { atom, selector, useRecoilState } from "recoil";
 import type { SetterOrUpdater } from "recoil";
+import { ADDING_LIST } from "~/assets/dummy";
 import type { Music } from "~/types/musics";
 
 interface RoomState {
   playList: Music[];
+  proposedMusicList: Music[];
   playingMusicId: string;
   isPlaying: boolean;
 }
@@ -18,6 +20,8 @@ const roomAtomState = atom<RoomState>({
 
     // Playlist
     playList: [],
+    proposedMusicList: [],
+
     playingMusicId: "",
   },
 });
@@ -44,6 +48,7 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
     init(musicData: Music[]) {
       update((draft) => {
         draft.playList = musicData;
+        draft.proposedMusicList = ADDING_LIST;
         draft.playingMusicId = musicData[0].id;
       });
     },
@@ -75,6 +80,12 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
       });
     },
 
+    addToPlaylist(music: Music) {
+      update((draft) => {
+        draft.playList.push(music);
+      });
+    },
+
     setPlaylist(list: Music[]) {
       update((draft) => {
         draft.playList = list;
@@ -88,5 +99,13 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
     },
 
     getMusicIndex,
+
+    removeMusicFromProposedList(id: string) {
+      update((draft) => {
+        draft.proposedMusicList = state.proposedMusicList.filter(
+          (item) => item.id !== id
+        );
+      });
+    },
   };
 }
