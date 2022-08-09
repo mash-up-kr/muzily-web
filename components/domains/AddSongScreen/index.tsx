@@ -11,6 +11,7 @@ import {
 } from "~/components/uis";
 import { useModal } from "~/components/uis/Modal";
 import { useRoomStore } from "~/store";
+import { getDurationText } from "~/store/room/utils";
 import type { Music } from "~/types/musics";
 
 const defaultEndPoint = process.env
@@ -32,7 +33,7 @@ interface AddSongScreenProps {
 
 function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
   const {
-    state: { playList, proposedMusicList },
+    state: { playList, proposedMusicList, isHost },
     actions,
   } = useRoomStore();
 
@@ -80,9 +81,14 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
         thumbnail: res.data.snippet.thumbnails.high.url,
         colors: thumbnailRes.data.colors,
       };
-      actions.addToPlaylist(musicData);
+
+      if (isHost) {
+        actions.addToPlaylist(musicData);
+      } else {
+        actions.addMusicToProposedList(musicData);
+      }
+
       close();
-      // actions.setOpenAddSongScreen(false);
 
       // TODO(@Young-mason): 웹소켓 요청보내기
     } catch (error) {
@@ -141,7 +147,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
       )}
 
       {proposedMusicList.length ? (
-        <S.ProposedMusicListCard>
+        <S.ProposedMusicListCard hidden={!isHost}>
           <S.CardHeader>
             <strong>{proposedMusicList.length}건</strong>의 신청된 노래가 있어요
           </S.CardHeader>
@@ -150,7 +156,9 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
               <S.CardItem key={item.id}>
                 <Spacer type="vertical">
                   <S.MusicTitle>{item.title}</S.MusicTitle>
-                  {/* <S.MusicArtist>{item.artist}</S.MusicArtist> */}
+                  <S.MusicArtist>
+                    {getDurationText(item.duration || 0)}
+                  </S.MusicArtist>
                 </Spacer>
                 <Spacer gap={8}>
                   <S.Button
@@ -181,7 +189,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
       )}
 
       <BottomButton
-        label="곡 추가하기"
+        label={isHost ? "곡 추가하기" : "곡 신청하기"}
         onClick={handleSubmit}
         disabled={!isValid}
       />
@@ -265,7 +273,8 @@ const S = {
     }
   `,
 
-  ProposedMusicListCard: styled.div`
+  ProposedMusicListCard: styled.div<{ hidden: boolean }>`
+    display: ${(p) => (p.hidden ? "none" : "")};
     margin: 20px 0%;
     background: rgba(26, 26, 26, 0.9);
     border-radius: 20px;

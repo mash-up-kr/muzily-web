@@ -4,13 +4,16 @@ import styled from "@emotion/styled";
 import type { Variant } from "framer-motion";
 import { motion } from "framer-motion";
 import Vibrant from "node-vibrant";
+import { useQuery } from "react-query";
 import YouTube from "react-youtube";
+import { getPlaylist } from "~/api/playlist";
 import { VIDEO_LIST } from "~/assets/dummy";
 import { LongPress, NowPlayingCard } from "~/components/domains";
 import AddSongScreen from "~/components/domains/AddSongScreen";
 import PlaylistCard from "~/components/domains/PlaylistCard";
 import { Layout, Modal, Spacer } from "~/components/uis";
 import IconButton from "~/components/uis/IconButton";
+import { queryKeys } from "~/consts/react-query";
 import { useRoomStore } from "~/store";
 import type { Music } from "~/types/musics";
 
@@ -22,12 +25,11 @@ interface RoomPageProps {
 
 const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
   const {
-    state: { playingMusicId, playList },
+    state: { playingMusicId, playList, isHost },
     actions,
   } = useRoomStore();
 
   const [player, setPlayer] = useState(null);
-
   const currentMusic = useMemo(
     () => playList.find((item) => item.id === playingMusicId) || playList[0],
     [playingMusicId, playList]
@@ -54,7 +56,12 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
 
           <PlaylistCard currentMusic={currentMusic} />
         </S.ContentWrapper>
-
+        <button
+          style={{ height: 50 }}
+          onClick={() => actions.setIsHost(!isHost)}
+        >
+          {isHost ? "방장" : "익명"}
+        </button>
         <S.IconWrapper>
           <Actions.NewMusic />
           <Actions.Emoji />
@@ -62,7 +69,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
         </S.IconWrapper>
       </S.Container>
 
-      {currentMusic && (
+      {isHost && currentMusic && (
         <S.YoutubeWrapper hidden>
           <YouTube
             id="iframe"
@@ -148,6 +155,7 @@ const S = {
 };
 
 RoomPage.getInitialProps = async (ctx: NextPageContext) => {
+  const isHost = ctx.query.isHost === "true";
   const list = [...VIDEO_LIST];
   const musicData: Music[] = await Promise.all(
     list.map(async (el) => {
@@ -170,6 +178,7 @@ RoomPage.getInitialProps = async (ctx: NextPageContext) => {
   );
 
   return {
+    isHost,
     musicData,
   };
 };

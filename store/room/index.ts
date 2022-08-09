@@ -10,12 +10,14 @@ interface RoomState {
   proposedMusicList: Music[];
   playingMusicId: string;
   isPlaying: boolean;
+  isHost: boolean;
 }
 
 const roomAtomState = atom<RoomState>({
   key: "room",
   default: {
     // Youtube Player
+    isHost: false,
     isPlaying: false,
 
     // Playlist
@@ -54,6 +56,10 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
     },
 
     playNextMusic() {
+      if (!state.isHost) {
+        return null;
+      }
+
       const playingIndex = getMusicIndex(state.playingMusicId);
       if (playingIndex === state.playList.length - 1) {
         return null;
@@ -65,6 +71,9 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
     },
 
     playPrevMusic() {
+      if (!state.isHost) {
+        return null;
+      }
       const playingIndex = getMusicIndex(state.playingMusicId);
       if (playingIndex === 0) {
         return null;
@@ -105,6 +114,18 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
         draft.proposedMusicList = state.proposedMusicList.filter(
           (item) => item.id !== id
         );
+      });
+    },
+
+    addMusicToProposedList(music: Music) {
+      update((draft) => {
+        draft.proposedMusicList.push(music);
+      });
+    },
+
+    setIsHost(isHost: boolean) {
+      update((draft) => {
+        draft.isHost = isHost;
       });
     },
   };

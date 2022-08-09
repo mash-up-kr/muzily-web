@@ -17,7 +17,7 @@ function NowPlayingCard({
   player,
 }: NowPlayingCardProps) {
   const {
-    state: { isPlaying },
+    state: { isPlaying, isHost },
     actions,
   } = useRoomStore();
 
@@ -49,7 +49,7 @@ function NowPlayingCard({
       <Thumbnail src={currentMusic.thumbnail} colors={currentMusic.colors} />
 
       {/* TODO(@Young-mason): 컨트롤러는 방장에게만 보이도록 처리해야함 */}
-      <S.Controller>
+      <S.Controller hidden={!isHost}>
         <Image
           src="/images/play-back.svg"
           alt="play-back"
@@ -134,10 +134,10 @@ const S = {
     color: rgba(255, 255, 255, 0.65);
   `,
 
-  Controller: styled.div`
+  Controller: styled.div<{ hidden: boolean }>`
+    display: ${(p) => (p.hidden ? "none" : "flex")};
     width: 100%;
     height: 90%;
-    display: flex;
     justify-content: center;
     align-items: center;
     gap: 25px;

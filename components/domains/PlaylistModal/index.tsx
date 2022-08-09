@@ -9,12 +9,15 @@ import MusicItemCard from "./MusicItemCard";
 
 function PlaylistModal() {
   const {
-    state: { playList, playingMusicId },
+    state: { playList, playingMusicId, isHost },
     actions,
   } = useRoomStore();
   const { close } = useModal();
 
   const moveCard = (from: number, to: number) => {
+    if (!isHost) {
+      return null;
+    }
     const arr = [...playList];
     const item = arr.splice(from, 1);
     const newArr = [...arr.slice(0, to), item[0], ...arr.slice(to)];
@@ -24,6 +27,7 @@ function PlaylistModal() {
   return (
     <S.Container>
       <TopBar
+        sticky
         leftIconButton={
           <TopBarIconButton iconName="arrow-left" onClick={close} />
         }
@@ -44,7 +48,11 @@ function PlaylistModal() {
               key={el.id}
               active={el.id === playingMusicId}
               index={i}
-              onClick={() => actions.setPlayingMusicId(el.id)}
+              onClick={() => {
+                if (isHost) {
+                  actions.setPlayingMusicId(el.id);
+                }
+              }}
               moveCard={moveCard}
             />
           ))}
@@ -65,6 +73,7 @@ const S = {
     background-color: #030303;
     padding: 0 20px;
     z-index: 10;
+    overflow: auto;
   `,
   MusicList: styled.div`
     display: flex;
