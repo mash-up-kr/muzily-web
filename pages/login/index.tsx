@@ -8,7 +8,8 @@ import { withRouteGuard } from "~/hocs";
 
 const LoginPage: NextPage = withRouteGuard({ UNCONNECTED: true }, "/", () => {
   return (
-    <div>
+    <Layout screenColor="linear-gradient(#000, 90%, #01356E)">
+      <TopBar leftIconButton={<TopBarIconButton iconName="star" />} />
       <Head>
         <title>Musily</title>
         <meta
@@ -17,25 +18,21 @@ const LoginPage: NextPage = withRouteGuard({ UNCONNECTED: true }, "/", () => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <Layout screenColor="linear-gradient(#000, 90%, #01356E)">
-        <TopBar leftIconButton={<TopBarIconButton iconName="star" />} />
-        <S.Container>
-          <S.Header>
-            방을 만드려면<br></br>
-            로그인이 필요해요
-          </S.Header>
-          <KakaoLoginButton
-            restApiKey={
-              process.env.NEXT_PUBLIC_KAKAO_APP_KEY_REST_API_KEY as string
-            }
-            redirectUri={
-              process.env.NEXT_PUBLIC_KAKAO_LOGIN_REDIRECT_URI as string
-            }
-          ></KakaoLoginButton>
-        </S.Container>
-      </Layout>
-    </div>
+      <S.Container>
+        <S.Header>
+          방을 만드려면<br></br>
+          로그인이 필요해요
+        </S.Header>
+        <KakaoLoginButton
+          restApiKey={
+            process.env.NEXT_PUBLIC_KAKAO_APP_KEY_REST_API_KEY as string
+          }
+          redirectUri={
+            process.env.NEXT_PUBLIC_KAKAO_LOGIN_REDIRECT_URI as string
+          }
+        ></KakaoLoginButton>
+      </S.Container>
+    </Layout>
   );
 });
 
