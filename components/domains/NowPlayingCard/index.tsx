@@ -48,7 +48,6 @@ function NowPlayingCard({
       <S.Title>Now Playing</S.Title>
       <Thumbnail src={currentMusic.thumbnail} colors={currentMusic.colors} />
 
-      {/* TODO(@Young-mason): 컨트롤러는 방장에게만 보이도록 처리해야함 */}
       <S.Controller hidden={!isHost}>
         <Image
           src="/images/play-back.svg"

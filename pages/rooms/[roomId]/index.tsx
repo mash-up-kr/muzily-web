@@ -25,7 +25,7 @@ interface RoomPageProps {
 
 const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
   const {
-    state: { playingMusicId, playList, isHost },
+    state: { playingMusicId, playList, isHost, proposedMusicList },
     actions,
   } = useRoomStore();
 
@@ -63,7 +63,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
           {isHost ? "방장" : "익명"}
         </button>
         <S.IconWrapper>
-          <Actions.NewMusic />
+          <Actions.NewMusic value={isHost ? proposedMusicList.length : 0} />
           <Actions.Emoji />
           <Actions.ChangeMood />
         </S.IconWrapper>
@@ -190,10 +190,12 @@ const STAGE_2_MAX_PERCENTAGE = 50;
 const STAGE_3_MAX_PERCENTAGE = 100;
 
 const Actions = {
-  NewMusic: () => (
+  NewMusic: ({ value }: { value: number }) => (
     <Spacer type="vertical" align="center" gap={8}>
       <Modal
-        trigger={({ open }) => <IconButton iconName="star" onClick={open} />}
+        trigger={({ open }) => (
+          <IconButton iconName="star" onClick={open} value={value} />
+        )}
         modal={({ close }) => <AddSongScreen onClickBackButton={close} />}
       />
       <S.IconText>곡추가</S.IconText>
