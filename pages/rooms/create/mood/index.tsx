@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
+import { postRoom } from "~/api/room";
 import {
   BottomButton,
   Layout,
@@ -10,6 +11,7 @@ import {
   TopBar,
   TopBarIconButton,
 } from "~/components/uis";
+import type { Room } from "~/types/rooms";
 
 const MOOD_EXAMPLE = [
   {
@@ -34,6 +36,32 @@ const RoomCreateMoodPage: NextPage = () => {
     }
   );
   const router = useRouter();
+
+  const createRoom = () => {
+    const { roomName } = router.query as { roomName: string };
+
+    postRoom({
+      description: roomName,
+      moods: [
+        {
+          name: mood.name,
+          emoji: mood.emoji,
+        },
+      ],
+    })
+      .then((room: Room) => {
+        const { roomId } = room;
+        router.push(
+          `/rooms/${roomId}`,
+          { query: { roomId } },
+          { shallow: true }
+        );
+      })
+      .catch((reason: any) => {
+        // TODO: 실패 이유 팝업 핸들링
+        console.error(reason);
+      });
+  };
 
   return (
     <Layout screenColor="linear-gradient(#000, 85%, #01356E)">
@@ -75,7 +103,7 @@ const RoomCreateMoodPage: NextPage = () => {
           </StyledBottomButton>
         </StyledNoticeTextWrapper>
       </StyledContainer>
-      <BottomButton label="다음" onClick={() => console.log("next!")} />
+      <BottomButton label="방 만들기" onClick={createRoom} />
     </Layout>
   );
 };
