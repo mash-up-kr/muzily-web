@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import type { NextPage } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import {
@@ -46,13 +47,13 @@ const RoomCreatePage: NextPage = withRouteGuard(
             </StyledNoticeText>
           </StyledNoticeTextWrapper>
         </StyledContainer>
-        <BottomButton
-          label="다음"
-          onClick={() =>
-            router.push("/rooms/create/mood", { query: { roomName: value } })
-          }
-          disabled={value.length === 0}
-        />
+        <Link
+          href={{ pathname: "/rooms/create/mood", query: { roomName: value } }}
+        >
+          <a>
+            <BottomButton label="다음" disabled={value.length === 0} />
+          </a>
+        </Link>
       </Layout>
     );
   }
