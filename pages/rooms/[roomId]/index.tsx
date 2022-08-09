@@ -135,10 +135,12 @@ const S = {
   ContentWrapper: styled.div`
     display: flex;
     align-items: center;
-    width: 100%;
     height: 100%;
     gap: 20px;
     overflow-x: auto;
+    padding: 0 20px;
+    margin-left: -20px;
+    width: calc(100% + 40px);
   `,
   YoutubeWrapper: styled.div<{ hidden: boolean }>`
     visibility: ${(p) => p.hidden && "hidden"};
