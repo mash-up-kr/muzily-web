@@ -27,7 +27,12 @@ const MOOD_EXAMPLE = [
 ];
 
 const RoomCreateMoodPage: NextPage = () => {
-  const [mood, setMood] = useState("");
+  const [mood, setMood] = useState(
+    {} as {
+      name: string;
+      emoji: string;
+    }
+  );
   const router = useRouter();
 
   return (
@@ -50,8 +55,8 @@ const RoomCreateMoodPage: NextPage = () => {
           {MOOD_EXAMPLE.map((v) => (
             <StyledButton
               key={v.text}
-              onClick={() => setMood(v.iconName)}
-              isActive={mood === v.iconName}
+              onClick={() => setMood({ name: v.text, emoji: v.iconName })}
+              isActive={mood.emoji === v.iconName}
             >
               <StyledButtonText>{v.text}</StyledButtonText>
               <Image
