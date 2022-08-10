@@ -59,7 +59,6 @@ const ModalTestPage = () => {
                   Modal.Close.waitOnClick: false
                 </Modal.Close>
                 <Modal
-                  portalId="depth-modal"
                   trigger={
                     <Modal.Open
                       as={LoadingButton}

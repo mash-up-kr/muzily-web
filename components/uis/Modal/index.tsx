@@ -6,6 +6,8 @@ import Context from "./context";
 import Open from "./Open";
 import Portal from "./Portal";
 
+const DEFAULT_PORTAL_ID_PREFIX = "modal-portal";
+
 type UseDisclosure = typeof useDisclosure;
 
 type Props = {
@@ -25,21 +27,26 @@ type Props = {
 };
 
 const Modal = ({
-  portalId = "modal-portal",
+  portalId,
   initialIsOpen = false,
   trigger,
   onOpen,
   onClose,
   modal,
 }: Props) => {
-  const portalIdMemoized = useMemo(() => portalId, []);
+  const memoizedPortalId = useMemo(() => {
+    return typeof portalId === "string" && portalId !== DEFAULT_PORTAL_ID_PREFIX
+      ? portalId
+      : `${DEFAULT_PORTAL_ID_PREFIX}-${new Date().getTime()}`;
+  }, []);
+
   const [isWaiting, setIsWaiting] = useState(false);
   const { isOpen, close, open } = useDisclosure({
     initialState: initialIsOpen,
     onOpen,
     onClose: async () => {
       await onClose?.();
-      document.getElementById(portalIdMemoized)?.remove();
+      document.getElementById(memoizedPortalId)?.remove();
     },
   });
 
@@ -47,7 +54,7 @@ const Modal = ({
     <Context.Provider value={{ open, close, isWaiting, setIsWaiting }}>
       {typeof trigger === "function" ? trigger({ open }) : trigger}
       {isOpen ? (
-        <Portal id={portalIdMemoized}>
+        <Portal id={memoizedPortalId}>
           {typeof modal === "function" ? modal({ close, isWaiting }) : modal}
         </Portal>
       ) : null}
