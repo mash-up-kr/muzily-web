@@ -220,6 +220,7 @@ const Actions = {
                 bottom: 0,
                 background: "rgba(0, 0, 0, 0.1)",
                 zIndex: 9999999,
+                pointerEvents: "none",
               }}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -372,17 +373,19 @@ const Hearts = ({ stage }: { stage: 1 | 2 | 3 }) => (
 const Heart3D = ({ stage }: { stage: 1 | 2 | 3 }) => {
   const getRandomHalfToFull = () => Math.random() / 3 + 2 / 3;
 
-  const width = stage * stage * 38 * ((Math.random() * 3) / 4 + 1 / 4);
+  const width = stage * stage * 38;
 
   return (
     <motion.div
       initial={{
         x: window.innerWidth * Math.random() - width / 2,
         y: 600 * getRandomHalfToFull() - width / 2,
+        opacity: Math.random() * 0.3 + 0.7,
       }}
       animate={{
         x: window.innerWidth * Math.random() - width / 2,
         y: -1300 * getRandomHalfToFull() - width / 2,
+        opacity: Math.random() * 0.9 + 0.1,
       }}
       transition={{ duration: 4 * getRandomHalfToFull() }}
     >
