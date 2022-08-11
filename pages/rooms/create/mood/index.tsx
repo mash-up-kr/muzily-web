@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
+import { postRoom } from "~/api/room";
 import {
   BottomButton,
   Layout,
@@ -10,25 +11,52 @@ import {
   TopBar,
   TopBarIconButton,
 } from "~/components/uis";
+import type { Mood } from "~/types/rooms";
 
 const MOOD_EXAMPLE = [
   {
-    text: "# 조용~ 집중 빡 공부 모드",
-    iconName: "book-3d",
+    name: "# 조용~ 집중 빡 공부 모드",
+    emoji: "book-3d",
   },
   {
-    text: "# 쉣댓 부레 엉덩이~! 흔들어버려",
-    iconName: "mirror-3d",
+    name: "# 쉣댓 부레 엉덩이~! 흔들어버려",
+    emoji: "mirror-3d",
   },
   {
-    text: "# 잔잔한 내적 댄스 유발",
-    iconName: "heart-3d",
+    name: "# 잔잔한 내적 댄스 유발",
+    emoji: "heart-3d",
   },
 ];
 
 const RoomCreateMoodPage: NextPage = () => {
-  const [mood, setMood] = useState("");
+  const [mood, setMood] = useState({} as Mood);
   const router = useRouter();
+
+  const createRoom = () => {
+    const { roomName } = router.query as { roomName: string };
+
+    postRoom({
+      description: roomName,
+      moods: [
+        {
+          name: mood.name,
+          emoji: mood.emoji,
+        },
+      ],
+    })
+      .then((room) => {
+        const { roomId } = room;
+        router.push(
+          `/rooms/${roomId}`,
+          { query: { roomId } },
+          { shallow: true }
+        );
+      })
+      .catch((reason: any) => {
+        // TODO: 실패 이유 팝업 핸들링
+        console.error(reason);
+      });
+  };
 
   return (
     <Layout screenColor="linear-gradient(#000, 85%, #01356E)">
@@ -49,13 +77,13 @@ const RoomCreateMoodPage: NextPage = () => {
         <StyledButtonGroup type="vertical" gap={15}>
           {MOOD_EXAMPLE.map((v) => (
             <StyledButton
-              key={v.text}
-              onClick={() => setMood(v.iconName)}
-              isActive={mood === v.iconName}
+              key={v.name}
+              onClick={() => setMood(v)}
+              isActive={mood.emoji === v.emoji}
             >
-              <StyledButtonText>{v.text}</StyledButtonText>
+              <StyledButtonText>{v.name}</StyledButtonText>
               <Image
-                src={`/images/${v.iconName}.svg`}
+                src={`/images/${v.emoji}.svg`}
                 alt="icon"
                 width={56}
                 height={58}
@@ -70,7 +98,7 @@ const RoomCreateMoodPage: NextPage = () => {
           </StyledBottomButton>
         </StyledNoticeTextWrapper>
       </StyledContainer>
-      <BottomButton label="다음" onClick={() => console.log("next!")} />
+      <BottomButton label="방 만들기" onClick={createRoom} />
     </Layout>
   );
 };

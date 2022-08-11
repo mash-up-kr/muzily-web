@@ -4,15 +4,11 @@ import styled from "@emotion/styled";
 interface BottomButtonProps {
   disabled?: boolean;
   label: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
-function BottomButton({ disabled = false, label, onClick }: BottomButtonProps) {
-  return (
-    <StyledButton disabled={disabled} onClick={() => !disabled && onClick()}>
-      {label}
-    </StyledButton>
-  );
+function BottomButton({ ...props }: BottomButtonProps) {
+  return <StyledButton {...props}>{props.label}</StyledButton>;
 }
 
 const StyledButton = styled.button<{ disabled?: boolean }>`
