@@ -19,10 +19,11 @@ const StyledContainer = styled.div`
   display: flex;
   justify-content: center;
   background-color: grey;
+  z-index: 100;
 `;
 
 const StyledScreen = styled.div<{ screenColor?: string }>`
-  max-width: 375px;
+  max-width: 450px;
   width: 100%;
   height: 100%;
   background: ${(p) => p.screenColor || "#030303"};

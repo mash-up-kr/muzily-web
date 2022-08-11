@@ -3,5 +3,6 @@
 export const queryKeys = {
   member: ["member"],
   rooms: ["rooms"],
+  playlist: ["playlist"],
   roomsById: (roomId: number) => ["rooms", roomId],
 } as const;

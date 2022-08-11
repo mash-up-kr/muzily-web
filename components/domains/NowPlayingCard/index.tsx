@@ -17,7 +17,7 @@ function NowPlayingCard({
   player,
 }: NowPlayingCardProps) {
   const {
-    state: { isPlaying },
+    state: { isPlaying, isHost },
     actions,
   } = useRoomStore();
 
@@ -41,48 +41,49 @@ function NowPlayingCard({
       </S.Container>
     );
   }
-  const musicText = `${currentMusic.artist} - ${currentMusic.title}`;
+  const musicText = `${currentMusic.title}`;
 
   return (
     <S.Container>
       <S.Title>Now Playing</S.Title>
       <Thumbnail src={currentMusic.thumbnail} colors={currentMusic.colors} />
 
-      {/* TODO(@Young-mason): 컨트롤러는 방장에게만 보이도록 처리해야함 */}
-      <S.Controller>
-        <Image
-          src="/images/play-back.svg"
-          alt="play-back"
-          width={20}
-          height={20}
-          onClick={actions.playPrevMusic}
-        />
-        {isPlaying ? (
+      {isHost && (
+        <S.Controller>
           <Image
-            src="/images/pause-button.svg"
+            src="/images/play-back.svg"
             alt="play-back"
-            width={60}
-            height={60}
-            onClick={() => player.pauseVideo()}
+            width={20}
+            height={20}
+            onClick={actions.playPrevMusic}
           />
-        ) : (
+          {isPlaying ? (
+            <Image
+              src="/images/pause-button.svg"
+              alt="play-back"
+              width={60}
+              height={60}
+              onClick={() => player.pauseVideo()}
+            />
+          ) : (
+            <Image
+              // 임시
+              src="/images/play.svg"
+              alt="play"
+              width={60}
+              height={60}
+              onClick={() => player.playVideo()}
+            />
+          )}
           <Image
-            // 임시
-            src="/images/play.svg"
-            alt="play"
-            width={60}
-            height={60}
-            onClick={() => player.playVideo()}
+            src="/images/play-next.svg"
+            alt="play-next"
+            width={20}
+            height={20}
+            onClick={actions.playNextMusic}
           />
-        )}
-        <Image
-          src="/images/play-next.svg"
-          alt="play-next"
-          width={20}
-          height={20}
-          onClick={actions.playNextMusic}
-        />
-      </S.Controller>
+        </S.Controller>
+      )}
 
       <S.MusicText>{musicText}</S.MusicText>
     </S.Container>
@@ -135,9 +136,9 @@ const S = {
   `,
 
   Controller: styled.div`
+    display: ${(p) => (p.hidden ? "none" : "flex")};
     width: 100%;
     height: 90%;
-    display: flex;
     justify-content: center;
     align-items: center;
     gap: 25px;

@@ -1,14 +1,21 @@
 import type { ReactNode } from "react";
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 interface TopBarProps {
   leftIconButton?: JSX.Element;
   rightIconButton?: JSX.Element;
   children?: ReactNode;
+  sticky?: boolean;
 }
-const TopBar = ({ leftIconButton, rightIconButton, children }: TopBarProps) => {
+const TopBar = ({
+  leftIconButton,
+  rightIconButton,
+  children,
+  sticky,
+}: TopBarProps) => {
   return (
-    <StyledContainer>
+    <StyledContainer sticky={sticky}>
       {leftIconButton && <LeftIconWrapper>{leftIconButton}</LeftIconWrapper>}
       <StyledTopBarText>{children}</StyledTopBarText>
       {rightIconButton && (
@@ -24,7 +31,15 @@ const LeftIconWrapper = styled.div`
 const RightIconWrapper = styled.div`
   margin-right: -24px;
 `;
-const StyledContainer = styled.div`
+const StyledContainer = styled.div<{ sticky?: boolean }>`
+  ${(p) =>
+    p.sticky &&
+    css`
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    `}
+  background-color: #030303;
   display: flex;
   align-items: center;
   height: 40px;

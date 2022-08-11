@@ -2,6 +2,7 @@ import React from "react";
 import styled from "@emotion/styled";
 import { Modal } from "~/components/uis";
 import { useRoomStore } from "~/store";
+import { getDurationText } from "~/store/room/utils";
 import type { Music } from "~/types/musics";
 import PlaylistModal from "../PlaylistModal";
 
@@ -33,7 +34,9 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
           ) : (
             <>
               <div>{currentMusic.title}</div>
-              <S.Artist>{currentMusic.artist}</S.Artist>
+              <S.Duration>
+                {getDurationText(currentMusic.duration || 0)}
+              </S.Duration>
             </>
           )}
         </S.Content>
@@ -47,7 +50,9 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
           ) : (
             <>
               <div>{nextMusic?.title || "-"}</div>
-              <S.Artist>{nextMusic?.artist || "-"}</S.Artist>
+              <S.Duration>
+                {getDurationText(nextMusic?.duration || 0)}
+              </S.Duration>
             </>
           )}
         </S.Content>
@@ -121,7 +126,7 @@ const S = {
     line-height: 19px;
     letter-spacing: -0.02em;
   `,
-  Artist: styled.div`
+  Duration: styled.div`
     font-weight: 500;
     font-size: 12px;
     line-height: 14px;

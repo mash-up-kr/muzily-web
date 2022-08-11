@@ -9,7 +9,10 @@ import {
   TopBar,
   TopBarIconButton,
 } from "~/components/uis";
+import { useModal } from "~/components/uis/Modal";
 import { useRoomStore } from "~/store";
+import { getDurationText } from "~/store/room/utils";
+import type { Music } from "~/types/musics";
 
 const defaultEndPoint = process.env
   .NEXT_PUBLIC_SERVER_DEFAULT_END_POINT as string;
@@ -30,14 +33,13 @@ interface AddSongScreenProps {
 
 function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
   const {
-    state: { playList },
+    state: { playList, proposedMusicList, isHost },
     actions,
   } = useRoomStore();
 
+  const { close } = useModal();
   const [youtubeLink, setYoutubeLink] = useState("");
-
   const [youtubeId, setYoutubeId] = useState("");
-
   const [isValid, setIsValid] = useState(false);
   const [isError, setIsError] = useState(false);
 
@@ -57,25 +59,38 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
         `${defaultEndPoint}/search/v1/youtube/video?videoId=${youtubeId}`
       );
 
-      const testRes = await axios.get("/api/thumbnail", {
+      const thumbnailRes = await axios.get("/api/thumbnail", {
         params: {
           url: res.data.snippet.thumbnails.high.url,
         },
       });
 
-      const color = testRes.data.colors[0];
+      // const socketData = {
+      //   videoId: res.data.id,
+      //   title: res.data.snippet.title,
+      //   duration: res.data.contentDetails.duration,
+      //   thumbnail: res.data.snippet.thumbnails.high.url,
+      //   channelName: "",
+      //   color,
+      // };
 
-      const socketData = {
-        videoId: res.data.id,
+      const musicData: Music = {
+        id: res.data.id,
         title: res.data.snippet.title,
         duration: res.data.contentDetails.duration,
         thumbnail: res.data.snippet.thumbnails.high.url,
-        channelName: "",
-        color,
+        colors: thumbnailRes.data.colors,
       };
 
+      if (isHost) {
+        actions.addToPlaylist(musicData);
+      } else {
+        actions.addMusicToProposedList(musicData);
+      }
+
+      close();
+
       // TODO(@Young-mason): 웹소켓 요청보내기
-      console.log(socketData);
     } catch (error) {
       console.log(error);
     }
@@ -131,28 +146,50 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
         </S.YoutubeWrapper>
       )}
 
-      <S.ProposedMusicListCard>
-        <S.CardHeader>
-          <strong>{ADDING_LIST.length}건</strong>의 신청된 노래가 있어요
-        </S.CardHeader>
-        <S.CardContent>
-          {ADDING_LIST.map((item) => (
-            <S.CardItem key={item.id}>
-              <Spacer type="vertical">
-                <S.MusicTitle>{item.title}</S.MusicTitle>
-                <S.MusicArtist>{item.artist}</S.MusicArtist>
-              </Spacer>
-              <Spacer gap={8}>
-                <S.Button color="#007aff">추가</S.Button>
-                <S.Button color=" #F54031">거절</S.Button>
-              </Spacer>
-            </S.CardItem>
-          ))}
-        </S.CardContent>
-      </S.ProposedMusicListCard>
+      {proposedMusicList.length ? (
+        <S.ProposedMusicListCard hidden={!isHost}>
+          <S.CardHeader>
+            <strong>{proposedMusicList.length}건</strong>의 신청된 노래가 있어요
+          </S.CardHeader>
+          <S.CardContent>
+            {proposedMusicList.map((item) => (
+              <S.CardItem key={item.id}>
+                <Spacer type="vertical">
+                  <S.MusicTitle>{item.title}</S.MusicTitle>
+                  <S.MusicArtist>
+                    {getDurationText(item.duration || 0)}
+                  </S.MusicArtist>
+                </Spacer>
+                <Spacer gap={8}>
+                  <S.Button
+                    color="#007aff"
+                    onClick={() => {
+                      actions.addToPlaylist(item);
+                      actions.removeMusicFromProposedList(item.id);
+                      close();
+                    }}
+                  >
+                    추가
+                  </S.Button>
+                  <S.Button
+                    color=" #F54031"
+                    onClick={() => {
+                      actions.removeMusicFromProposedList(item.id);
+                    }}
+                  >
+                    거절
+                  </S.Button>
+                </Spacer>
+              </S.CardItem>
+            ))}
+          </S.CardContent>
+        </S.ProposedMusicListCard>
+      ) : (
+        <></>
+      )}
 
       <BottomButton
-        label="곡 추가하기"
+        label={isHost ? "곡 추가하기" : "곡 신청하기"}
         onClick={handleSubmit}
         disabled={!isValid}
       />
@@ -236,7 +273,8 @@ const S = {
     }
   `,
 
-  ProposedMusicListCard: styled.div`
+  ProposedMusicListCard: styled.div<{ hidden: boolean }>`
+    display: ${(p) => (p.hidden ? "none" : "")};
     margin: 20px 0%;
     background: rgba(26, 26, 26, 0.9);
     border-radius: 20px;

@@ -1,23 +1,29 @@
 import produce from "immer";
 import type { WritableDraft } from "immer/dist/internal";
-import { atom, useRecoilState } from "recoil";
+import { atom, selector, useRecoilState } from "recoil";
 import type { SetterOrUpdater } from "recoil";
+import { ADDING_LIST } from "~/assets/dummy";
 import type { Music } from "~/types/musics";
 
 interface RoomState {
   playList: Music[];
+  proposedMusicList: Music[];
   playingMusicId: string;
   isPlaying: boolean;
+  isHost: boolean;
 }
 
 const roomAtomState = atom<RoomState>({
   key: "room",
   default: {
     // Youtube Player
+    isHost: false,
     isPlaying: false,
 
     // Playlist
     playList: [],
+    proposedMusicList: [],
+
     playingMusicId: "",
   },
 });
@@ -44,11 +50,16 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
     init(musicData: Music[]) {
       update((draft) => {
         draft.playList = musicData;
+        draft.proposedMusicList = ADDING_LIST;
         draft.playingMusicId = musicData[0].id;
       });
     },
 
     playNextMusic() {
+      if (!state.isHost) {
+        return null;
+      }
+
       const playingIndex = getMusicIndex(state.playingMusicId);
       if (playingIndex === state.playList.length - 1) {
         return null;
@@ -60,6 +71,9 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
     },
 
     playPrevMusic() {
+      if (!state.isHost) {
+        return null;
+      }
       const playingIndex = getMusicIndex(state.playingMusicId);
       if (playingIndex === 0) {
         return null;
@@ -72,6 +86,12 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
     setPlayingMusicId(id: string) {
       update((draft) => {
         draft.playingMusicId = id;
+      });
+    },
+
+    addToPlaylist(music: Music) {
+      update((draft) => {
+        draft.playList.push(music);
       });
     },
 
@@ -88,5 +108,25 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
     },
 
     getMusicIndex,
+
+    removeMusicFromProposedList(id: string) {
+      update((draft) => {
+        draft.proposedMusicList = state.proposedMusicList.filter(
+          (item) => item.id !== id
+        );
+      });
+    },
+
+    addMusicToProposedList(music: Music) {
+      update((draft) => {
+        draft.proposedMusicList.push(music);
+      });
+    },
+
+    setIsHost(isHost: boolean) {
+      update((draft) => {
+        draft.isHost = isHost;
+      });
+    },
   };
 }
