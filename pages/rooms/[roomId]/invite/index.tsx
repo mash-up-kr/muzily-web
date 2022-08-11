@@ -130,7 +130,7 @@ const StyledUserNumberStatusSpan = styled.span`
     font-weight: 500;
     line-spacing: -0.544648px;
   }
-  &: before {
+  & :before {
     content: "";
     display: block;
     background: url("/images/usernumber.png") no-repeat;
@@ -161,7 +161,7 @@ const StyledPlayListStatusSpan = styled.span`
     font-weight: 500;
     line-spacing: -0.544648px;
   }
-  &: before {
+  & :before {
     content: "";
     display: block;
     background: url("/images/playlistnumber.png") no-repeat;

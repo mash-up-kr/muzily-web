@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import QRCodeWithLogo from "~/components/uis/QRCodeWithLogo";
+import { QRCodeWithLogo } from "~/components/uis";
 
 const RoomQRPage: NextPage = () => {
   const [inviteURL, setInviteURL] = useState("");

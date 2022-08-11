@@ -4,16 +4,15 @@ import styled from "@emotion/styled";
 import type { Variant } from "framer-motion";
 import { motion } from "framer-motion";
 import Vibrant from "node-vibrant";
-import { useQuery } from "react-query";
 import YouTube from "react-youtube";
-import { getPlaylist } from "~/api/playlist";
 import { VIDEO_LIST } from "~/assets/dummy";
-import { LongPress, NowPlayingCard } from "~/components/domains";
-import AddSongScreen from "~/components/domains/AddSongScreen";
-import PlaylistCard from "~/components/domains/PlaylistCard";
-import { Layout, Modal, Spacer } from "~/components/uis";
-import IconButton from "~/components/uis/IconButton";
-import { queryKeys } from "~/consts/react-query";
+import {
+  LongPress,
+  NowPlayingCard,
+  PlaylistCard,
+  AddSongScreen,
+} from "~/components/domains";
+import { Layout, Modal, Spacer, IconButton } from "~/components/uis";
 import { useRoomStore } from "~/store";
 import type { Music } from "~/types/musics";
 
