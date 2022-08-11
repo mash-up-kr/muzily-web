@@ -196,7 +196,7 @@ const Actions = {
     <Spacer type="vertical" align="center" gap={8}>
       <Modal
         trigger={({ open }) => (
-          <IconButton iconName="star" onClick={open} value={value} />
+          <IconButton iconName="star" onClick={open} badgeValue={value} />
         )}
         modal={({ close }) => <AddSongScreen onClickBackButton={close} />}
       />
