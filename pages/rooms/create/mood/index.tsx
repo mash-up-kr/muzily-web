@@ -11,30 +11,25 @@ import {
   TopBar,
   TopBarIconButton,
 } from "~/components/uis";
-import type { Room } from "~/types/rooms";
+import type { Mood } from "~/types/rooms";
 
 const MOOD_EXAMPLE = [
   {
-    text: "# 조용~ 집중 빡 공부 모드",
-    iconName: "book-3d",
+    name: "# 조용~ 집중 빡 공부 모드",
+    emoji: "book-3d",
   },
   {
-    text: "# 쉣댓 부레 엉덩이~! 흔들어버려",
-    iconName: "mirror-3d",
+    name: "# 쉣댓 부레 엉덩이~! 흔들어버려",
+    emoji: "mirror-3d",
   },
   {
-    text: "# 잔잔한 내적 댄스 유발",
-    iconName: "heart-3d",
+    name: "# 잔잔한 내적 댄스 유발",
+    emoji: "heart-3d",
   },
 ];
 
 const RoomCreateMoodPage: NextPage = () => {
-  const [mood, setMood] = useState(
-    {} as {
-      name: string;
-      emoji: string;
-    }
-  );
+  const [mood, setMood] = useState({} as Mood);
   const router = useRouter();
 
   const createRoom = () => {
@@ -49,7 +44,7 @@ const RoomCreateMoodPage: NextPage = () => {
         },
       ],
     })
-      .then((room: Room) => {
+      .then((room) => {
         const { roomId } = room;
         router.push(
           `/rooms/${roomId}`,
@@ -82,13 +77,13 @@ const RoomCreateMoodPage: NextPage = () => {
         <StyledButtonGroup type="vertical" gap={15}>
           {MOOD_EXAMPLE.map((v) => (
             <StyledButton
-              key={v.text}
-              onClick={() => setMood({ name: v.text, emoji: v.iconName })}
-              isActive={mood.emoji === v.iconName}
+              key={v.name}
+              onClick={() => setMood(v)}
+              isActive={mood.emoji === v.emoji}
             >
-              <StyledButtonText>{v.text}</StyledButtonText>
+              <StyledButtonText>{v.name}</StyledButtonText>
               <Image
-                src={`/images/${v.iconName}.svg`}
+                src={`/images/${v.emoji}.svg`}
                 alt="icon"
                 width={56}
                 height={58}
