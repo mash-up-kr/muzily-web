@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
-import { Layout, TopBar, TopBarIconButton } from "~/components/uis";
+import { TopBar, TopBarIconButton } from "~/components/uis";
 import { withRouteGuard } from "~/hocs";
 
 const HomePage: NextPage = withRouteGuard(
@@ -21,7 +21,7 @@ const HomePage: NextPage = withRouteGuard(
     };
 
     return (
-      <Layout screenColor="black">
+      <>
         <TopBar leftIconButton={<TopBarIconButton iconName="star" />} />
         <S.Form onSubmit={onSubmit}>
           <S.InviteContainer>
@@ -41,7 +41,7 @@ const HomePage: NextPage = withRouteGuard(
             <S.Description>지금 바로 3초만에 만들어보세요!</S.Description>
           </S.InviteContainer>
         </S.Form>
-      </Layout>
+      </>
     );
   }
 );

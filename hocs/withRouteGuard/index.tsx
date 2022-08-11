@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
+import { Spinner } from "~/components/uis";
 import { MemberInfo } from "~/contexts";
 import type { Member } from "~/types/members";
 
@@ -12,8 +13,8 @@ const withRouteGuard = <P extends object>(
     const { memberInfo } = MemberInfo.use();
     const router = useRouter();
 
-    if (!router.isReady || memberInfo === null) {
-      return <>withRouteGuard Loading...</>;
+    if (memberInfo === null) {
+      return <Spinner.FullPage />;
     }
 
     const { accountConnectType } = memberInfo;
@@ -21,7 +22,7 @@ const withRouteGuard = <P extends object>(
     if (!access[accountConnectType]) {
       router.replace(replaceUrl);
 
-      return null;
+      return <Spinner.FullPage />;
     }
 
     return <Page {...props} />;

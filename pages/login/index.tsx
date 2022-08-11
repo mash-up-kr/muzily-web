@@ -3,12 +3,12 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import styled from "@emotion/styled";
 import { KakaoLoginButton } from "~/components/domains";
-import { Layout, TopBar, TopBarIconButton } from "~/components/uis";
+import { TopBar, TopBarIconButton } from "~/components/uis";
 import { withRouteGuard } from "~/hocs";
 
 const LoginPage: NextPage = withRouteGuard({ UNCONNECTED: true }, "/", () => {
   return (
-    <Layout screenColor="linear-gradient(#000, 90%, #01356E)">
+    <>
       <TopBar leftIconButton={<TopBarIconButton iconName="star" />} />
       <Head>
         <title>Musily</title>
@@ -32,7 +32,7 @@ const LoginPage: NextPage = withRouteGuard({ UNCONNECTED: true }, "/", () => {
           }
         ></KakaoLoginButton>
       </S.Container>
-    </Layout>
+    </>
   );
 });
 

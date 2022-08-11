@@ -1,6 +1,8 @@
 import React from "react";
 import type { NextPage } from "next";
+import Image from "next/image";
 import { useRouter } from "next/router";
+import { Spinner } from "~/components/uis";
 import { MemberInfo } from "~/contexts";
 import { useAuthRedirected } from "~/features/auth/redirected";
 
@@ -9,13 +11,16 @@ const LoginRedirectedPage: NextPage = () => {
 
   if (router.query.code) {
     return (
-      <MemberInfo.Only fallback={"loading"}>
+      <MemberInfo.Only fallback={<Spinner.FullPage />}>
         {({ memberInfo }) => (
           <>
             {memberInfo.accountConnectType === "UNCONNECTED" ? (
               <GetServiceToken />
             ) : (
-              "memberInfo.accountConnectType가 UNCONNECTED가 아닙니다."
+              <div>
+                {memberInfo.nickname}님이 연결 되었습니다.
+                {memberInfo.profileUrl && <Image src={memberInfo.profileUrl} />}
+              </div>
             )}
           </>
         )}
@@ -23,7 +28,7 @@ const LoginRedirectedPage: NextPage = () => {
     );
   }
 
-  return <div>router.query.code를 받아오는 중입니다.</div>;
+  return <Spinner.FullPage />;
 };
 
 export default LoginRedirectedPage;
@@ -32,7 +37,7 @@ const GetServiceToken = () => {
   const { isLoading, isError } = useAuthRedirected();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Spinner.FullPage />;
   }
 
   if (isError) {

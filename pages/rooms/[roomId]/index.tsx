@@ -12,7 +12,7 @@ import {
   PlaylistCard,
   AddSongScreen,
 } from "~/components/domains";
-import { Layout, Modal, Spacer, IconButton } from "~/components/uis";
+import { Modal, Spacer, IconButton } from "~/components/uis";
 import { useRoomStore } from "~/store";
 import type { Music } from "~/types/musics";
 
@@ -39,7 +39,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
   }, []);
 
   return (
-    <Layout>
+    <>
       <S.Container>
         <S.Header>
           <S.Title>{TITLE}</S.Title>
@@ -97,7 +97,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
           />
         </S.YoutubeWrapper>
       )}
-    </Layout>
+    </>
   );
 };
 

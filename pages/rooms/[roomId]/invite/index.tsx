@@ -1,11 +1,11 @@
 import React from "react";
 import type { NextPage } from "next";
 import styled from "@emotion/styled";
-import { Layout, TopBar, TopBarIconButton } from "~/components/uis";
+import { TopBar, TopBarIconButton } from "~/components/uis";
 
 const RoomInvitePage: NextPage = () => {
   return (
-    <Layout screenColor="black">
+    <>
       <TopBar
         leftIconButton={<TopBarIconButton iconName="star" />}
         rightIconButton={<StyledTopBarRightItem>로그인</StyledTopBarRightItem>}
@@ -23,7 +23,7 @@ const RoomInvitePage: NextPage = () => {
         <StyledRoomJoinButton>방 입장하기</StyledRoomJoinButton>
       </StyledInviteContainer>
       <BottomGifImage src="/images/invite.gif"></BottomGifImage>
-    </Layout>
+    </>
   );
 };
 

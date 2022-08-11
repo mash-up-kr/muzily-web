@@ -6,7 +6,6 @@ import styled from "@emotion/styled";
 import { postRoom } from "~/api/room";
 import {
   BottomButton,
-  Layout,
   Spacer,
   TopBar,
   TopBarIconButton,
@@ -59,7 +58,7 @@ const RoomCreateMoodPage: NextPage = () => {
   };
 
   return (
-    <Layout screenColor="linear-gradient(#000, 85%, #01356E)">
+    <>
       <TopBar leftIconButton={<TopBarIconButton iconName="arrow-left" />}>
         방 만들기
       </TopBar>
@@ -99,7 +98,7 @@ const RoomCreateMoodPage: NextPage = () => {
         </StyledNoticeTextWrapper>
       </StyledContainer>
       <BottomButton label="방 만들기" onClick={createRoom} />
-    </Layout>
+    </>
   );
 };
 

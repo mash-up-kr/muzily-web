@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import type { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import {
   BottomButton,
-  Layout,
   Spacer,
   TopBar,
   TopBarIconButton,
@@ -18,10 +16,9 @@ const RoomCreatePage: NextPage = withRouteGuard(
   "/login",
   () => {
     const [value, setValue] = useState("");
-    const router = useRouter();
 
     return (
-      <Layout screenColor="linear-gradient(#000, 90%, #01356E)">
+      <>
         <TopBar leftIconButton={<TopBarIconButton iconName="arrow-left" />}>
           방 만들기
         </TopBar>
@@ -54,7 +51,7 @@ const RoomCreatePage: NextPage = withRouteGuard(
             <BottomButton label="다음" disabled={value.length === 0} />
           </a>
         </Link>
-      </Layout>
+      </>
     );
   }
 );
