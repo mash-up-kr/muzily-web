@@ -1,7 +1,9 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import styled from "@emotion/styled";
 import { useDrag, useDrop, type XYCoord } from "react-dnd";
+import { IconButton, Spacer } from "~/components/uis";
+import { useRoomStore } from "~/store";
 import { getDurationText } from "~/store/room/utils";
 import type { Music } from "~/types/musics";
 
@@ -10,7 +12,9 @@ interface MusicCardItemProps {
   onClick: () => void;
   item: Music;
   index: number;
+  deleteMode: boolean;
   moveCard: (from: number, to: number) => void;
+  setDeleteList: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 interface DragItem {
@@ -27,8 +31,33 @@ function MusicItemCard({
   item,
   index,
   moveCard,
+  setDeleteList,
+  deleteMode,
 }: MusicCardItemProps) {
+  const {
+    state: { isHost },
+  } = useRoomStore();
+
   const dragRef = useRef<HTMLDivElement>(null);
+  const [checked, setChecked] = useState(false);
+
+  const handleClickCheckButton = (
+    e: React.MouseEvent<HTMLDivElement>,
+    id: string
+  ) => {
+    e.stopPropagation();
+    setChecked((prev) => !prev);
+
+    if (!checked) {
+      return setDeleteList((list) => [...list, id]);
+    }
+    setDeleteList((list) => list.filter((item) => item !== id));
+  };
+
+  useEffect(() => {
+    setChecked(false);
+    setDeleteList([]);
+  }, [deleteMode, setDeleteList]);
 
   const [{ opacity, isDragging }, drag, preview] = useDrag({
     type: DRAG_TYPE,
@@ -81,22 +110,57 @@ function MusicItemCard({
   return (
     <S.Container ref={(node) => drop(preview(node))} opacity={opacity}>
       <S.MusicItem key={item.id} active={active} onClick={onClick}>
-        <S.Title>{item.title}</S.Title>
-        <S.Duration active={active}>
-          {getDurationText(item.duration || 0)}
-        </S.Duration>
+        {deleteMode && (
+          <Checkbox
+            onClick={(e) => handleClickCheckButton(e, item.id)}
+            color={active ? "blue" : "white"}
+            active={checked}
+            bgColor={active ? "#007AFF" : "#5EABFF"}
+          />
+        )}
+
+        <Spacer type="vertical">
+          <S.Title>{item.title}</S.Title>
+          <S.Duration active={active}>
+            {getDurationText(item.duration || 0)}
+          </S.Duration>
+        </Spacer>
       </S.MusicItem>
 
-      <S.Kebab active={active} ref={dragRef}>
-        <Image
-          src={active ? "/images/kebab-black.svg" : "/images/kebab.svg"}
-          alt="kebab"
-          width={4}
-          height={15}
-          style={{ color: "blue" }}
-        />
-      </S.Kebab>
+      {isHost && (
+        <S.Kebab active={active} ref={dragRef}>
+          <Image
+            src={active ? "/images/kebab-black.svg" : "/images/kebab.svg"}
+            alt="kebab"
+            width={4}
+            height={15}
+            style={{ color: "blue" }}
+          />
+        </S.Kebab>
+      )}
     </S.Container>
+  );
+}
+
+interface CheckboxProps {
+  onClick: React.MouseEventHandler<HTMLDivElement>;
+  active: boolean;
+  bgColor: string;
+  color: "white" | "blue";
+}
+
+function Checkbox({ onClick, active, bgColor = "#fff", color }: CheckboxProps) {
+  return (
+    <S.Checkbox onClick={onClick} bgColor={bgColor}>
+      {active && (
+        <Image
+          src={`/images/${color === "white" ? "check" : "check-white"}.svg`}
+          alt="check"
+          width={10}
+          height={10}
+        />
+      )}
+    </S.Checkbox>
   );
 }
 
@@ -109,7 +173,7 @@ const S = {
 
   MusicItem: styled.div<{ active: boolean }>`
     background-color: ${(p) => (p.active ? "#fff" : "#007aff")};
-    width: 50%;
+
     cursor: pointer;
     flex: 1;
     padding: 16px 18px;
@@ -117,13 +181,16 @@ const S = {
     border-radius: 7px;
     color: ${(p) => (p.active ? "#007aff" : "#fff")};
     border: 1px solid rgba(255, 255, 255, 0.08);
+
+    display: flex;
+    align-items: center;
   `,
 
   Title: styled.div`
     font-weight: 600;
     font-size: 14px;
     line-height: 155%;
-
+    width: 230px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -147,13 +214,21 @@ const S = {
     background-color: ${(p) => (p.active ? "#fff" : "#007aff")};
     border-radius: 7px;
     width: 64px;
-    display: flex;
+    display: ${(p) => (p.hidden ? "none" : "flex")};
     justify-content: center;
     align-items: center;
     /* width: 100%;
     height: 100%; */
     border: 1px solid rgba(255, 255, 255, 0.08);
   `,
-};
 
+  Checkbox: styled.div<{ bgColor: string }>`
+    width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+    background-color: ${(p) => p.bgColor};
+    border-radius: 50%;
+  `,
+};
 export default MusicItemCard;

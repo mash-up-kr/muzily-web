@@ -36,6 +36,7 @@ function IconButton({
 
 const S = {
   Container: styled(motion.div)`
+    cursor: pointer;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -44,8 +45,6 @@ const S = {
   `,
 
   IconWrapper: styled.div`
-    cursor: pointer;
-
     width: 60px;
     height: 60px;
     border-radius: 50%;
