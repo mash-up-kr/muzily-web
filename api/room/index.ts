@@ -10,5 +10,5 @@ export const postRoom = (
     data: roomReq,
   });
 
-export const getRoomDetail = (roomId: number): Promise<Room> =>
+export const getRoomDetail = (roomId: Room["roomId"]): Promise<Room> =>
   http.get(`/rooms/${roomId}`);
