@@ -48,40 +48,42 @@ function NowPlayingCard({
       <S.Title>Now Playing</S.Title>
       <Thumbnail src={currentMusic.thumbnail} colors={currentMusic.colors} />
 
-      <S.Controller hidden={!isHost}>
-        <Image
-          src="/images/play-back.svg"
-          alt="play-back"
-          width={20}
-          height={20}
-          onClick={actions.playPrevMusic}
-        />
-        {isPlaying ? (
+      {isHost && (
+        <S.Controller>
           <Image
-            src="/images/pause-button.svg"
+            src="/images/play-back.svg"
             alt="play-back"
-            width={60}
-            height={60}
-            onClick={() => player.pauseVideo()}
+            width={20}
+            height={20}
+            onClick={actions.playPrevMusic}
           />
-        ) : (
+          {isPlaying ? (
+            <Image
+              src="/images/pause-button.svg"
+              alt="play-back"
+              width={60}
+              height={60}
+              onClick={() => player.pauseVideo()}
+            />
+          ) : (
+            <Image
+              // 임시
+              src="/images/play.svg"
+              alt="play"
+              width={60}
+              height={60}
+              onClick={() => player.playVideo()}
+            />
+          )}
           <Image
-            // 임시
-            src="/images/play.svg"
-            alt="play"
-            width={60}
-            height={60}
-            onClick={() => player.playVideo()}
+            src="/images/play-next.svg"
+            alt="play-next"
+            width={20}
+            height={20}
+            onClick={actions.playNextMusic}
           />
-        )}
-        <Image
-          src="/images/play-next.svg"
-          alt="play-next"
-          width={20}
-          height={20}
-          onClick={actions.playNextMusic}
-        />
-      </S.Controller>
+        </S.Controller>
+      )}
 
       <S.MusicText>{musicText}</S.MusicText>
     </S.Container>
@@ -133,7 +135,7 @@ const S = {
     color: rgba(255, 255, 255, 0.65);
   `,
 
-  Controller: styled.div<{ hidden: boolean }>`
+  Controller: styled.div`
     display: ${(p) => (p.hidden ? "none" : "flex")};
     width: 100%;
     height: 90%;

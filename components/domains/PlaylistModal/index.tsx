@@ -15,9 +15,6 @@ function PlaylistModal() {
   const { close } = useModal();
 
   const moveCard = (from: number, to: number) => {
-    if (!isHost) {
-      return null;
-    }
     const arr = [...playList];
     const item = arr.splice(from, 1);
     const newArr = [...arr.slice(0, to), item[0], ...arr.slice(to)];

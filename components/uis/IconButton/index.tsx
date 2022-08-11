@@ -7,12 +7,12 @@ interface Props extends React.ComponentProps<typeof motion.div> {
   type?: "round";
   iconName: string; // 파일명에서 .svg를 제거한 파일명
   onClick?: () => void;
-  value?: number;
+  badgeValue?: number;
 }
 
 function IconButton({
   type = "round",
-  value,
+  badgeValue,
   iconName,
   onClick,
   ...props
@@ -29,7 +29,7 @@ function IconButton({
           height={20}
         />
       </S.IconWrapper>
-      {value ? <S.ValueCircle>{value}</S.ValueCircle> : <></>}
+      {badgeValue ? <S.Badge>{badgeValue}</S.Badge> : <></>}
     </S.Container>
   );
 }
@@ -56,7 +56,7 @@ const S = {
     align-items: center;
   `,
 
-  ValueCircle: styled.div`
+  Badge: styled.div`
     width: 24px;
     height: 24px;
     background: #017aff;
