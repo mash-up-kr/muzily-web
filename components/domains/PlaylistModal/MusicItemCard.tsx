@@ -173,7 +173,7 @@ const S = {
 
   MusicItem: styled.div<{ active: boolean }>`
     background-color: ${(p) => (p.active ? "#fff" : "#007aff")};
-    width: 50%;
+
     cursor: pointer;
     flex: 1;
     padding: 16px 18px;
@@ -190,6 +190,7 @@ const S = {
     font-weight: 600;
     font-size: 14px;
     line-height: 155%;
+    width: 230px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
