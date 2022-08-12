@@ -49,7 +49,7 @@ interface MoodScreenProps {
 
 const MoodScreen = ({ onClickBackButton }: MoodScreenProps) => {
   const {
-    state: { isHost },
+    state: { isHost, mood },
   } = useRoomStore();
   const [moodIdx, setMoodIdx] = useState(0);
   const [isAccodionOpen, setIsAccodionOpen] = useState(true);
@@ -75,7 +75,7 @@ const MoodScreen = ({ onClickBackButton }: MoodScreenProps) => {
           <TopBarIconButton iconName="arrow-left" onClick={onClickBackButton} />
         }
       />
-      {isHost ? (
+      {!isHost ? (
         <>
           <S.Title>
             원하는 무드로
@@ -85,7 +85,7 @@ const MoodScreen = ({ onClickBackButton }: MoodScreenProps) => {
           <S.Subtitle>현재 내 방의 무드는?</S.Subtitle>
 
           <S.MoodButton>
-            <S.MoodButtonTitle># 잔잔한 내적 댄스 유발</S.MoodButtonTitle>
+            <S.MoodButtonTitle>{mood}</S.MoodButtonTitle>
             <ChangeMoodButton />
           </S.MoodButton>
           <S.Accordion>

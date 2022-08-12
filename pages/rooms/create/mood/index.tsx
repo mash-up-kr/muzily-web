@@ -10,6 +10,7 @@ import {
   TopBar,
   TopBarIconButton,
 } from "~/components/uis";
+import { useRoomStore } from "~/store";
 import type { Mood } from "~/types/rooms";
 
 const MOOD_EXAMPLE = [
@@ -28,10 +29,15 @@ const MOOD_EXAMPLE = [
 ];
 
 const RoomCreateMoodPage: NextPage = () => {
-  const [mood, setMood] = useState({} as Mood);
   const router = useRouter();
+  const {
+    state: { mood: initialMood },
+    actions,
+  } = useRoomStore();
+  const [mood, setMood] = useState(initialMood);
 
   const createRoom = () => {
+    actions.setMood(mood);
     router.push(`/rooms/123/?isHost=true`);
   };
 
@@ -55,8 +61,8 @@ const RoomCreateMoodPage: NextPage = () => {
           {MOOD_EXAMPLE.map((v) => (
             <StyledButton
               key={v.name}
-              onClick={() => setMood(v)}
-              isActive={mood.emoji === v.emoji}
+              onClick={() => setMood(v.name)}
+              isActive={mood === v.name}
             >
               <StyledButtonText>{v.name}</StyledButtonText>
               <Image

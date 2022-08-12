@@ -7,6 +7,7 @@ import {
   TopBar,
   TopBarIconButton,
 } from "~/components/uis";
+import { useRoomStore } from "~/store";
 
 const MOOD_EXAMPLE = [
   {
@@ -32,9 +33,14 @@ const ChangeMoodScreen = ({
   onClickBackButton,
   onClosePrevPage,
 }: ChangeMoodScreenProps) => {
-  const [mood, setMood] = useState("");
+  const {
+    state: { mood: initialMood },
+    actions,
+  } = useRoomStore();
+  const [mood, setMood] = useState(initialMood);
 
   const handleClick = () => {
+    actions.setMood(mood);
     onClickBackButton();
     onClosePrevPage();
   };
@@ -57,8 +63,8 @@ const ChangeMoodScreen = ({
         {MOOD_EXAMPLE.map((v) => (
           <S.Button
             key={v.text}
-            onClick={() => setMood(v.iconName)}
-            isActive={mood === v.iconName}
+            onClick={() => setMood(v.text)}
+            isActive={mood === v.text}
           >
             <S.ButtonText>{v.text}</S.ButtonText>
             <Image
