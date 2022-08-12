@@ -9,6 +9,7 @@ interface Props {
   align?: CSSProperties["alignItems"];
   justify?: CSSProperties["justifyContent"];
   children: ReactNode;
+  margin?: number | string;
 }
 
 const Spacer = styled(motion.div)<Props>`
@@ -18,6 +19,8 @@ const Spacer = styled(motion.div)<Props>`
   align-items: ${({ align }) => align};
   gap: ${({ theme, gap = 0 }) =>
     typeof gap === "string" ? theme.gaps[gap] : `${gap}px`};
+  margin: ${({ margin }) =>
+    typeof margin === "string" ? margin : `${margin}px`};
 `;
 
 export default Spacer;
