@@ -1,11 +1,13 @@
 import { useContext, createContext } from "react";
 
-const Context = createContext({
-  open: (() => {}) as () => Promise<void>,
-  close: (() => {}) as () => Promise<void>,
-  isWaiting: false,
-  setIsWaiting: (() => {}) as React.Dispatch<React.SetStateAction<boolean>>,
-});
+type InitialState = {
+  open: () => Promise<void>,
+  close: () => Promise<void>,
+  isWaiting: boolean,
+  setIsWaiting: React.Dispatch<React.SetStateAction<boolean>>,
+}
+
+const Context = createContext({} as InitialState)
 export default Context;
 
 export const useModal = () => useContext(Context);
