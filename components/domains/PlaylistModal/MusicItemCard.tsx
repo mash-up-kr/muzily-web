@@ -120,7 +120,17 @@ function MusicItemCard({
         )}
 
         <Spacer type="vertical">
-          <S.Title>{item.title}</S.Title>
+          <S.Title>
+            {item.title}
+            {active && (
+              <Image
+                src="/images/music-status-bar.svg"
+                alt="music-status-bar"
+                width={14}
+                height={11}
+              />
+            )}
+          </S.Title>
           <S.Duration active={active}>
             {getDurationText(item.duration || 0)}
           </S.Duration>
@@ -190,10 +200,14 @@ const S = {
     font-weight: 600;
     font-size: 14px;
     line-height: 155%;
-    width: 230px;
-    white-space: nowrap;
+    /* width: 230px; */
+    /* white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: ellipsis; */
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
   `,
 
   Duration: styled.div<{ active: boolean }>`
