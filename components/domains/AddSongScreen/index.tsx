@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import axios from "axios";
 import YouTube from "react-youtube";
-import { ADDING_LIST } from "~/assets/dummy";
+import { VIDEO_LIST } from "~/assets/dummy";
 import {
   BottomButton,
   Spacer,

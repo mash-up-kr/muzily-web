@@ -2,7 +2,7 @@ import produce from "immer";
 import type { WritableDraft } from "immer/dist/internal";
 import { atom, selector, useRecoilState } from "recoil";
 import type { SetterOrUpdater } from "recoil";
-import { ADDING_LIST } from "~/assets/dummy";
+import { VIDEO_LIST } from "~/assets/dummy";
 import type { Music } from "~/types/musics";
 
 interface RoomState {
@@ -50,7 +50,7 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
     init(musicData: Music[], isHost: boolean) {
       update((draft) => {
         draft.playList = musicData;
-        draft.proposedMusicList = ADDING_LIST;
+        draft.proposedMusicList = VIDEO_LIST;
         draft.playingMusicId = musicData[0]?.id || "";
         draft.isHost = isHost;
       });
