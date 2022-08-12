@@ -11,6 +11,7 @@ interface RoomState {
   playingMusicId: string;
   isPlaying: boolean;
   isHost: boolean;
+  mood: string;
 }
 
 const roomAtomState = atom<RoomState>({
@@ -25,6 +26,9 @@ const roomAtomState = atom<RoomState>({
     proposedMusicList: [],
 
     playingMusicId: "",
+
+    // Mood
+    mood: "",
   },
 });
 
@@ -47,12 +51,13 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
   };
 
   return {
-    init(musicData: Music[], isHost: boolean) {
+    init(musicData: Music[], isHost: boolean, mood: string) {
       update((draft) => {
         draft.playList = musicData;
         draft.proposedMusicList = VIDEO_LIST;
         draft.playingMusicId = musicData[0]?.id || "";
         draft.isHost = isHost;
+        draft.mood = mood;
       });
     },
 
@@ -127,6 +132,12 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
     setIsHost(isHost: boolean) {
       update((draft) => {
         draft.isHost = isHost;
+      });
+    },
+
+    setMood(mood: string) {
+      update((draft) => {
+        draft.mood = mood;
       });
     },
   };

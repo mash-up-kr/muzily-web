@@ -13,6 +13,7 @@ import {
   NowPlayingCard,
   PlaylistCard,
   AddSongScreen,
+  MoodScreen,
 } from "~/components/domains";
 import QRCodeCard from "~/components/domains/QRCodeCard";
 import { Modal, Spacer, IconButton } from "~/components/uis";
@@ -315,7 +316,10 @@ const Actions = {
   ChangeMood: () => {
     return (
       <Spacer type="vertical" align="center" gap={8}>
-        <IconButton iconName="union" />
+        <Modal
+          trigger={({ open }) => <IconButton iconName="union" onClick={open} />}
+          modal={({ close }) => <MoodScreen onClickBackButton={close} />}
+        />
         <S.IconText>무드변경</S.IconText>
       </Spacer>
     );
