@@ -28,7 +28,7 @@ interface RoomPageProps {
 
 const RoomPage: NextPage<RoomPageProps> = ({ musicData, isHost: host }) => {
   const router = useRouter();
-  const { roomId } = router.query;
+  const { roomId } = router.query as { roomId: string };
   const {
     state: { playingMusicId, playList, isHost, proposedMusicList },
     actions,
