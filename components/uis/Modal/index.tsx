@@ -1,61 +1,70 @@
-import type { ReactElement } from "react";
-import { useContext, createContext } from "react";
+import type { ReactElement, ReactNode } from "react";
+import { useMemo, useState } from "react";
 import { useDisclosure } from "~/hooks/commons";
+import Close from "./Close";
+import Context from "./context";
+import Open from "./Open";
+import Portal from "./Portal";
 
-const Context = createContext({
-  close: (() => {}) as () => Promise<void>,
-});
+const DEFAULT_PORTAL_ID_PREFIX = "modal-portal";
 
-export const useModal = () => useContext(Context);
+type UseDisclosure = typeof useDisclosure;
 
 type Props = {
-  trigger: (args: { open: () => void }) => ReactElement;
+  portalId?: string;
+  trigger:
+    | ReactNode
+    | ((args: { open: ReturnType<UseDisclosure>["open"] }) => ReactElement);
   modal:
-    | React.ReactNode
-    | ((args: { close: () => Promise<void> }) => ReactElement);
-  initialState?: Parameters<typeof useDisclosure>[0]["initialState"];
-  onOpen?: Parameters<typeof useDisclosure>[0]["onOpen"];
-  onClose?: Parameters<typeof useDisclosure>[0]["onClose"];
+    | ReactNode
+    | ((args: {
+        close: ReturnType<UseDisclosure>["close"];
+        isWaiting: boolean;
+      }) => ReactElement);
+  initialIsOpen?: Parameters<UseDisclosure>[0]["initialState"];
+  onOpen?: Parameters<UseDisclosure>[0]["onOpen"];
+  onClose?: Parameters<UseDisclosure>[0]["onClose"];
 };
 
 const Modal = ({
-  initialState = false,
+  portalId,
+  initialIsOpen = false,
   trigger,
   onOpen,
   onClose,
   modal,
 }: Props) => {
+  const memoizedPortalId = useMemo(() => {
+    return typeof portalId === "string" && portalId !== DEFAULT_PORTAL_ID_PREFIX
+      ? portalId
+      : `${DEFAULT_PORTAL_ID_PREFIX}-${new Date().getTime()}`;
+  }, []);
+
+  const [isWaiting, setIsWaiting] = useState(false);
   const { isOpen, close, open } = useDisclosure({
-    initialState,
+    initialState: initialIsOpen,
     onOpen,
-    onClose,
+    onClose: async () => {
+      await onClose?.();
+      document.getElementById(memoizedPortalId)?.remove();
+    },
   });
 
-  const modalOpened = typeof modal === "function" ? modal({ close }) : modal;
-
   return (
-    <Context.Provider value={{ close }}>
-      {trigger({ open })}
-      {isOpen ? modalOpened : null}
+    <Context.Provider value={{ open, close, isWaiting, setIsWaiting }}>
+      {typeof trigger === "function" ? trigger({ open }) : trigger}
+      {isOpen ? (
+        <Portal id={memoizedPortalId}>
+          {typeof modal === "function" ? modal({ close, isWaiting }) : modal}
+        </Portal>
+      ) : null}
     </Context.Provider>
   );
 };
 
-type CloseProps<T extends React.ElementType> = {
-  as?: T;
-};
+export default Modal;
 
-const Close = <T extends React.ElementType = "button">({
-  as,
-  ...props
-}: CloseProps<T> &
-  Omit<React.ComponentPropsWithoutRef<T>, keyof CloseProps<T>>) => {
-  const { close } = useModal();
-  const Component = as || "button";
-
-  return <Component onClick={close} {...props} />;
-};
-
+Modal.Open = Open;
 Modal.Close = Close;
 
-export default Modal;
+export { useModal } from "./context";
