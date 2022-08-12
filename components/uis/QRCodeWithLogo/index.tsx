@@ -7,13 +7,13 @@ interface QRCodeWithLogoProps {
 
 type QRStyleType = "dots" | "squares";
 
-const logoStaticImage = "/images/qr-code-logo.png";
+const logoStaticImage = "/images/qr-code-logo.svg";
 const logoSize = {
-  width: 27,
-  height: 30,
+  width: 20,
+  height: 20,
 };
-const eyeRadius = 6;
-const qrSize = 178;
+const eyeRadius = 9;
+const qrSize = 157;
 const qrStyle: QRStyleType = "dots";
 const qrCodeMarginAreaSize = 10;
 

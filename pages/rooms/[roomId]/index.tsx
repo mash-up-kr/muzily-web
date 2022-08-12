@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import type { NextPage, NextPageContext } from "next";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import type { Variant } from "framer-motion";
 import { AnimatePresence, motion } from "framer-motion";
@@ -13,6 +14,7 @@ import {
   PlaylistCard,
   AddSongScreen,
 } from "~/components/domains";
+import QRCodeCard from "~/components/domains/QRCodeCard";
 import { Modal, Spacer, IconButton } from "~/components/uis";
 import { useRoomStore } from "~/store";
 import type { Music } from "~/types/musics";
@@ -25,6 +27,8 @@ interface RoomPageProps {
 }
 
 const RoomPage: NextPage<RoomPageProps> = ({ musicData, isHost: host }) => {
+  const router = useRouter();
+  const { roomId } = router.query;
   const {
     state: { playingMusicId, playList, isHost, proposedMusicList },
     actions,
@@ -49,6 +53,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData, isHost: host }) => {
         </S.Header>
 
         <S.ContentWrapper>
+          <QRCodeCard roomId={roomId} />
           <NowPlayingCard
             noPlaylist={!playList.length}
             currentMusic={currentMusic}

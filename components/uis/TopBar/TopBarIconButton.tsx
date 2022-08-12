@@ -15,7 +15,11 @@ const TopBarIconButton = ({
 }: TopBarIconButtonProps) => {
   const router = useRouter();
   const backButton = () => {
-    router.back();
+    if (iconName === "arrow-left") {
+      router.back();
+    } else if (iconName === "star") {
+      router.push("/");
+    }
   };
 
   return (
