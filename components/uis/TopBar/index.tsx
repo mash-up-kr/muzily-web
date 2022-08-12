@@ -44,6 +44,7 @@ const StyledContainer = styled.div<{ sticky?: boolean }>`
   align-items: center;
   height: 40px;
   padding: 0 24px;
+  color: #fff;
 `;
 const StyledTopBarText = styled.h2`
   flex: 1;

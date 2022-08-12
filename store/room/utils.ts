@@ -10,5 +10,5 @@ export function getDurationText(duration: number) {
   const min = Math.floor(duration / 60);
   const sec = duration - min * 60;
 
-  return `${min > 9 ? min : `0${min}`}:${sec}`;
+  return `${min > 9 ? min : `0${min}`}:${sec > 9 ? sec : `0${sec}`}`;
 }
