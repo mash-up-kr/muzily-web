@@ -127,6 +127,7 @@ const S = {
   `,
   NoticeTextWrapper: styled(Spacer)`
     position: absolute;
+    z-index: 10;
     bottom: 32px;
     align-items: flex-start;
   `,
