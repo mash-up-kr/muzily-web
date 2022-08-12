@@ -47,11 +47,12 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
   };
 
   return {
-    init(musicData: Music[]) {
+    init(musicData: Music[], isHost: boolean) {
       update((draft) => {
         draft.playList = musicData;
         draft.proposedMusicList = ADDING_LIST;
-        draft.playingMusicId = musicData[0].id;
+        draft.playingMusicId = musicData[0]?.id || "";
+        draft.isHost = isHost;
       });
     },
 
