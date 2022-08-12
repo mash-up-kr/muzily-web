@@ -32,25 +32,7 @@ const RoomCreateMoodPage: NextPage = () => {
   const router = useRouter();
 
   const createRoom = () => {
-    const { roomName } = router.query as { roomName: string };
-
-    postRoom({
-      description: roomName,
-      moods: [
-        {
-          name: mood.name,
-          emoji: mood.emoji,
-        },
-      ],
-    })
-      .then((room) => {
-        const { roomId } = room;
-        router.push(`/rooms/${roomId}/`);
-      })
-      .catch((reason: any) => {
-        // TODO: 실패 이유 팝업 핸들링
-        console.error(reason);
-      });
+    router.push(`/rooms/123/?isHost=true`);
   };
 
   return (
