@@ -45,10 +45,10 @@
 
 export const VIDEO_LIST = [
   {
-    id: "Rrf8uQFvICE",
-    duration: 176,
-    title: "NewJeans (뉴진스) 'Hype Boy' Official MV (MINJI ver.)",
-    thumbnail: "https://i.ytimg.com/vi/Rrf8uQFvICE/hqdefault.jpg",
+    id: "z2ZjutyxmjA",
+    duration: 187,
+    title: "aespa 에스파 'Life's Too Short (English Ver.)' MV",
+    thumbnail: "https://i.ytimg.com/vi/z2ZjutyxmjA/hqdefault.jpg",
     colors: ["#007AFF"],
   },
   {

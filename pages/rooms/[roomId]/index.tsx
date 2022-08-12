@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import type { NextPage, NextPageContext } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -33,6 +33,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData, isHost: host }) => {
     state: { playingMusicId, playList, isHost, proposedMusicList },
     actions,
   } = useRoomStore();
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const [player, setPlayer] = useState(null);
   const currentMusic = useMemo(
@@ -44,6 +45,13 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData, isHost: host }) => {
     actions.init(host ? [] : VIDEO_LIST, host);
   }, []);
 
+  useEffect(() => {
+    if (contentRef.current) {
+      const contentWidth = contentRef.current.offsetWidth;
+      contentRef.current.scrollTo({ left: contentWidth / 2 });
+    }
+  }, [contentRef]);
+
   return (
     <>
       <S.Container>
@@ -52,7 +60,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData, isHost: host }) => {
           <S.Desc>{DESC}</S.Desc>
         </S.Header>
 
-        <S.ContentWrapper>
+        <S.ContentWrapper ref={contentRef}>
           <QRCodeCard roomId={roomId} />
           <NowPlayingCard
             noPlaylist={!playList.length}
@@ -142,6 +150,9 @@ const S = {
     padding: 0 20px;
     margin-left: -20px;
     width: calc(100% + 40px);
+    ::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera*/
+    }
   `,
   YoutubeWrapper: styled.div<{ hidden: boolean }>`
     visibility: ${(p) => p.hidden && "hidden"};

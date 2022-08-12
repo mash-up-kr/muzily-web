@@ -168,7 +168,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
                     onClick={() => {
                       actions.addToPlaylist(item);
                       actions.removeMusicFromProposedList(item.id);
-                      close();
+                      // close();
                     }}
                   >
                     추가
