@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 
 interface TopBarIconButtonProps {
@@ -12,8 +13,13 @@ const TopBarIconButton = ({
   alt,
   onClick,
 }: TopBarIconButtonProps) => {
+  const router = useRouter();
+  const backButton = () => {
+    router.back();
+  };
+
   return (
-    <StyledIconWrapper onClick={onClick}>
+    <StyledIconWrapper onClick={onClick ?? backButton}>
       <Image
         src={`/images/${iconName}.svg`}
         alt={alt ?? "icon"}

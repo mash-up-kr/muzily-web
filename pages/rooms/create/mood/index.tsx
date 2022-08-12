@@ -45,11 +45,7 @@ const RoomCreateMoodPage: NextPage = () => {
     })
       .then((room) => {
         const { roomId } = room;
-        router.push(
-          `/rooms/${roomId}`,
-          { query: { roomId } },
-          { shallow: true }
-        );
+        router.push(`/rooms/${roomId}/`);
       })
       .catch((reason: any) => {
         // TODO: 실패 이유 팝업 핸들링

@@ -31,7 +31,7 @@ export const useAuthRedirected = () => {
     {
       onSuccess: () => {
         refetchMemberInfo();
-        router.replace("/");
+        router.replace("/rooms/create");
       },
     }
   );
