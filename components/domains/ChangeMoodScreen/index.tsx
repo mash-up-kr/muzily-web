@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import type { NextPage } from "next";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import {
   BottomButton,
-  Layout,
   Spacer,
   TopBar,
   TopBarIconButton,
@@ -28,11 +25,19 @@ const MOOD_EXAMPLE = [
 
 interface ChangeMoodScreenProps {
   onClickBackButton: () => void;
+  onClosePrevPage: () => void;
 }
 
-const ChangeMoodScreen = ({ onClickBackButton }: ChangeMoodScreenProps) => {
+const ChangeMoodScreen = ({
+  onClickBackButton,
+  onClosePrevPage,
+}: ChangeMoodScreenProps) => {
   const [mood, setMood] = useState("");
-  const router = useRouter();
+
+  const handleClick = () => {
+    onClickBackButton();
+    onClosePrevPage();
+  };
 
   return (
     <S.Container>
@@ -71,10 +76,7 @@ const ChangeMoodScreen = ({ onClickBackButton }: ChangeMoodScreenProps) => {
           <Image src={`/images/plus.svg`} alt="icon" width={14} height={14} />
         </S.BottomButton>
       </S.NoticeTextWrapper>
-      <BottomButton
-        label="무드 변경하기"
-        onClick={() => console.log("next!")}
-      />
+      <BottomButton label="무드 변경하기" onClick={handleClick} />
     </S.Container>
   );
 };
@@ -86,8 +88,9 @@ const S = {
     left: 0;
     width: 100%;
     height: 100%;
-    /* background: linear-gradient(); */
-    background: linear-gradient(rgba(0, 0, 0, 0.85), 85%, #01356e);
+    color: #fff;
+    text-align: left;
+    background: linear-gradient(#000, 85%, #01356e);
     padding: 0 20px;
     z-index: 1;
   `,
@@ -101,6 +104,7 @@ const S = {
   SubTitle: styled.p`
     margin-top: 17px;
     font-size: 16px;
+    text-align: center;
     color: #8b95a1;
   `,
   ButtonGroup: styled(Spacer)`
