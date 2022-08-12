@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef, ElementType } from "react";
-import { useModal } from "./context";
+import { useModal } from "../../context";
 
 type Props<T extends ElementType> = {
   as?: T;

@@ -1,12 +1,9 @@
 import type { ReactElement, ReactNode } from "react";
 import { useMemo, useState } from "react";
 import { useDisclosure } from "~/hooks/commons";
-import Close from "./Close";
+import { Open, Close, Portal } from "./components";
+import { DEFAULT_PORTAL_ID_PREFIX } from "./constants";
 import Context from "./context";
-import Open from "./Open";
-import Portal from "./Portal";
-
-const DEFAULT_PORTAL_ID_PREFIX = "modal-portal";
 
 type UseDisclosure = typeof useDisclosure;
 
@@ -67,4 +64,5 @@ export default Modal;
 Modal.Open = Open;
 Modal.Close = Close;
 
+export { default as createModal } from "./create";
 export { useModal } from "./context";

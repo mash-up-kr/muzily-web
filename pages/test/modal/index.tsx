@@ -1,16 +1,14 @@
 import type { ComponentProps } from "react";
 import React from "react";
-import { css } from "@emotion/react";
+import { css, ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
-import { Layout, Modal, Spacer } from "~/components/uis";
+import { Layout, Spacer } from "~/components/uis";
+import Modal, { createModal } from "~/components/uis/Modal";
+import { emotionTheme } from "~/theme";
 
-const getAsyncText = async (text = "비동기처리 끝", ms = 1000) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(text);
-    }, ms);
-  });
-};
+const themedModal = createModal([
+  { component: ThemeProvider, props: { theme: emotionTheme } },
+]);
 
 const ModalTestPage = () => {
   const handleConfirm = async () => {
@@ -18,9 +16,54 @@ const ModalTestPage = () => {
     console.log(awaitedText);
   };
 
+  const handleClickFunctionalModal = () =>
+    themedModal.show(({ createClose }) => {
+      const close = createClose();
+      const closeAfterAsync = createClose<typeof LoadingButton>(getAsyncText, {
+        onFailure: (error) => {
+          console.log("onFailure", error);
+        },
+        onSuccess: () => {
+          console.log("onSuccess");
+        },
+        onClosed: () => {
+          console.log("onClosed");
+        },
+      });
+
+      return (
+        <S.Modal>
+          <Spacer
+            type="horizontal"
+            justify="space-between"
+            gap={8}
+            style={{ flex: 1 }}
+          >
+            <LoadingButton {...close()}>
+              그냥 닫고 백그라운드 비동기 처리
+            </LoadingButton>
+            <LoadingButton
+              {...closeAfterAsync("onClick", ({ isLoading }) => ({
+                loading: isLoading,
+                disabled: isLoading,
+              }))}
+            >
+              비동기 처리
+            </LoadingButton>
+          </Spacer>
+        </S.Modal>
+      );
+    });
+
   return (
     <Layout>
-      <Spacer type="horizontal" gap={16}>
+      <Spacer type="vertical" gap={16} style={{ marginTop: 32 }}>
+        {/* 1. 함수형 모달 */}
+        <LoadingButton onClick={handleClickFunctionalModal}>
+          open modal
+        </LoadingButton>
+
+        {/* 2. 컴포넌트 형 모달 */}
         <Modal
           trigger={
             <Modal.Open
@@ -100,7 +143,7 @@ const LoadingButton = ({
   loading = false,
   children,
   ...props
-}: ComponentProps<typeof S.Button> & { loading?: boolean }) => {
+}: ComponentProps<"button"> & { loading?: boolean }) => {
   return (
     <S.Button {...props}>
       <Spacer gap={8} align="center">
@@ -139,6 +182,8 @@ const S = {
   `,
 
   Modal: styled.div`
+    display: flex;
+    justify-content: space-between;
     width: 100%;
     max-width: 500px;
     margin: 16px;
@@ -167,4 +212,12 @@ const S = {
       }
     `}
   `,
+};
+
+const getAsyncText = async (text = "비동기처리 성공", ms = 1000) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(text);
+    }, ms);
+  });
 };
