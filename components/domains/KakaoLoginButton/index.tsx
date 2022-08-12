@@ -28,6 +28,8 @@ const KakaoLoginButton = ({
     width: "100%",
     height: "51px",
     background: "url('images/kakao_login_large_wide.png')",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "auto",
     cursor: "pointer",
     border: "none",
   };

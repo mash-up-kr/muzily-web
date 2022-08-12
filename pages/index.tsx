@@ -57,6 +57,9 @@ const S = {
     letter-spacing: -0.478073px;
     display: flex;
     align-items: center;
+    background-color: black;
+    border: none;
+    cursor: pointer;
   `,
   InviteContainer: styled.div`
     display: flex;
