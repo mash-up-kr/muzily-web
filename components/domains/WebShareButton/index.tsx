@@ -68,6 +68,18 @@ const WebShareButton = ({
   );
 };
 
-const StyledButton = styled.button``;
+const StyledButton = styled.button`
+  width: 100%;
+  height: 66.96px;
+  border: 2px solid rgba(255, 255, 255, 0.11);
+  border-radius: 20px;
+
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 19px;
+  color: #9c9c9c;
+
+  cursor: pointer;
+`;
 
 export default WebShareButton;
