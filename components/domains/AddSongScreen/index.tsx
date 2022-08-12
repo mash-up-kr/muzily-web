@@ -292,6 +292,7 @@ const S = {
   `,
 
   CardHeader: styled.div`
+    color: white;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     padding-bottom: 20px;
 
@@ -318,9 +319,16 @@ const S = {
   `,
 
   MusicTitle: styled.div`
+    color: white;
     font-weight: 600;
     font-size: 12px;
     line-height: 155%;
+    line-clamp: 2;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   `,
   MusicArtist: styled.div`
     font-weight: 300;
@@ -342,6 +350,7 @@ const S = {
     line-height: 14px;
     letter-spacing: -0.306564px;
     color: #fff;
+    white-space: nowrap;
   `,
 };
 

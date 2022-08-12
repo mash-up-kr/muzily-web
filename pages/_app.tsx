@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import React from "react";
 import type { AppProps } from "next/app";
 import { ThemeProvider } from "@emotion/react";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -12,18 +13,20 @@ const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <RecoilRoot>
-      <Layout>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider theme={emotionTheme}>
-            <MemberInfo.Provider>
-              <Component {...pageProps} />
-            </MemberInfo.Provider>
-          </ThemeProvider>
-          <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
-        </QueryClientProvider>
-      </Layout>
-    </RecoilRoot>
+    <React.StrictMode>
+      <RecoilRoot>
+        <Layout>
+          <QueryClientProvider client={queryClient}>
+            <ThemeProvider theme={emotionTheme}>
+              <MemberInfo.Provider>
+                <Component {...pageProps} />
+              </MemberInfo.Provider>
+            </ThemeProvider>
+            <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+          </QueryClientProvider>
+        </Layout>
+      </RecoilRoot>
+    </React.StrictMode>
   );
 }
 
