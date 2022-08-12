@@ -250,7 +250,7 @@ const S = {
     padding-left: 23px;
     font-size: 16px;
     font-weight: 600;
-    background: ${(p) => (p.isChecked ? "white" : "rgba(64, 73, 83, 0.85)")};
+    background: ${(p) => (p.isChecked ? "white" : "#373E46")};
     color: ${(p) => (p.isChecked ? "#007AFF" : "white")};
     border: none;
     border-radius: 20px;
@@ -265,7 +265,7 @@ const S = {
       height: 14px;
       clip-path: polygon(0% 0%, 100% 100%, 100% 0%);
       transform: rotate(270deg);
-      background: ${(p) => (p.isChecked ? "white" : "rgba(64, 73, 83, 0.85)")};
+      background: ${(p) => (p.isChecked ? "white" : "#373E47")};
       border-radius: 4px;
     }
   `,

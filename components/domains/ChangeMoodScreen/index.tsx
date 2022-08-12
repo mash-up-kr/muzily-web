@@ -128,7 +128,9 @@ const S = {
   NoticeTextWrapper: styled(Spacer)`
     position: absolute;
     z-index: 10;
-    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 94px;
     align-items: flex-start;
   `,
   BottomButton: styled.button`
