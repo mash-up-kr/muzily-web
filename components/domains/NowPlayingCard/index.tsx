@@ -1,8 +1,10 @@
 import React from "react";
 import Image from "next/image";
 import styled from "@emotion/styled";
+import { Modal } from "~/components/uis";
 import { useRoomStore } from "~/store";
 import type { Music } from "~/types/musics";
+import AddSongScreen from "../AddSongScreen";
 import Thumbnail from "../Thumbnail";
 
 interface NowPlayingCardProps {
@@ -24,21 +26,26 @@ function NowPlayingCard({
   // 재생 중인 노래 없는경우
   if (noPlaylist) {
     return (
-      <S.Container noPlaylist>
-        <S.Title>Now Playing</S.Title>
-        <S.Content>
-          <S.NoPlaylistText>{`재생 중인\n노래가 없어요`}</S.NoPlaylistText>
+      <Modal
+        modal={({ close }) => <AddSongScreen onClickBackButton={close} />}
+        trigger={({ open }) => (
+          <S.Container noPlaylist onClick={open}>
+            <S.Title>Now Playing</S.Title>
+            <S.Content>
+              <S.NoPlaylistText>{`재생 중인\n노래가 없어요`}</S.NoPlaylistText>
 
-          <Image
-            src="/images/no-music-emoji.svg"
-            alt="no-music"
-            width={160}
-            height={160}
-          />
+              <Image
+                src="/images/no-music-emoji.svg"
+                alt="no-music"
+                width={160}
+                height={160}
+              />
 
-          <S.SubText>지금 바로 추가해보세요</S.SubText>
-        </S.Content>
-      </S.Container>
+              <S.SubText>지금 바로 추가해보세요</S.SubText>
+            </S.Content>
+          </S.Container>
+        )}
+      />
     );
   }
   const musicText = `${currentMusic.title}`;

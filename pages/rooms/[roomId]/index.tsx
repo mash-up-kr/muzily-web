@@ -21,9 +21,10 @@ const TITLE = "매쇼~쉬는탐";
 const DESC = "곡을 추가하거나 좋아요를 해보세요!";
 interface RoomPageProps {
   musicData: Music[];
+  isHost: boolean;
 }
 
-const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
+const RoomPage: NextPage<RoomPageProps> = ({ musicData, isHost: host }) => {
   const {
     state: { playingMusicId, playList, isHost, proposedMusicList },
     actions,
@@ -36,7 +37,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
   );
 
   useEffect(() => {
-    actions.init(musicData);
+    actions.init([], host);
   }, []);
 
   return (
@@ -56,12 +57,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData }) => {
 
           <PlaylistCard currentMusic={currentMusic} />
         </S.ContentWrapper>
-        <button
-          style={{ height: 50 }}
-          onClick={() => actions.setIsHost(!isHost)}
-        >
-          {isHost ? "방장" : "익명"}
-        </button>
+
         <S.IconWrapper>
           <Actions.NewMusic value={isHost ? proposedMusicList.length : 0} />
           <Actions.Emoji />

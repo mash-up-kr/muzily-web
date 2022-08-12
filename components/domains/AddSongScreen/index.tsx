@@ -9,10 +9,11 @@ import {
   TopBar,
   TopBarIconButton,
 } from "~/components/uis";
-import { useModal } from "~/components/uis/Modal";
+import Modal, { useModal } from "~/components/uis/Modal";
 import { useRoomStore } from "~/store";
 import { getDurationText } from "~/store/room/utils";
 import type { Music } from "~/types/musics";
+import AddSongGuideScreen from "../AddSongGuideScreen";
 
 const defaultEndPoint = process.env
   .NEXT_PUBLIC_SERVER_DEFAULT_END_POINT as string;
@@ -102,6 +103,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
         leftIconButton={
           <TopBarIconButton iconName="arrow-left" onClick={onClickBackButton} />
         }
+        rightIconButton={<QuestionButton />}
       />
       {/* <button onClick={props.onClickBackButton}>뒤로가기</button> */}
       <S.HeadingText>
@@ -196,6 +198,14 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
     </S.Container>
   );
 }
+const QuestionButton = () => (
+  <Modal
+    trigger={({ open }) => (
+      <TopBarIconButton iconName="circle-question" onClick={open} />
+    )}
+    modal={({ close }) => <AddSongGuideScreen onClickBackButton={close} />}
+  />
+);
 
 const DOMAINS = ["www.youtube.com", "youtu.be"];
 

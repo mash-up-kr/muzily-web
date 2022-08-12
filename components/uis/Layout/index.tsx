@@ -18,7 +18,7 @@ const StyledContainer = styled.div`
   height: 100%;
   display: flex;
   justify-content: center;
-  background-color: grey;
+  background-color: #121212;
   z-index: 100;
 `;
 
