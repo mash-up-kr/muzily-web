@@ -13,6 +13,7 @@ import {
   NowPlayingCard,
   PlaylistCard,
   AddSongScreen,
+  MoodScreen,
   ChangeMoodScreen,
 } from "~/components/domains";
 import QRCodeCard from "~/components/domains/QRCodeCard";
