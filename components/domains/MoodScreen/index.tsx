@@ -50,9 +50,15 @@ interface MoodScreenProps {
 const MoodScreen = ({ onClickBackButton }: MoodScreenProps) => {
   const {
     state: { isHost, mood },
+    actions,
   } = useRoomStore();
   const [moodIdx, setMoodIdx] = useState(0);
   const [isAccodionOpen, setIsAccodionOpen] = useState(true);
+
+  // XXX(jiyoung.lim): User test를 위한 임시 무드. 추후 방 생성 비즈니스 로직 구현 시 변경 필요.
+  React.useEffect(() => {
+    actions.setMood("# 잔잔한 내적 댄스 유발");
+  }, []);
 
   const ChangeMoodButton = () => (
     <Modal
@@ -327,6 +333,7 @@ const S = {
     font-weight: 600;
     font-size: 12px;
     line-height: 155%;
+    color: #fff;
   `,
   RequestDate: styled.span`
     font-weight: 300;
