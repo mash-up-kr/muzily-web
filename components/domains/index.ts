@@ -5,3 +5,4 @@ export { default as Thumbnail } from "./Thumbnail";
 export { default as LongPress } from "./LongPress";
 export { default as PlaylistCard } from "./PlaylistCard";
 export { default as AddSongScreen } from "./AddSongScreen";
+export { default as ChangeMoodScreen } from "./ChangeMoodScreen";
