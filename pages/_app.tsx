@@ -2,6 +2,7 @@ import "../styles/globals.css";
 import React from "react";
 import type { AppProps } from "next/app";
 import { ThemeProvider } from "@emotion/react";
+import styled from "@emotion/styled";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { RecoilRoot } from "recoil";
@@ -15,6 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <React.StrictMode>
       <RecoilRoot>
+        <S.Background />
         <Layout>
           <QueryClientProvider client={queryClient}>
             <ThemeProvider theme={emotionTheme}>
@@ -31,3 +33,14 @@ function MyApp({ Component, pageProps }: AppProps) {
 }
 
 export default MyApp;
+
+const S = {
+  Background: styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #111111;
+  `,
+};

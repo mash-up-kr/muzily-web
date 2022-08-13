@@ -18,7 +18,6 @@ const S = {
   Container: styled.div`
     height: 100%;
     width: 100%;
-    background-color: #121212;
     z-index: 100;
     display: flex;
     justify-content: center;
@@ -32,6 +31,7 @@ const S = {
     padding: 0 20px;
     color: #fff;
     position: relative;
+    backdrop-filter: blur(10px);
   `,
 };
 
