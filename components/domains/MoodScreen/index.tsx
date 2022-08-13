@@ -76,7 +76,7 @@ const MoodScreen = ({ onClickBackButton }: MoodScreenProps) => {
   );
 
   return (
-    <Layout>
+    <Layout screenColor="rgba(0, 0, 0, 0.85)">
       <TopBar
         leftIconButton={
           <TopBarIconButton iconName="arrow-left" onClick={onClickBackButton} />

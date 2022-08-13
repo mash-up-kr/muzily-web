@@ -47,7 +47,7 @@ const ChangeMoodScreen = ({
   };
 
   return (
-    <Layout>
+    <Layout screenColor="rgba(0, 0, 0, 0.85)">
       <TopBar
         leftIconButton={
           <TopBarIconButton iconName="arrow-left" onClick={onClickBackButton} />
@@ -89,18 +89,6 @@ const ChangeMoodScreen = ({
 };
 
 const S = {
-  Container: styled.div`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    color: #fff;
-    text-align: left;
-    background: linear-gradient(#000, 85%, #01356e);
-    padding: 0 20px;
-    z-index: 1;
-  `,
   Title: styled.h3`
     display: flex;
     justify-content: center;

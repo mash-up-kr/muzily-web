@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import styled from "@emotion/styled";
-import { TopBar, TopBarIconButton } from "~/components/uis";
+import { Layout, TopBar, TopBarIconButton } from "~/components/uis";
 import { useRoomStore } from "~/store";
 
 const STEPS_FOR_HOST = [
@@ -52,7 +52,7 @@ function AddSongGuideScreen({ onClickBackButton }: AddSongGuideScreenProps) {
   const steps = isHost ? STEPS_FOR_HOST : STEPS_FOR_USER;
 
   return (
-    <S.Container>
+    <Layout screenColor="#030303">
       <TopBar
         sticky
         leftIconButton={
@@ -76,25 +76,11 @@ function AddSongGuideScreen({ onClickBackButton }: AddSongGuideScreenProps) {
           </S.Step>
         ))}
       </S.StepList>
-    </S.Container>
+    </Layout>
   );
 }
 
 const S = {
-  Container: styled.div`
-    position: absolute;
-    padding: 0 20px;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #030303;
-    z-index: 1;
-    overflow-y: auto;
-    text-align: start;
-    padding-bottom: 60px;
-  `,
-
   Title: styled.h2`
     margin: 0;
     font-weight: 600;

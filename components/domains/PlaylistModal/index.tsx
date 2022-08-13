@@ -31,7 +31,7 @@ function PlaylistModal() {
   };
 
   return (
-    <Layout>
+    <Layout screenColor="rgba(0, 0, 0, 0.85)">
       <TopBar
         sticky
         leftIconButton={
