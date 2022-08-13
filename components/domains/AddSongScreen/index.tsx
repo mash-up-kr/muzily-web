@@ -157,7 +157,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
           <S.CardContent>
             {proposedMusicList.map((item) => (
               <S.CardItem key={item.id}>
-                <Spacer type="vertical">
+                <Spacer type="vertical" style={{ marginRight: 12 }}>
                   <S.MusicTitle>{item.title}</S.MusicTitle>
                   <S.MusicArtist>
                     {getDurationText(item.duration || 0)}
