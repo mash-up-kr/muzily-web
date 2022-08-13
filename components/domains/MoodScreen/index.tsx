@@ -7,6 +7,7 @@ import {
   TopBar,
   TopBarIconButton,
   BottomButton,
+  Layout,
 } from "~/components/uis";
 import Modal from "~/components/uis/Modal";
 import { useRoomStore } from "~/store";
@@ -75,7 +76,7 @@ const MoodScreen = ({ onClickBackButton }: MoodScreenProps) => {
   );
 
   return (
-    <S.Container>
+    <Layout>
       <TopBar
         leftIconButton={
           <TopBarIconButton iconName="arrow-left" onClick={onClickBackButton} />
@@ -176,22 +177,11 @@ const MoodScreen = ({ onClickBackButton }: MoodScreenProps) => {
           <BottomButton label="메세지 보내기" onClick={onClickBackButton} />
         </>
       )}
-    </S.Container>
+    </Layout>
   );
 };
 
 const S = {
-  Container: styled.div`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.85);
-    padding: 0 20px;
-    text-align: left;
-    z-index: 1;
-  `,
   Title: styled.h2`
     margin-top: 16px;
     font-size: 24px;

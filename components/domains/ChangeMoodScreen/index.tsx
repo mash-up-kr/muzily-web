@@ -3,6 +3,7 @@ import Image from "next/image";
 import styled from "@emotion/styled";
 import {
   BottomButton,
+  Layout,
   Spacer,
   TopBar,
   TopBarIconButton,
@@ -46,7 +47,7 @@ const ChangeMoodScreen = ({
   };
 
   return (
-    <S.Container>
+    <Layout>
       <TopBar
         leftIconButton={
           <TopBarIconButton iconName="arrow-left" onClick={onClickBackButton} />
@@ -83,7 +84,7 @@ const ChangeMoodScreen = ({
         </S.BottomButton>
       </S.NoticeTextWrapper>
       <BottomButton label="무드 변경하기" onClick={handleClick} />
-    </S.Container>
+    </Layout>
   );
 };
 

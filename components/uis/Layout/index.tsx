@@ -16,10 +16,11 @@ function Layout({ children, screenColor }: LayoutProps) {
 
 const StyledContainer = styled.div`
   height: 100%;
-  display: flex;
-  justify-content: center;
+  width: 100%;
   background-color: #121212;
   z-index: 100;
+  display: flex;
+  justify-content: center;
 `;
 
 const StyledScreen = styled.div<{ screenColor?: string }>`

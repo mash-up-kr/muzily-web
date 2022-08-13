@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { DndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { TopBar, TopBarIconButton } from "~/components/uis";
+import { Layout, TopBar, TopBarIconButton } from "~/components/uis";
 import { useModal } from "~/components/uis/Modal";
 import { useRoomStore } from "~/store";
 import MusicItemCard from "./MusicItemCard";
@@ -31,7 +31,7 @@ function PlaylistModal() {
   };
 
   return (
-    <S.Container>
+    <Layout>
       <TopBar
         sticky
         leftIconButton={
@@ -90,23 +90,11 @@ function PlaylistModal() {
       ) : (
         <></>
       )}
-    </S.Container>
+    </Layout>
   );
 }
 
 const S = {
-  Container: styled.div`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-
-    background-color: #030303;
-    padding: 0 20px;
-    z-index: 10;
-    overflow: auto;
-  `,
   MusicList: styled.div`
     display: flex;
     flex-direction: column;

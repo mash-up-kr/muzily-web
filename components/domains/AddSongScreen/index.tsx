@@ -5,6 +5,7 @@ import YouTube from "react-youtube";
 import { VIDEO_LIST } from "~/assets/dummy";
 import {
   BottomButton,
+  Layout,
   Spacer,
   TopBar,
   TopBarIconButton,
@@ -98,7 +99,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
   };
 
   return (
-    <S.Container>
+    <Layout>
       <TopBar
         leftIconButton={
           <TopBarIconButton iconName="arrow-left" onClick={onClickBackButton} />
@@ -195,7 +196,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
         onClick={handleSubmit}
         disabled={!isValid}
       />
-    </S.Container>
+    </Layout>
   );
 }
 const QuestionButton = () => (
@@ -231,19 +232,6 @@ function parseYoutubeIdFromLink(link: string) {
 }
 
 const S = {
-  Container: styled.div`
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-
-    background-color: rgba(0, 0, 0, 0.85);
-    padding: 0 20px;
-    z-index: 1;
-    overflow-y: auto;
-  `,
-
   HeadingText: styled.h3`
     font-weight: 600;
     font-size: 24px;
