@@ -163,7 +163,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
                     {getDurationText(item.duration || 0)}
                   </S.MusicArtist>
                 </Spacer>
-                <Spacer gap={8}>
+                <Spacer gap={8} align="center">
                   <S.Button
                     color="#007aff"
                     onClick={() => {
