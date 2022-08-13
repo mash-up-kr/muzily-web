@@ -43,7 +43,7 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData, isHost: host }) => {
   );
 
   useEffect(() => {
-    actions.init(host ? [] : VIDEO_LIST, host);
+    actions.init(host ? [] : VIDEO_LIST, host, "");
   }, []);
 
   useEffect(() => {

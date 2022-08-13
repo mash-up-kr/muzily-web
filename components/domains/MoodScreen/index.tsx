@@ -81,7 +81,7 @@ const MoodScreen = ({ onClickBackButton }: MoodScreenProps) => {
           <TopBarIconButton iconName="arrow-left" onClick={onClickBackButton} />
         }
       />
-      {!isHost ? (
+      {isHost ? (
         <>
           <S.Title>
             원하는 무드로
