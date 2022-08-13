@@ -185,6 +185,7 @@ const S = {
     position: absolute;
     left: 0;
     bottom: 0;
+    z-index: -1;
     width: 100%;
     float: left;
   `,
