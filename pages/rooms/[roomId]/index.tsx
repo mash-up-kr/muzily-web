@@ -75,7 +75,8 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData, isHost: host }) => {
         <S.IconWrapper>
           <Actions.NewMusic value={isHost ? proposedMusicList.length : 0} />
           <Actions.Emoji />
-          <Actions.ChangeMood />
+          {/* XXX: User test를 위한 임시값 */}
+          <Actions.ChangeMood value={isHost ? 2 : 0} />
         </S.IconWrapper>
       </S.Container>
 
@@ -313,11 +314,13 @@ const Actions = {
       </>
     );
   },
-  ChangeMood: () => {
+  ChangeMood: ({ value }: { value: number }) => {
     return (
       <Spacer type="vertical" align="center" gap={8}>
         <Modal
-          trigger={({ open }) => <IconButton iconName="union" onClick={open} />}
+          trigger={({ open }) => (
+            <IconButton iconName="union" onClick={open} badgeValue={value} />
+          )}
           modal={({ close }) => <MoodScreen onClickBackButton={close} />}
         />
         <S.IconText>무드변경</S.IconText>
