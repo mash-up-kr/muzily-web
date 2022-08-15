@@ -9,3 +9,4 @@ export { default as TopBarIconButton } from "./TopBar/TopBarIconButton";
 export { default as Modal } from "./Modal";
 export { default as QRCodeWithLogo } from "./QRCodeWithLogo";
 export { default as Spinner } from "./Spinner";
+export { default as Toast } from "./Toast";
