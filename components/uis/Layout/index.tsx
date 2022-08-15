@@ -28,10 +28,14 @@ const S = {
     width: 100%;
     height: 100%;
     background: ${(p) => p.screenColor};
-    padding: 0 20px;
     color: #fff;
     position: relative;
     backdrop-filter: blur(10px);
+    overflow-y: auto;
+
+    ::-webkit-scrollbar {
+      width: 0px;
+    }
   `,
 };
 

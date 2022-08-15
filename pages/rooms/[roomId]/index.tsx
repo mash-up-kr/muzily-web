@@ -119,7 +119,7 @@ const S = {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 20px 0;
+    padding: 20px 16px 0 16px;
   `,
   Header: styled.div``,
   Title: styled.h1`

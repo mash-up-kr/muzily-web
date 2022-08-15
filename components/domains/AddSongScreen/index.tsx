@@ -100,102 +100,111 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
 
   return (
     <Layout screenColor="rgba(0, 0, 0, 0.85)">
-      <TopBar
-        leftIconButton={
-          <TopBarIconButton iconName="arrow-left" onClick={onClickBackButton} />
-        }
-        rightIconButton={<QuestionButton />}
-      />
-      {/* <button onClick={props.onClickBackButton}>뒤로가기</button> */}
-      <S.HeadingText>
-        {`추가하고 싶은 곡의\n링크를 입력해주세요!`}
-      </S.HeadingText>
+      <Spacer type="vertical" style={{ height: "100%" }}>
+        <TopBar
+          sticky
+          leftIconButton={
+            <TopBarIconButton
+              iconName="arrow-left"
+              onClick={onClickBackButton}
+            />
+          }
+          rightIconButton={<QuestionButton />}
+        />
+        <Spacer type="vertical" style={{ flex: 1, padding: "0 16px" }}>
+          {/* <button onClick={props.onClickBackButton}>뒤로가기</button> */}
+          <S.HeadingText>
+            {`추가하고 싶은 곡의\n링크를 입력해주세요!`}
+          </S.HeadingText>
 
-      <S.Input
-        placeholder="링크 입력해주세요"
-        value={youtubeLink}
-        onChange={(e) => setYoutubeLink(e.target.value)}
-      />
-
-      {youtubeId && (
-        <S.YoutubeWrapper>
-          <YouTube
-            videoId={youtubeId}
-            opts={{
-              width: "100%",
-              height: 185,
-              playerVars: {
-                autoplay: 1,
-                controls: 0,
-                mute: 1,
-              },
-            }}
-            onError={() => {
-              console.error("유효하지 않은 ID입니다");
-              setIsError(true);
-            }}
-            onReady={(e) => {
-              const data = e.target.getVideoData();
-              console.log(
-                "🚀 ~ file: index.tsx ~ line 124 ~ AddSongScreen ~ data",
-                data
-              );
-              const videoId = e.target.getVideoData().video_id;
-              if (videoId) {
-                setIsValid(true);
-              }
-            }}
+          <S.Input
+            placeholder="링크 입력해주세요"
+            value={youtubeLink}
+            onChange={(e) => setYoutubeLink(e.target.value)}
           />
-        </S.YoutubeWrapper>
-      )}
 
-      {proposedMusicList.length ? (
-        <S.ProposedMusicListCard hidden={!isHost}>
-          <S.CardHeader>
-            <strong>{proposedMusicList.length}건</strong>의 신청된 노래가 있어요
-          </S.CardHeader>
-          <S.CardContent>
-            {proposedMusicList.map((item) => (
-              <S.CardItem key={item.id}>
-                <Spacer type="vertical" style={{ marginRight: 12 }}>
-                  <S.MusicTitle>{item.title}</S.MusicTitle>
-                  <S.MusicArtist>
-                    {getDurationText(item.duration || 0)}
-                  </S.MusicArtist>
-                </Spacer>
-                <Spacer gap={8} align="center">
-                  <S.Button
-                    color="#007aff"
-                    onClick={() => {
-                      actions.addToPlaylist(item);
-                      actions.removeMusicFromProposedList(item.id);
-                      // close();
-                    }}
-                  >
-                    추가
-                  </S.Button>
-                  <S.Button
-                    color=" #F54031"
-                    onClick={() => {
-                      actions.removeMusicFromProposedList(item.id);
-                    }}
-                  >
-                    거절
-                  </S.Button>
-                </Spacer>
-              </S.CardItem>
-            ))}
-          </S.CardContent>
-        </S.ProposedMusicListCard>
-      ) : (
-        <></>
-      )}
+          {youtubeId && (
+            <S.YoutubeWrapper>
+              <YouTube
+                videoId={youtubeId}
+                opts={{
+                  width: "100%",
+                  height: 185,
+                  playerVars: {
+                    autoplay: 1,
+                    controls: 0,
+                    mute: 1,
+                  },
+                }}
+                onError={() => {
+                  console.error("유효하지 않은 ID입니다");
+                  setIsError(true);
+                }}
+                onReady={(e) => {
+                  const data = e.target.getVideoData();
+                  console.log(
+                    "🚀 ~ file: index.tsx ~ line 124 ~ AddSongScreen ~ data",
+                    data
+                  );
+                  const videoId = e.target.getVideoData().video_id;
+                  if (videoId) {
+                    setIsValid(true);
+                  }
+                }}
+              />
+            </S.YoutubeWrapper>
+          )}
 
-      <BottomButton
-        label={isHost ? "곡 추가하기" : "곡 신청하기"}
-        onClick={handleSubmit}
-        disabled={!isValid}
-      />
+          {proposedMusicList.length ? (
+            <S.ProposedMusicListCard hidden={!isHost}>
+              <S.CardHeader>
+                <strong>{proposedMusicList.length}건</strong>의 신청된 노래가
+                있어요
+              </S.CardHeader>
+              <S.CardContent>
+                {proposedMusicList.map((item) => (
+                  <S.CardItem key={item.id}>
+                    <Spacer type="vertical" style={{ marginRight: 12 }}>
+                      <S.MusicTitle>{item.title}</S.MusicTitle>
+                      <S.MusicArtist>
+                        {getDurationText(item.duration || 0)}
+                      </S.MusicArtist>
+                    </Spacer>
+                    <Spacer gap={8} align="center">
+                      <S.Button
+                        color="#007aff"
+                        onClick={() => {
+                          actions.addToPlaylist(item);
+                          actions.removeMusicFromProposedList(item.id);
+                          // close();
+                        }}
+                      >
+                        추가
+                      </S.Button>
+                      <S.Button
+                        color=" #F54031"
+                        onClick={() => {
+                          actions.removeMusicFromProposedList(item.id);
+                        }}
+                      >
+                        거절
+                      </S.Button>
+                    </Spacer>
+                  </S.CardItem>
+                ))}
+              </S.CardContent>
+            </S.ProposedMusicListCard>
+          ) : (
+            <></>
+          )}
+        </Spacer>
+
+        <BottomButton
+          label={isHost ? "곡 추가하기" : "곡 신청하기"}
+          onClick={handleSubmit}
+          disabled={!isValid}
+        />
+      </Spacer>
     </Layout>
   );
 }
