@@ -1,14 +1,9 @@
 import type { ComponentProps } from "react";
 import React from "react";
-import { css, ThemeProvider } from "@emotion/react";
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
-import { Layout, Spacer } from "~/components/uis";
-import Modal, { createModal } from "~/components/uis/Modal";
-import { emotionTheme } from "~/theme";
-
-const themedModal = createModal([
-  { component: ThemeProvider, props: { theme: emotionTheme } },
-]);
+import { Layout, Spacer, Modal } from "~/components/uis";
+import { showModal } from "~/components/uis/Modal";
 
 const ModalTestPage = () => {
   const handleConfirm = async () => {
@@ -17,7 +12,7 @@ const ModalTestPage = () => {
   };
 
   const handleClickFunctionalModal = () =>
-    themedModal.show(({ createClose }) => {
+    showModal(({ createClose }) => {
       const close = createClose();
       const closeAfterAsync = createClose<typeof LoadingButton>(getAsyncText, {
         onFailure: (error) => {

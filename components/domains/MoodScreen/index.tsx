@@ -8,8 +8,8 @@ import {
   TopBarIconButton,
   BottomButton,
   Layout,
+  Modal,
 } from "~/components/uis";
-import Modal from "~/components/uis/Modal";
 import { useRoomStore } from "~/store";
 import ChangeMoodScreen from "../ChangeMoodScreen";
 

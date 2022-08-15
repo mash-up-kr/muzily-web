@@ -9,8 +9,9 @@ import {
   Spacer,
   TopBar,
   TopBarIconButton,
+  Modal,
 } from "~/components/uis";
-import Modal, { useModal } from "~/components/uis/Modal";
+import { useModal } from "~/components/uis/Modal";
 import { useRoomStore } from "~/store";
 import { getDurationText } from "~/store/room/utils";
 import type { Music } from "~/types/musics";
