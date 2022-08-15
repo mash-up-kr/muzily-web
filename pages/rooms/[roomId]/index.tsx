@@ -209,27 +209,6 @@ const Actions = {
 
     return (
       <>
-        <AnimatePresence exitBeforeEnter>
-          {pop.isPopping && (
-            <motion.div
-              style={{
-                position: "fixed",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: "rgba(0, 0, 0, 0.1)",
-                zIndex: 9999999,
-                pointerEvents: "none",
-              }}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <Hearts stage={getStage(pop.percentage)} />
-            </motion.div>
-          )}
-        </AnimatePresence>
         <Spacer type="vertical" align="center" gap={8}>
           <LongPress
             threshold={7000}
@@ -297,6 +276,27 @@ const Actions = {
           />
           <S.IconText>좋아요</S.IconText>
         </Spacer>
+        <AnimatePresence exitBeforeEnter>
+          {pop.isPopping && (
+            <motion.div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: "rgba(0, 0, 0, 0.1)",
+                zIndex: 9999999,
+                pointerEvents: "none",
+              }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <Hearts stage={getStage(pop.percentage)} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </>
     );
   },
@@ -380,16 +380,23 @@ const Heart3D = ({ stage }: { stage: 1 | 2 | 3 }) => {
 
   const width = stage * stage * 38;
 
+  const isMinus = Math.random() > 0.5;
+
   return (
     <motion.div
+      style={{ width, height: width }}
       initial={{
-        x: window.innerWidth * Math.random() - width / 2,
-        y: 600 * getRandomHalfToFull() - width / 2,
+        x: isMinus
+          ? -(window.innerWidth * Math.random())
+          : window.innerWidth * Math.random(),
+        y: 600 * getRandomHalfToFull(),
         opacity: Math.random() * 0.3 + 0.7,
       }}
       animate={{
-        x: window.innerWidth * Math.random() - width / 2,
-        y: -1300 * getRandomHalfToFull() - width / 2,
+        x: isMinus
+          ? -(window.innerWidth * Math.random())
+          : window.innerWidth * Math.random(),
+        y: -1300 * getRandomHalfToFull(),
         opacity: Math.random() * 0.9 + 0.1,
       }}
       transition={{ duration: 4 * getRandomHalfToFull() }}
