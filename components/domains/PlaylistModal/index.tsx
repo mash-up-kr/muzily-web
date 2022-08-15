@@ -33,7 +33,6 @@ function PlaylistModal() {
   return (
     <Layout screenColor="rgba(0, 0, 0, 0.85)">
       <TopBar
-        sticky
         leftIconButton={
           <TopBarIconButton iconName="arrow-left" onClick={close} />
         }

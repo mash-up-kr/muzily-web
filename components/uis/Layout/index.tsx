@@ -18,6 +18,7 @@ const S = {
   Container: styled.div`
     height: 100%;
     width: 100%;
+    max-height: 100%;
     z-index: 100;
     display: flex;
     justify-content: center;
@@ -31,10 +32,10 @@ const S = {
     color: #fff;
     position: relative;
     backdrop-filter: blur(10px);
-    overflow-y: auto;
 
     ::-webkit-scrollbar {
-      width: 0px;
+      width: 0;
+      height: 0;
     }
   `,
 };

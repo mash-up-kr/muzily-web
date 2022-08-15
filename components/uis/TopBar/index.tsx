@@ -12,7 +12,7 @@ const TopBar = ({
   leftIconButton,
   rightIconButton,
   children,
-  sticky,
+  sticky = true,
 }: Props) => {
   return (
     <StyledContainer sticky={sticky}>

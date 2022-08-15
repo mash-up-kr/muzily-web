@@ -93,7 +93,7 @@ const StyledContainer = styled.div`
   align-items: center;
   position: relative;
   height: calc(100% - 104px);
-  padding: 20px 0;
+  padding: 20px 16px;
 `;
 
 const StyledTitle = styled.h3`

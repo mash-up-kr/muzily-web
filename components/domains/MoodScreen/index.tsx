@@ -54,7 +54,7 @@ const MoodScreen = ({ onClickBackButton }: MoodScreenProps) => {
     actions,
   } = useRoomStore();
   const [moodIdx, setMoodIdx] = useState(0);
-  const [isAccodionOpen, setIsAccodionOpen] = useState(true);
+  const [isAccordionOpen, setIsAccordionOpen] = useState(true);
 
   // XXX(jiyoung.lim): User test를 위한 임시 무드. 추후 방 생성 비즈니스 로직 구현 시 변경 필요.
   React.useEffect(() => {
@@ -77,106 +77,113 @@ const MoodScreen = ({ onClickBackButton }: MoodScreenProps) => {
 
   return (
     <Layout screenColor="rgba(0, 0, 0, 0.85)">
-      <TopBar
-        leftIconButton={
-          <TopBarIconButton iconName="arrow-left" onClick={onClickBackButton} />
-        }
-      />
-      {isHost ? (
-        <>
-          <S.Title>
-            원하는 무드로
-            <br />
-            변경하세요
-          </S.Title>
-          <S.Subtitle>현재 내 방의 무드는?</S.Subtitle>
+      <Spacer type="vertical" style={{ height: "100%" }}>
+        <TopBar
+          leftIconButton={
+            <TopBarIconButton
+              iconName="arrow-left"
+              onClick={onClickBackButton}
+            />
+          }
+        />
+        {isHost ? (
+          <Spacer type="vertical" style={{ margin: 16, flex: 1 }}>
+            <S.Title>
+              원하는 무드로
+              <br />
+              변경하세요
+            </S.Title>
+            <S.Subtitle>현재 내 방의 무드는?</S.Subtitle>
 
-          <S.MoodButton>
-            <S.MoodButtonTitle>{mood}</S.MoodButtonTitle>
-            <ChangeMoodButton />
-          </S.MoodButton>
-          <S.Accordion>
-            <S.AccordionButton
-              onClick={() => setIsAccodionOpen(!isAccodionOpen)}
-            >
-              <S.AccordionButtonTitle>
-                <Image
-                  src="/images/music-note.svg"
-                  alt=""
-                  width={6}
-                  height={10.28}
-                />
-                <strong>{MOOD_REQUEST_DUMMY_DATA.length}</strong>
-                건의 신청된 무드가 있어요
-              </S.AccordionButtonTitle>
-              <S.AccordionButtonArrow
-                animate={{ rotate: isAccodionOpen ? 180 : 0 }}
+            <div style={{ flex: 1 }}>
+              <S.MoodButton>
+                <S.MoodButtonTitle>{mood}</S.MoodButtonTitle>
+                <ChangeMoodButton />
+              </S.MoodButton>
+            </div>
+            <S.Accordion>
+              <S.AccordionButton
+                onClick={() => setIsAccordionOpen(!isAccordionOpen)}
               >
-                <Image
-                  src="/images/caret-up.svg"
-                  alt={isAccodionOpen ? "목록 닫기" : "목록 열기"}
-                  width={18}
-                  height={18}
-                />
-              </S.AccordionButtonArrow>
-            </S.AccordionButton>
-            <motion.div
-              animate={{
-                opacity: isAccodionOpen ? 1 : 0,
-                height: isAccodionOpen ? undefined : 0,
-              }}
-            >
-              <S.AccordionPanel>
-                {MOOD_REQUEST_DUMMY_DATA.every(
-                  (item) => item.isConfirmed === true
-                ) && <S.Notice>전체 읽음</S.Notice>}
-                {MOOD_REQUEST_DUMMY_DATA.map((item, idx) => (
-                  // NOTE: 서버 데이터로 변경하기
-                  <S.AccordionItem key={idx}>
-                    <Spacer type="vertical">
-                      <S.RequestTitle>{item.title}</S.RequestTitle>
-                      <S.RequestDate>{item.date}</S.RequestDate>
-                    </Spacer>
-                    <S.RequestButton isConfirmed={item.isConfirmed}>
-                      {item.isConfirmed ? "읽음" : "읽지 않음"}
-                    </S.RequestButton>
-                  </S.AccordionItem>
-                ))}
-              </S.AccordionPanel>
-            </motion.div>
-          </S.Accordion>
-        </>
-      ) : (
-        <>
-          <S.Title>
-            원하는 무드를
-            <br />
-            신청해보세요!
-          </S.Title>
-          <S.Subtitle>방장에게 전하고 싶은 메세지를 골라보세요.</S.Subtitle>
-          <S.GuestMoodButtonGroup type="vertical" gap={16}>
-            {MOOD_LIST_DUMMY_DATA.map((item, idx) => (
-              <S.GuestMoodButton
-                key={idx}
-                onClick={() => setMoodIdx(idx)}
-                idx={idx}
-                isChecked={moodIdx === idx}
+                <S.AccordionButtonTitle>
+                  <Image
+                    src="/images/music-note.svg"
+                    alt=""
+                    width={6}
+                    height={10.28}
+                  />
+                  <strong>{MOOD_REQUEST_DUMMY_DATA.length}</strong>
+                  건의 신청된 무드가 있어요
+                </S.AccordionButtonTitle>
+                <S.AccordionButtonArrow
+                  animate={{ rotate: isAccordionOpen ? 180 : 0 }}
+                >
+                  <Image
+                    src="/images/caret-up.svg"
+                    alt={isAccordionOpen ? "목록 닫기" : "목록 열기"}
+                    width={18}
+                    height={18}
+                  />
+                </S.AccordionButtonArrow>
+              </S.AccordionButton>
+              <motion.div
+                animate={{
+                  opacity: isAccordionOpen ? 1 : 0,
+                  height: isAccordionOpen ? undefined : 0,
+                }}
               >
-                {item.title}
-                <Image
-                  src={`/images/${
-                    moodIdx === idx ? "radio-circle-checked" : "radio-circle"
-                  }.svg`}
-                  alt="icon"
-                  width={20}
-                  height={20}
-                />
-              </S.GuestMoodButton>
-            ))}
-          </S.GuestMoodButtonGroup>
-          <BottomButton label="메세지 보내기" onClick={onClickBackButton} />
-        </>
-      )}
+                <S.AccordionPanel>
+                  {MOOD_REQUEST_DUMMY_DATA.every(
+                    (item) => item.isConfirmed === true
+                  ) && <S.Notice>전체 읽음</S.Notice>}
+                  {MOOD_REQUEST_DUMMY_DATA.map((item, idx) => (
+                    // NOTE: 서버 데이터로 변경하기
+                    <S.AccordionItem key={idx}>
+                      <Spacer type="vertical">
+                        <S.RequestTitle>{item.title}</S.RequestTitle>
+                        <S.RequestDate>{item.date}</S.RequestDate>
+                      </Spacer>
+                      <S.RequestButton isConfirmed={item.isConfirmed}>
+                        {item.isConfirmed ? "읽음" : "읽지 않음"}
+                      </S.RequestButton>
+                    </S.AccordionItem>
+                  ))}
+                </S.AccordionPanel>
+              </motion.div>
+            </S.Accordion>
+          </Spacer>
+        ) : (
+          <>
+            <S.Title>
+              원하는 무드를
+              <br />
+              신청해보세요!
+            </S.Title>
+            <S.Subtitle>방장에게 전하고 싶은 메세지를 골라보세요.</S.Subtitle>
+            <S.GuestMoodButtonGroup type="vertical" gap={16}>
+              {MOOD_LIST_DUMMY_DATA.map((item, idx) => (
+                <S.GuestMoodButton
+                  key={idx}
+                  onClick={() => setMoodIdx(idx)}
+                  idx={idx}
+                  isChecked={moodIdx === idx}
+                >
+                  {item.title}
+                  <Image
+                    src={`/images/${
+                      moodIdx === idx ? "radio-circle-checked" : "radio-circle"
+                    }.svg`}
+                    alt="icon"
+                    width={20}
+                    height={20}
+                  />
+                </S.GuestMoodButton>
+              ))}
+            </S.GuestMoodButtonGroup>
+            <BottomButton label="메세지 보내기" onClick={onClickBackButton} />
+          </>
+        )}
+      </Spacer>
     </Layout>
   );
 };
@@ -273,9 +280,8 @@ const S = {
     border: none;
   `,
   Accordion: styled.div`
-    position: absolute;
     bottom: 20px;
-    width: calc(100% - 40px);
+    display: block;
     padding: 0 20px;
     border-radius: 20px;
     background-color: #1a1a1a;

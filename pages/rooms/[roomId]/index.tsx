@@ -20,14 +20,12 @@ import { Modal, Spacer, IconButton } from "~/components/uis";
 import { useRoomStore } from "~/store";
 import type { Music } from "~/types/musics";
 
-const TITLE = "매쇼~쉬는탐";
-const DESC = "곡을 추가하거나 좋아요를 해보세요!";
-interface RoomPageProps {
+interface Props {
   musicData: Music[];
   isHost: boolean;
 }
 
-const RoomPage: NextPage<RoomPageProps> = ({ musicData, isHost: host }) => {
+const RoomPage: NextPage<Props> = ({ musicData, isHost: host }) => {
   const router = useRouter();
   const { roomId } = router.query as { roomId: string };
   const {
@@ -55,10 +53,14 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData, isHost: host }) => {
 
   return (
     <>
-      <S.Container>
+      <Spacer
+        type="vertical"
+        justify="space-between"
+        style={{ height: "100%" }}
+      >
         <S.Header>
-          <S.Title>{TITLE}</S.Title>
-          <S.Desc>{DESC}</S.Desc>
+          <S.Title>매쇼~쉬는탐</S.Title>
+          <S.Desc>곡을 추가하거나 좋아요를 해보세요!</S.Desc>
         </S.Header>
 
         <S.ContentWrapper ref={contentRef}>
@@ -72,13 +74,13 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData, isHost: host }) => {
           <PlaylistCard currentMusic={currentMusic} />
         </S.ContentWrapper>
 
-        <S.IconWrapper>
+        <Spacer justify="center" gap={36} style={{ margin: "0 0 32px 0" }}>
           <Actions.NewMusic value={isHost ? proposedMusicList.length : 0} />
           <Actions.Emoji />
           {/* XXX: User test를 위한 임시값 */}
           <Actions.ChangeMood value={isHost ? 2 : 0} />
-        </S.IconWrapper>
-      </S.Container>
+        </Spacer>
+      </Spacer>
 
       {isHost && currentMusic && (
         <S.YoutubeWrapper hidden>
@@ -114,19 +116,13 @@ const RoomPage: NextPage<RoomPageProps> = ({ musicData, isHost: host }) => {
 };
 
 const S = {
-  Container: styled.div`
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 20px 16px 0 16px;
+  Header: styled.div`
+    margin: 30px 0 0 16px;
   `,
-  Header: styled.div``,
   Title: styled.h1`
     font-weight: 700;
     font-size: 28px;
     line-height: 155%;
-    margin: 10px 0 0;
   `,
   Desc: styled.h4`
     font-weight: 500;
@@ -134,24 +130,14 @@ const S = {
     line-height: 145%;
     letter-spacing: -0.02em;
     color: #6b6b6b;
-    margin: 8px 0 0;
     margin-bottom: 34px;
-  `,
-  IconWrapper: styled.div`
-    display: flex;
-    gap: 36px;
-    margin-top: 22px;
-    justify-content: center;
   `,
   ContentWrapper: styled.div`
     display: flex;
     align-items: center;
-    height: 100%;
     gap: 20px;
     overflow-x: auto;
-    padding: 0 20px;
-    margin-left: -20px;
-    width: calc(100% + 40px);
+    width: 100%;
     ::-webkit-scrollbar {
       display: none; /* Chrome, Safari, Opera*/
     }

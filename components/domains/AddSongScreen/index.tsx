@@ -100,7 +100,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
 
   return (
     <Layout screenColor="rgba(0, 0, 0, 0.85)">
-      <Spacer type="vertical" style={{ height: "100%" }}>
+      <Spacer type="vertical" style={{ height: "100%", overflowY: "auto" }}>
         <TopBar
           sticky
           leftIconButton={

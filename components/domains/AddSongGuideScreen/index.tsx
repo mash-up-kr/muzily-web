@@ -54,7 +54,6 @@ function AddSongGuideScreen({ onClickBackButton }: AddSongGuideScreenProps) {
   return (
     <Layout screenColor="#030303">
       <TopBar
-        sticky
         leftIconButton={
           <TopBarIconButton iconName="arrow-left" onClick={onClickBackButton} />
         }
