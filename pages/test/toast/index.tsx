@@ -27,11 +27,14 @@ const ToastTestPage = () => {
         <S.Button
           onClick={() => {
             // 2. 함수를 넘겨서 options를 사용할 수도 있어요,
-            Toast.show(({ options }) => (
-              <ToastContent onClick={handleSomething} options={options}>
-                토스트 짜잔~!
-              </ToastContent>
-            ));
+            Toast.show(
+              ({ options }) => (
+                <ToastContent onClick={handleSomething} options={options}>
+                  토스트 짜잔~!
+                </ToastContent>
+              ),
+              { duration: 2000 }
+            );
           }}
         >
           open modal

@@ -55,12 +55,16 @@ class Toast {
 
   show(
     Content: ReactNode | FunctionComponent<{ options: Options }>,
-    options: Options = { delay: 400, duration: 2000 }
+    options: Partial<Options> = { delay: 400, duration: 2000 }
   ) {
     const { delay = 400, duration = 2000 } = options;
 
     const content =
-      typeof Content === "function" ? <Content options={options} /> : Content;
+      typeof Content === "function" ? (
+        <Content options={{ delay, duration }} />
+      ) : (
+        Content
+      );
 
     this.createToast?.(content, { delay, duration });
   }
