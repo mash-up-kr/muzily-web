@@ -1,8 +1,8 @@
 import type { ComponentProps, FunctionComponent, ReactNode } from "react";
 import { hydrateRoot } from "react-dom/client";
-import DefaultItem from "./DefaultItem";
+import { Context } from "./context";
+import type DefaultTemplate from "./DefaultTemplate";
 import Manager from "./Manager";
-import type { Options } from "./types";
 
 class Toast {
   portal: HTMLElement | null = null;
@@ -12,14 +12,21 @@ class Toast {
 
   constructor(
     options: {
+      zIndex?: number;
       portalId?: string;
       Adapter?: FunctionComponent<{ children: ReactNode }>;
-      ToastItem?: ComponentProps<typeof Manager>["ToastItem"];
+      Template?: FunctionComponent<
+        { content: ReactNode } & Pick<
+          ComponentProps<typeof DefaultTemplate>,
+          "close" | "isShow" | "options"
+        >
+      >;
     } = {}
   ) {
     const {
+      zIndex = 9999,
       portalId = "toast-portal",
-      ToastItem,
+      Template,
       Adapter = ({ children }) => <>{children}</>,
     } = options;
     if (typeof document !== "undefined") {
@@ -30,11 +37,13 @@ class Toast {
       } else {
         const newPortal = document.createElement("div");
         newPortal.id = portalId;
-        newPortal.style.left = "0";
-        newPortal.style.right = "0";
-        newPortal.style.bottom = "0";
-        newPortal.style.zIndex = "9999";
-        newPortal.style.position = "fixed";
+        newPortal.style.cssText = `
+          left: 0;
+          right: 0;
+          bottom: 0;
+          z-index: ${zIndex};
+          position: fixed;
+        `;
         this.portal = newPortal;
         document.body.appendChild(this.portal);
       }
@@ -42,31 +51,29 @@ class Toast {
       hydrateRoot(
         this.portal,
         <Adapter>
-          <Manager
-            bind={(createToast) => {
-              this.createToast = createToast;
-            }}
-            ToastItem={ToastItem ?? DefaultItem}
-          />
+          <Context.Provider value={{ Template }}>
+            <Manager
+              bind={(createToast) => {
+                this.createToast = createToast;
+              }}
+            />
+          </Context.Provider>
         </Adapter>
       );
     }
   }
 
   show(
-    Content: ReactNode | FunctionComponent<{ options: Options }>,
-    options: Partial<Options> = { delay: 400, duration: 2000 }
+    content: ComponentProps<typeof DefaultTemplate>["content"],
+    options: Partial<ComponentProps<typeof DefaultTemplate>["options"]> = {
+      duration: 2000,
+      delay: 400,
+      status: null,
+    }
   ) {
-    const { delay = 400, duration = 2000 } = options;
+    const { duration = 2000, delay = 400, status = null } = options;
 
-    const content =
-      typeof Content === "function" ? (
-        <Content options={{ delay, duration }} />
-      ) : (
-        Content
-      );
-
-    this.createToast?.(content, { delay, duration });
+    this.createToast?.(content, { duration, delay, status });
   }
 }
 

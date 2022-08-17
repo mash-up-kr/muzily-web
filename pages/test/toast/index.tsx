@@ -1,87 +1,102 @@
-import type { ReactNode } from "react";
 import React from "react";
-import { css } from "@emotion/react";
+import { css, ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
 import { Layout, Spacer, Toast } from "~/components/uis";
+import ToastCreator from "~/libs/Toast";
+import { emotionTheme } from "~/theme";
+
+const ToastDefault = new ToastCreator({
+  Adapter: ({ children }) => (
+    <ThemeProvider theme={emotionTheme}>{children}</ThemeProvider>
+  ),
+});
 
 const ToastTestPage = () => {
-  const handleSomething = () => {
-    console.log("something");
-  };
-
   return (
     <Layout screenColor="#121212">
       <Spacer type="vertical" gap={16} style={{ marginTop: 32 }}>
         <S.Button
           onClick={() => {
             // 1. ReactElement를 넘길 수도 있고,
-            Toast.show(
-              <ToastContent onClick={handleSomething}>
-                토스트 짜잔~!
-              </ToastContent>
-            );
+            Toast.show(<Spacer justify="space-between">토스트 짜잔~!</Spacer>);
           }}
         >
-          open modal
+          toast
         </S.Button>
         <S.Button
           onClick={() => {
-            // 2. 함수를 넘겨서 options를 사용할 수도 있어요,
+            // 2. 함수를 넘겨서 options, close, closeAll를 사용할 수도 있어요
             Toast.show(
-              ({ options }) => (
-                <ToastContent onClick={handleSomething} options={options}>
+              ({ options, close, closeAll }) => (
+                <Spacer justify="space-between" align="center">
                   토스트 짜잔~!
-                </ToastContent>
+                  <Spacer gap={8}>
+                    <S.Button onClick={close}>닫기</S.Button>
+                    <S.Button onClick={closeAll}>모두 닫기</S.Button>
+                  </Spacer>
+                </Spacer>
+              ),
+              // 3. options에 status를 넣어 Toast 인스턴스를 생성할 때 정의한 Template에 전달해 status에 따라 다른 토스트가 노출되도록 만들 수 있어요.
+              { duration: 4000, delay: 300, status: "error" }
+            );
+          }}
+        >
+          Error open toast
+        </S.Button>
+        <S.Button
+          onClick={() => {
+            Toast.show(
+              ({ options, close, closeAll }) => (
+                <Spacer justify="space-between" align="center">
+                  토스트 짜잔~!
+                  <Spacer gap={8}>
+                    <S.Button onClick={close}>닫기</S.Button>
+                    <S.Button onClick={closeAll}>모두 닫기</S.Button>
+                  </Spacer>
+                </Spacer>
+              ),
+              { duration: 4000, delay: 300, status: "success" }
+            );
+          }}
+        >
+          Success toast
+        </S.Button>
+        <S.Button
+          onClick={() => {
+            Toast.show(
+              ({ options, close, closeAll }) => (
+                <Spacer justify="space-between" align="center">
+                  토스트 짜잔~!
+                  <Spacer gap={8}>
+                    <S.Button onClick={close}>닫기</S.Button>
+                    <S.Button onClick={closeAll}>모두 닫기</S.Button>
+                  </Spacer>
+                </Spacer>
+              ),
+              { duration: 4000, delay: 300, status: "warning" }
+            );
+          }}
+        >
+          Warning toast
+        </S.Button>
+        <S.Button
+          onClick={() => {
+            ToastDefault.show(
+              ({ options }) => (
+                <Spacer justify="space-between">토스트 짜잔~!</Spacer>
               ),
               { duration: 2000 }
             );
           }}
         >
-          open modal
+          toast
         </S.Button>
       </Spacer>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
-      <BigText>안녕하세요 뒤의 내용입니다.</BigText>
     </Layout>
   );
 };
 
 export default ToastTestPage;
-
-const ToastContent = (props: {
-  onClick: () => void;
-  options?: any;
-  children?: ReactNode;
-}) => {
-  return (
-    <Spacer justify="space-between" style={{ color: "white" }}>
-      {props.children}
-      <S.Button onClick={props.onClick}>something</S.Button>
-    </Spacer>
-  );
-};
 
 const S = {
   Button: styled.button`
@@ -110,7 +125,3 @@ const S = {
     `}
   `,
 };
-
-const BigText = styled.div`
-  font-size: 30px;
-`;

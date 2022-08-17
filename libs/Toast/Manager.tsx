@@ -1,51 +1,79 @@
-import type { FunctionComponent, ReactNode, ReactElement } from "react";
-import { useEffect, useState } from "react";
-import { useTimeout } from "~/hooks/commons";
-import type { Options, Toast } from "./types";
+import type { ReactElement, ComponentProps } from "react";
+import { useRef, useContext, useEffect, useState } from "react";
+import { Context } from "./context";
+import DefaultTemplate from "./DefaultTemplate";
+import { iterateCallWithDelay } from "./helpers";
+import { useTimeout, useTimeoutFn } from "./hooks";
 
 const Manager = ({
   bind,
-  ToastItem,
 }: {
   bind: (
-    createToast: (content: Toast["content"], options: Toast["options"]) => void
+    createToast: (
+      content: ComponentProps<typeof DefaultTemplate>["content"],
+      options: ComponentProps<typeof DefaultTemplate>["options"]
+    ) => void
   ) => void;
-  ToastItem: FunctionComponent<{
-    isShow: boolean;
-    options: { duration: number; delay: number };
-    children: ReactNode;
-  }>;
 }) => {
-  const [toasts, setToasts] = useState<Toast[]>([]);
+  const { Template = DefaultTemplate } = useContext(Context);
+
+  const [toastItems, setToastItems] = useState<
+    (Pick<ComponentProps<typeof DefaultTemplate>, "content" | "options"> & {
+      id: string;
+    })[]
+  >([]);
 
   useEffect(() => {
-    bind((content, options) =>
-      setToasts((old) => [
-        ...old,
-        { id: `${new Date().getTime()}`, content, options },
-      ])
-    );
+    bind((content, options) => {
+      const id = `${new Date().getTime()}`;
+
+      return setToastItems((old) => [...old, { id, content, options }]);
+    });
   }, [bind]);
+
+  const closes = useRef<ComponentProps<typeof DefaultTemplate>["close"][]>([]);
+
+  const closeAll = () => {
+    iterateCallWithDelay(closes.current, 20);
+    closes.current = [];
+  };
 
   return (
     <>
-      {toasts.map(({ content, id, options }) => {
-        const Content = content;
-
+      {toastItems.map(({ id, content: Content, options }) => {
         return (
           <DoAfterDuration
             key={id}
-            options={options}
-            onDelayedAfterDone={() =>
-              setToasts((oldToasts) =>
-                oldToasts.filter((toast) => toast.id !== id)
+            options={{
+              delay: options.delay,
+              duration: options.duration,
+            }}
+            onDelayed={() =>
+              setToastItems((oldToastItems) =>
+                oldToastItems.filter((toast) => toast.id !== id)
               )
             }
+            onMount={({ doEarly }) => closes.current.push(doEarly)}
           >
-            {({ done }) => (
-              <ToastItem options={options} isShow={!done}>
-                {typeof Content === "function" ? <Content /> : Content}
-              </ToastItem>
+            {({ isDone: isClosed, doEarly: close }) => (
+              <Template
+                options={options}
+                isShow={!isClosed}
+                close={close}
+                closeAll={closeAll}
+                content={
+                  typeof Content === "function" ? (
+                    <Content
+                      close={close}
+                      isShow={!isClosed}
+                      options={options}
+                      closeAll={closeAll}
+                    />
+                  ) : (
+                    Content
+                  )
+                }
+              />
             )}
           </DoAfterDuration>
         );
@@ -59,23 +87,43 @@ export default Manager;
 const DoAfterDuration = ({
   options,
   children,
-  onDelayedAfterDone,
+  onDelayed,
   onDone,
+  onMount,
 }: {
-  options: Options;
-  children: (options: { done: boolean }) => ReactElement;
-  onDelayedAfterDone?: () => void;
+  options: Pick<
+    ComponentProps<typeof DefaultTemplate>["options"],
+    "delay" | "duration"
+  >;
+  children: (options: { isDone: boolean; doEarly: () => void }) => ReactElement;
+  onDelayed?: () => void;
   onDone?: () => void;
+  onMount?: (mount: { doEarly: () => void }) => void;
 }) => {
-  const [done, setDone] = useState(false);
+  const [isDone, setIsDone] = useState(false);
 
-  useTimeout(() => {
-    setDone(true);
+  const [runAfterDone] = useTimeoutFn(() => {
+    onDelayed?.();
+  }, options.delay);
+
+  const clearDurationDo = useTimeout(() => {
+    doAnyway();
     onDone?.();
-    setTimeout(() => {
-      onDelayedAfterDone?.();
-    }, options.delay);
   }, options.duration);
 
-  return <>{children({ done })}</>;
+  const doAnyway = () => {
+    setIsDone(true);
+    runAfterDone();
+  };
+
+  const doEarly = () => {
+    clearDurationDo();
+    doAnyway();
+  };
+
+  useEffect(() => {
+    onMount?.({ doEarly });
+  }, []);
+
+  return <>{children({ isDone, doEarly })}</>;
 };
