@@ -77,7 +77,7 @@ const MoodScreen = ({ onClickBackButton }: MoodScreenProps) => {
 
   return (
     <Layout screenColor="rgba(0, 0, 0, 0.85)">
-      <Spacer type="vertical" style={{ height: "100%" }}>
+      <Spacer type="vertical" style={{ height: "100%", overflowY: "auto" }}>
         <TopBar
           leftIconButton={
             <TopBarIconButton
@@ -128,6 +128,7 @@ const MoodScreen = ({ onClickBackButton }: MoodScreenProps) => {
               </S.AccordionButton>
               <motion.div
                 animate={{
+                  overflowY: "hidden",
                   opacity: isAccordionOpen ? 1 : 0,
                   height: isAccordionOpen ? undefined : 0,
                 }}
@@ -154,32 +155,36 @@ const MoodScreen = ({ onClickBackButton }: MoodScreenProps) => {
           </Spacer>
         ) : (
           <>
-            <S.Title>
-              원하는 무드를
-              <br />
-              신청해보세요!
-            </S.Title>
-            <S.Subtitle>방장에게 전하고 싶은 메세지를 골라보세요.</S.Subtitle>
-            <S.GuestMoodButtonGroup type="vertical" gap={16}>
-              {MOOD_LIST_DUMMY_DATA.map((item, idx) => (
-                <S.GuestMoodButton
-                  key={idx}
-                  onClick={() => setMoodIdx(idx)}
-                  idx={idx}
-                  isChecked={moodIdx === idx}
-                >
-                  {item.title}
-                  <Image
-                    src={`/images/${
-                      moodIdx === idx ? "radio-circle-checked" : "radio-circle"
-                    }.svg`}
-                    alt="icon"
-                    width={20}
-                    height={20}
-                  />
-                </S.GuestMoodButton>
-              ))}
-            </S.GuestMoodButtonGroup>
+            <Spacer type="vertical" style={{ margin: 16, flex: 1 }}>
+              <S.Title>
+                원하는 무드를
+                <br />
+                신청해보세요!
+              </S.Title>
+              <S.Subtitle>방장에게 전하고 싶은 메세지를 골라보세요.</S.Subtitle>
+              <S.GuestMoodButtonGroup type="vertical" gap={16}>
+                {MOOD_LIST_DUMMY_DATA.map((item, idx) => (
+                  <S.GuestMoodButton
+                    key={idx}
+                    onClick={() => setMoodIdx(idx)}
+                    idx={idx}
+                    isChecked={moodIdx === idx}
+                  >
+                    {item.title}
+                    <Image
+                      src={`/images/${
+                        moodIdx === idx
+                          ? "radio-circle-checked"
+                          : "radio-circle"
+                      }.svg`}
+                      alt="icon"
+                      width={20}
+                      height={20}
+                    />
+                  </S.GuestMoodButton>
+                ))}
+              </S.GuestMoodButtonGroup>
+            </Spacer>
             <BottomButton label="메세지 보내기" onClick={onClickBackButton} />
           </>
         )}

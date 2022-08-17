@@ -48,42 +48,59 @@ const ChangeMoodScreen = ({
 
   return (
     <Layout screenColor="rgba(0, 0, 0, 0.85)">
-      <TopBar
-        leftIconButton={
-          <TopBarIconButton iconName="arrow-left" onClick={onClickBackButton} />
-        }
-      >
-        무드 변경
-      </TopBar>
-      <S.Title>
-        <Image src={`/images/ticket.svg`} alt="icon" width={118} height={38} />
-        &nbsp; 의&nbsp;무드는?
-      </S.Title>
-      <S.SubTitle>무드에 맞춘 이모지를 제공해드려요!</S.SubTitle>
-      <S.ButtonGroup type="vertical" gap={15}>
-        {MOOD_EXAMPLE.map((v) => (
-          <S.Button
-            key={v.text}
-            onClick={() => setMood(v.text)}
-            isActive={mood === v.text}
-          >
-            <S.ButtonText>{v.text}</S.ButtonText>
-            <Image
-              src={`/images/${v.iconName}.svg`}
-              alt="icon"
-              width={56}
-              height={58}
+      <Spacer type="vertical" style={{ height: "100%", overflowY: "auto" }}>
+        <TopBar
+          leftIconButton={
+            <TopBarIconButton
+              iconName="arrow-left"
+              onClick={onClickBackButton}
             />
-          </S.Button>
-        ))}
-      </S.ButtonGroup>
-      <S.NoticeTextWrapper gap={4}>
-        <S.BottomButton>
-          직접 입력&nbsp;
-          <Image src={`/images/plus.svg`} alt="icon" width={14} height={14} />
-        </S.BottomButton>
-      </S.NoticeTextWrapper>
-      <BottomButton label="무드 변경하기" onClick={handleClick} />
+          }
+        >
+          무드 변경
+        </TopBar>
+        <Spacer type="vertical" style={{ margin: 16, flex: 1 }}>
+          <S.Title>
+            <Image
+              src={`/images/ticket.svg`}
+              alt="icon"
+              width={118}
+              height={38}
+            />
+            &nbsp; 의&nbsp;무드는?
+          </S.Title>
+          <S.SubTitle>무드에 맞춘 이모지를 제공해드려요!</S.SubTitle>
+          <S.ButtonGroup type="vertical" gap={15}>
+            {MOOD_EXAMPLE.map((v) => (
+              <S.Button
+                key={v.text}
+                onClick={() => setMood(v.text)}
+                isActive={mood === v.text}
+              >
+                <S.ButtonText>{v.text}</S.ButtonText>
+                <Image
+                  src={`/images/${v.iconName}.svg`}
+                  alt="icon"
+                  width={56}
+                  height={58}
+                />
+              </S.Button>
+            ))}
+          </S.ButtonGroup>
+          <S.NoticeTextWrapper gap={4}>
+            <S.BottomButton>
+              직접 입력&nbsp;
+              <Image
+                src={`/images/plus.svg`}
+                alt="icon"
+                width={14}
+                height={14}
+              />
+            </S.BottomButton>
+          </S.NoticeTextWrapper>
+        </Spacer>
+        <BottomButton label="무드 변경하기" onClick={handleClick} />
+      </Spacer>
     </Layout>
   );
 };
@@ -121,12 +138,10 @@ const S = {
     font-weight: 700;
   `,
   NoticeTextWrapper: styled(Spacer)`
-    position: absolute;
-    z-index: 10;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 94px;
-    align-items: flex-start;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 62px;
   `,
   BottomButton: styled.button`
     display: flex;
