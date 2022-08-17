@@ -14,14 +14,18 @@ const ToastDefault = new ToastCreator({
 const ToastTestPage = () => {
   return (
     <Layout screenColor="#121212">
-      <Spacer type="vertical" gap={16} style={{ marginTop: 32 }}>
+      <Spacer
+        type="vertical"
+        gap={16}
+        style={{ marginTop: 32, padding: "0 16px" }}
+      >
         <S.Button
           onClick={() => {
             // 1. ReactElement를 넘길 수도 있고,
             Toast.show(<Spacer justify="space-between">토스트 짜잔~!</Spacer>);
           }}
         >
-          toast
+          기본 시간 toast
         </S.Button>
         <S.Button
           onClick={() => {
@@ -29,7 +33,7 @@ const ToastTestPage = () => {
             Toast.show(
               ({ options, close, closeAll }) => (
                 <Spacer justify="space-between" align="center">
-                  토스트 짜잔~!
+                  토스트 짜잔~! ({options.duration / 1000}초)
                   <Spacer gap={8}>
                     <S.Button onClick={close}>닫기</S.Button>
                     <S.Button onClick={closeAll}>모두 닫기</S.Button>
@@ -37,36 +41,36 @@ const ToastTestPage = () => {
                 </Spacer>
               ),
               // 3. options에 status를 넣어 Toast 인스턴스를 생성할 때 정의한 Template에 전달해 status에 따라 다른 토스트가 노출되도록 만들 수 있어요.
-              { duration: 4000, delay: 300, status: "error" }
+              { duration: 8000, delay: 300, status: "error" }
             );
           }}
         >
-          Error open toast
+          8초 Error open toast
         </S.Button>
         <S.Button
           onClick={() => {
             Toast.show(
               ({ options, close, closeAll }) => (
                 <Spacer justify="space-between" align="center">
-                  토스트 짜잔~!
+                  토스트 짜잔~! ({options.duration / 1000}초)
                   <Spacer gap={8}>
                     <S.Button onClick={close}>닫기</S.Button>
                     <S.Button onClick={closeAll}>모두 닫기</S.Button>
                   </Spacer>
                 </Spacer>
               ),
-              { duration: 4000, delay: 300, status: "success" }
+              { duration: 1000, delay: 300, status: "success" }
             );
           }}
         >
-          Success toast
+          1초 Success toast
         </S.Button>
         <S.Button
           onClick={() => {
             Toast.show(
               ({ options, close, closeAll }) => (
                 <Spacer justify="space-between" align="center">
-                  토스트 짜잔~!
+                  토스트 짜잔~! ({options.duration / 1000}초)
                   <Spacer gap={8}>
                     <S.Button onClick={close}>닫기</S.Button>
                     <S.Button onClick={closeAll}>모두 닫기</S.Button>
@@ -77,19 +81,21 @@ const ToastTestPage = () => {
             );
           }}
         >
-          Warning toast
+          4초 Warning toast
         </S.Button>
         <S.Button
           onClick={() => {
             ToastDefault.show(
               ({ options }) => (
-                <Spacer justify="space-between">토스트 짜잔~!</Spacer>
+                <Spacer justify="space-between">
+                  토스트 짜잔~! ({options.duration / 1000}초)
+                </Spacer>
               ),
               { duration: 2000 }
             );
           }}
         >
-          toast
+          2초 toast
         </S.Button>
       </Spacer>
     </Layout>
@@ -108,7 +114,7 @@ const S = {
       background-color: ${theme.colors.blue0500};
       height: 40px;
       padding: 18px;
-      border-radius: 16px;
+      border-radius: 12px;
       border: none;
       cursor: pointer;
 
