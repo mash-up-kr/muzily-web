@@ -105,15 +105,17 @@ const show = (
   if (!portalEl) {
     portalEl = document.createElement("div");
     portalEl.id = id;
-    portalEl.style.left = "0";
-    portalEl.style.right = "0";
-    portalEl.style.top = "0";
-    portalEl.style.bottom = "0";
-    portalEl.style.position = "fixed";
-    portalEl.style.display = "flex";
-    portalEl.style.flexDirection = "column";
-    portalEl.style.justifyContent = "center";
-    portalEl.style.alignItems = "center";
+    portalEl.style.cssText = `
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      position: fixed;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      alignItems: center;
+    `;
   }
 
   document.body.appendChild(portalEl);
