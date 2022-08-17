@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import styled from "@emotion/styled";
-import { Layout, TopBar, TopBarIconButton } from "~/components/uis";
+import { Layout, TopBar, Spacer, TopBarIconButton } from "~/components/uis";
 import { useRoomStore } from "~/store";
 
 const STEPS_FOR_HOST = [
@@ -53,35 +53,40 @@ function AddSongGuideScreen({ onClickBackButton }: AddSongGuideScreenProps) {
 
   return (
     <Layout screenColor="#030303">
-      <TopBar
-        leftIconButton={
-          <TopBarIconButton iconName="arrow-left" onClick={onClickBackButton} />
-        }
-      />
+      <Spacer type="vertical" style={{ height: "100%", overflowY: "auto" }}>
+        <TopBar
+          leftIconButton={
+            <TopBarIconButton
+              iconName="arrow-left"
+              onClick={onClickBackButton}
+            />
+          }
+        />
+        <Spacer type="vertical" style={{ flex: 1, padding: "0 16px" }}>
+          <S.Title>곡 추가 방법</S.Title>
 
-      <S.Title>곡 추가 방법</S.Title>
+          <S.StepList>
+            {steps.map((item, i) => (
+              <S.Step key={i}>
+                {/* <S.StepNumber>{i + 1}</S.StepNumber> */}
+                <S.Desc>{item.desc}</S.Desc>
 
-      <S.StepList>
-        {steps.map((item, i) => (
-          <S.Step key={i}>
-            {/* <S.StepNumber>{i + 1}</S.StepNumber> */}
-            <S.Desc>{item.desc}</S.Desc>
-
-            {item.src.map((img) => (
-              <S.ImageWrapper key={img} height={item.height}>
-                <Image src={img} alt={img} layout="fill" />
-              </S.ImageWrapper>
+                {item.src.map((img) => (
+                  <S.ImageWrapper key={img} height={item.height}>
+                    <Image src={img} alt={img} layout="fill" />
+                  </S.ImageWrapper>
+                ))}
+              </S.Step>
             ))}
-          </S.Step>
-        ))}
-      </S.StepList>
+          </S.StepList>
+        </Spacer>
+      </Spacer>
     </Layout>
   );
 }
 
 const S = {
   Title: styled.h2`
-    margin: 0;
     font-weight: 600;
     font-size: 24px;
     line-height: 145%;
@@ -95,7 +100,6 @@ const S = {
     width: 100%;
     height: ${(p) => p.height}px;
     margin-top: 16px;
-    margin-left: -16px;
   `,
 
   StepList: styled.ol`
@@ -108,12 +112,10 @@ const S = {
     list-style-type: none;
     counter-increment: step-counter;
     position: relative;
-    margin-left: 30px;
 
     ::before {
       content: counter(step-counter);
       position: absolute;
-      left: -22px;
       top: 2px;
       width: 16px;
       height: 16px;
@@ -130,6 +132,7 @@ const S = {
   `,
 
   Desc: styled.span`
+    margin-left: 22px;
     font-weight: 400;
     font-size: 14px;
     line-height: 17px;

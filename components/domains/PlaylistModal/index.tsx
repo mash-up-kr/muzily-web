@@ -99,6 +99,7 @@ const S = {
     flex-direction: column;
     gap: 16px;
     margin-top: 20px;
+    padding: 0 16px;
   `,
   DeleteButton: styled.button`
     cursor: pointer;
