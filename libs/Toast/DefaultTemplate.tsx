@@ -31,7 +31,6 @@ const DefaultTemplate: FunctionComponent<
       opacity: isShow ? 1 : 0,
     }}
   >
-    <button onClick={close}>제거</button>
     {typeof Content === "function" ? (
       <Content
         isShow={isShow}
