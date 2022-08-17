@@ -5,8 +5,7 @@ import type {
   FunctionComponent,
   ReactNode,
 } from "react";
-import ReactDOM from "react-dom";
-import { createRoot, hydrateRoot } from "react-dom/client";
+import { createRoot } from "react-dom/client";
 import { DEFAULT_PORTAL_ID_PREFIX } from "../../constants";
 
 export const DEFAULT_ADAPTERS: FunctionComponent<{ children: ReactNode }> = (
