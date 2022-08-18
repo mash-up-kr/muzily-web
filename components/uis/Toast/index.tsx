@@ -4,6 +4,13 @@ import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
 import Toast from "~/libs/Toast";
 import { emotionTheme } from "~/theme";
 
+const badge = {
+  success: "✅",
+  error: "⛔️",
+  warning: "🚧",
+  info: "ⓘ",
+} as const;
+
 export default new Toast({
   Adapter: ({ children }) => (
     <ThemeProvider theme={emotionTheme}>
@@ -11,37 +18,13 @@ export default new Toast({
     </ThemeProvider>
   ),
   Template: ({ content, isShow, options: { delay, duration, status } }) => {
-    let badge = null;
-
-    switch (status) {
-      case "success": {
-        badge = "✅";
-        break;
-      }
-      case "error": {
-        badge = "⛔️";
-        break;
-      }
-      case "warning": {
-        badge = "🚧";
-        break;
-      }
-      case "info": {
-        badge = "🍋";
-        break;
-      }
-      default: {
-        badge = "";
-      }
-    }
-
     return (
       <AnimatePresence>
         {isShow && (
           <Container
             layout
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
+            initial={{ y: 40, opacity: 0 }}
+            animate={{ y: 0, opacity: 1, transition: { delay: delay / 1000 } }}
             exit={{
               y: -20,
               opacity: 0,
@@ -53,11 +36,10 @@ export default new Toast({
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: 12,
                 paddingLeft: 16,
               }}
             >
-              {badge}
+              {status && badge[status]}
               <Wrapper>{content}</Wrapper>
             </div>
           </Container>

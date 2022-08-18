@@ -32,8 +32,10 @@ const ToastTestPage = () => {
             // 2. 함수를 넘겨서 options, close, closeAll를 사용할 수도 있어요
             Toast.show(
               ({ options, close, closeAll }) => (
-                <Spacer justify="space-between" align="center">
-                  토스트 짜잔~! ({options.duration / 1000}초)
+                <Spacer justify="space-between" align="center" gap={8}>
+                  <S.TextWrapper>
+                    토스트 짜잔~! ({options.duration / 1000}초)
+                  </S.TextWrapper>
                   <Spacer gap={8}>
                     <S.Button onClick={close}>닫기</S.Button>
                     <S.Button onClick={closeAll}>모두 닫기</S.Button>
@@ -45,14 +47,16 @@ const ToastTestPage = () => {
             );
           }}
         >
-          8초 Error open toast
+          ⛔️ 8초 Error open toast
         </S.Button>
         <S.Button
           onClick={() => {
             Toast.show(
               ({ options, close, closeAll }) => (
-                <Spacer justify="space-between" align="center">
-                  토스트 짜잔~! ({options.duration / 1000}초)
+                <Spacer justify="space-between" align="center" gap={8}>
+                  <S.TextWrapper>
+                    토스트 짜잔~! ({options.duration / 1000}초)
+                  </S.TextWrapper>
                   <Spacer gap={8}>
                     <S.Button onClick={close}>닫기</S.Button>
                     <S.Button onClick={closeAll}>모두 닫기</S.Button>
@@ -63,14 +67,16 @@ const ToastTestPage = () => {
             );
           }}
         >
-          1초 Success toast
+          ✅ 1초 Success toast
         </S.Button>
         <S.Button
           onClick={() => {
             Toast.show(
               ({ options, close, closeAll }) => (
-                <Spacer justify="space-between" align="center">
-                  토스트 짜잔~! ({options.duration / 1000}초)
+                <Spacer justify="space-between" align="center" gap={8}>
+                  <S.TextWrapper>
+                    토스트 짜잔~! ({options.duration / 1000}초)
+                  </S.TextWrapper>
                   <Spacer gap={8}>
                     <S.Button onClick={close}>닫기</S.Button>
                     <S.Button onClick={closeAll}>모두 닫기</S.Button>
@@ -81,14 +87,36 @@ const ToastTestPage = () => {
             );
           }}
         >
-          4초 Warning toast
+          🚧 4초 Warning toast
+        </S.Button>
+        <S.Button
+          onClick={() => {
+            Toast.show(
+              ({ options, close, closeAll }) => (
+                <Spacer justify="space-between" align="center" gap={8}>
+                  <S.TextWrapper>
+                    토스트 짜잔~! ({options.duration / 1000}초)
+                  </S.TextWrapper>
+                  <Spacer gap={8}>
+                    <S.Button onClick={close}>닫기</S.Button>
+                    <S.Button onClick={closeAll}>모두 닫기</S.Button>
+                  </Spacer>
+                </Spacer>
+              ),
+              { duration: 4000, delay: 300, status: "info" }
+            );
+          }}
+        >
+          ⓘ 3초 Warning toast
         </S.Button>
         <S.Button
           onClick={() => {
             ToastDefault.show(
               ({ options }) => (
-                <Spacer justify="space-between">
-                  토스트 짜잔~! ({options.duration / 1000}초)
+                <Spacer justify="space-between" gap={8}>
+                  <S.TextWrapper>
+                    토스트 짜잔~! ({options.duration / 1000}초)
+                  </S.TextWrapper>
                 </Spacer>
               ),
               { duration: 2000 }
@@ -107,16 +135,24 @@ export default ToastTestPage;
 const S = {
   Button: styled.button`
     ${({ theme }) => css`
+      font-weight: 700;
+      white-space: nowrap;
       display: flex;
       justify-content: center;
       align-items: center;
       color: white;
       background-color: ${theme.colors.blue0500};
-      height: 40px;
-      padding: 18px;
+      height: 42px;
+      padding: 14px 18px;
       border-radius: 12px;
-      border: none;
       cursor: pointer;
+      border: none;
+
+      transition: all 100ms;
+
+      &:active {
+        filter: brightness(0.8);
+      }
 
       &:hover {
         opacity: 0.85;
@@ -128,6 +164,19 @@ const S = {
       }
 
       transition: 0.2s opacity;
+    `}
+  `,
+  TextWrapper: styled.div`
+    ${() => css`
+      text-align: left;
+      word-break: break-all;
+      flex: 1;
+      text-overflow: ellipsis;
+      overflow: hidden;
+
+      display: -webkit-box;
+      -webkit-line-clamp: 2; // 원하는 라인수
+      -webkit-box-orient: vertical;
     `}
   `,
 };
