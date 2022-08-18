@@ -1,135 +1,41 @@
 /* eslint-disable no-console */
-import React, { useState, useEffect } from "react";
+import { useEffect } from "react";
 import type { NextPage } from "next";
-import { Client } from "@stomp/stompjs";
-import type { IStompSocket, IMessage } from "@stomp/stompjs";
-import SockJS from "sockjs-client";
+import { useRecoilValue } from "recoil";
+import { useEmoji, useAddPlaylistItemRequest } from "~/hooks/webSocket";
+import { emojiAtomState } from "~/store/emoji";
+import { playlistAtomState } from "~/store/playlist";
+import { userQueueAtomState } from "~/store/user";
 
-interface ChatContent {
-  chat: string;
-}
-
-interface StompCallbackMessage {
-  type: "CHAT" | "ERROR";
-  code: string;
-  message: string;
-  data: ChatContent | null;
-}
-
-interface Chat {
-  chat: string;
-}
-
-const STOMP_SERVER_URL = process.env
-  .NEXT_PUBLIC_SERVER_STOMP_END_POINT as string;
-const ROOM_ID = 1; // For test
-
-const client = new Client();
-
-client.configure({
-  brokerURL: STOMP_SERVER_URL,
-  connectHeaders: {
-    "Content-Type": "application/json",
-  },
-  debug: (str) => {
-    console.debug(new Date(), str);
-  },
-  reconnectDelay: 5000,
-  heartbeatIncoming: 4000,
-  heartbeatOutgoing: 4000,
-});
-
-// Fallback code
-if (typeof WebSocket !== "function") {
-  client.webSocketFactory = () => {
-    return new SockJS(STOMP_SERVER_URL) as IStompSocket;
-  };
-}
-
+const ROOM_ID = 2; // XXX: for test. room 정보 api 연동되면 삭제
 const SocketTestPage: NextPage = () => {
-  const [chat, setChat] = useState<Chat[]>([]);
-  const [value, setValue] = useState("");
-
-  const subscribe = () => {
-    client.subscribe(`/sub/v1/rooms/${ROOM_ID}`, (message: IMessage) => {
-      if (message.body) {
-        const newMessage: StompCallbackMessage = JSON.parse(message.body);
-        console.log("newMessage", newMessage);
-        if (newMessage.type === "CHAT" && newMessage.data?.chat !== undefined) {
-          chat.push(newMessage.data);
-          setChat([...chat]);
-        }
-      } else {
-        console.error("got empty message");
-      }
-    });
-    client.subscribe("/user/queue/errors", (message: IMessage) => {
-      console.error("error message", message);
-      if (message.body) {
-        const newMessage: StompCallbackMessage = JSON.parse(message.body);
-        if (newMessage.type === "ERROR") {
-          console.error(newMessage.message);
-        }
-      } else {
-        console.error("got empty message");
-      }
-    });
-  };
-
-  const connect = () => {
-    client.onConnect = (frame) => {
-      console.log("connect!");
-      console.debug("connect", frame);
-      subscribe();
-    };
-
-    client.onStompError = (frame) => {
-      console.debug(`Broker reported error: ${frame.headers.message}`);
-      console.debug(`Additional details: ${frame.body}`);
-    };
-
-    client.activate();
-  };
-
-  const disConnect = () => {
-    if (client.connected) {
-      client.deactivate();
-    }
-  };
-
-  const handleChat = (message: string) => {
-    console.log("client", client, client.connected);
-    if (!client.connected) {
-      console.error("Stomp client is not connected");
-
-      return;
-    }
-    client.publish({
-      destination: `/pub/v1/rooms/${ROOM_ID}/send-chat`,
-      body: JSON.stringify({
-        chat: message,
-      }),
-      skipContentLengthHeader: true,
-    });
-  };
-
+  const emoji = useRecoilValue(emojiAtomState);
+  const playlist = useRecoilValue(playlistAtomState);
+  const userQueue = useRecoilValue(userQueueAtomState);
+  const { publish: publishEmoji } = useEmoji(ROOM_ID, {
+    emojiType: "HEART",
+    intensity: 100,
+  });
+  const { publish: publishPlaylist } = useAddPlaylistItemRequest(ROOM_ID, {
+    playlistId: ROOM_ID,
+    videoId: "LqfimuFAFJ8",
+    title: "라일락",
+    duration: "229",
+    thumbnail: "https://i.ytimg.com/vi/LqfimuFAFJ8/maxresdefault.jpg",
+    dominantColor: "#FFFFFF",
+  });
   useEffect(() => {
-    connect();
-
-    return () => disConnect();
-  }, []);
+    console.log("emoji", emoji);
+    console.log("playlist", playlist);
+    console.log("userQueue", userQueue);
+  }, [emoji, playlist, userQueue]);
 
   return (
     <div>
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-      />
-      <button onClick={() => handleChat(value)}>전송</button>
-      {chat.map((v, i) => (
-        <div key={i}>{v.chat}</div>
-      ))}
+      <h2>확인 방법: 버튼을 눌렀을 때 console.log 값 나오는거 확인</h2>
+      <button onClick={() => publishEmoji()}>이모지 날리기</button>
+      <br />
+      <button onClick={() => publishPlaylist()}>플레이리스트 추가하기</button>
     </div>
   );
 };
