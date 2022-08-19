@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import type { NextPage, NextPageContext } from "next";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import type { Variant } from "framer-motion";
@@ -8,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Vibrant from "node-vibrant";
 import YouTube from "react-youtube";
 import { VIDEO_LIST } from "~/assets/dummy";
+import Heart from "~/assets/svgs/Heart";
 import {
   LongPress,
   NowPlayingCard,
@@ -17,6 +17,7 @@ import {
 } from "~/components/domains";
 import QRCodeCard from "~/components/domains/QRCodeCard";
 import { Modal, Spacer, IconButton } from "~/components/uis";
+import { useTimeout, useTimeoutFn } from "~/hooks/commons";
 import { useRoomStore } from "~/store";
 import type { Music } from "~/types/musics";
 
@@ -187,10 +188,6 @@ RoomPage.getInitialProps = async (ctx: NextPageContext) => {
 
 export default RoomPage;
 
-const STAGE_1_MAX_PERCENTAGE = 20;
-const STAGE_2_MAX_PERCENTAGE = 50;
-const STAGE_3_MAX_PERCENTAGE = 100;
-
 const Actions = {
   NewMusic: ({ value }: { value: number }) => (
     <Spacer type="vertical" align="center" gap={8}>
@@ -207,75 +204,142 @@ const Actions = {
     const [isHover, setIsHover] = useState(false);
     const [pop, setPop] = useState({ isPopping: false, percentage: 0 });
 
+    const [run, clear] = useTimeoutFn(() => {
+      setPop({ isPopping: false, percentage: 0 });
+    }, 2500);
+
+    useEffect(() => {
+      if (pop.isPopping) {
+        run();
+      }
+
+      if (!pop.isPopping) {
+        clear();
+      }
+    }, [pop.isPopping]);
+
     return (
       <>
-        <Spacer type="vertical" align="center" gap={8}>
-          <LongPress
-            threshold={7000}
-            trigger={({ register, isProcessing, percentage }) => {
-              const rotate = [-5, 5, -5];
-
-              const stage0: Variant = { scale: 1 };
-              const stage1: Variant = { scale: 2.6 };
-              const stage2: Variant = { scale: 10 };
-              const stage3: Variant = { scale: 23 };
-
-              const isStage1 =
-                isProcessing &&
-                percentage > 0 &&
-                percentage < STAGE_1_MAX_PERCENTAGE;
-              const isStage2 =
-                isProcessing &&
-                percentage > STAGE_1_MAX_PERCENTAGE &&
-                percentage < STAGE_2_MAX_PERCENTAGE;
-              const isStage3 =
-                isProcessing &&
-                percentage > STAGE_2_MAX_PERCENTAGE &&
-                percentage < STAGE_3_MAX_PERCENTAGE;
-
-              return (
+        <Modal
+          trigger={
+            <Spacer type="vertical" align="center" gap={8}>
+              <Modal.Open
+                as={IconButton}
+                onClick={() => setPop({ isPopping: false, percentage: 0 })}
+                iconName="heart"
+                style={{ userSelect: "none" }}
+              />
+              <S.IconText>좋아요</S.IconText>
+            </Spacer>
+          }
+          modal={({ close }) => (
+            <>
+              <Modal.Overlay />
+              <Spacer type="vertical" justify="center" gap={100}>
                 <motion.div
-                  onHoverStart={() => setIsHover(true)}
-                  onHoverEnd={() => setIsHover(false)}
+                  initial={{ y: -30 }}
                   animate={{
-                    rotate: isHover || isProcessing ? rotate : 0,
+                    y: [0, 20, 0, 20, 0],
+                    transition: { repeat: Infinity, repeatDelay: 3 },
                   }}
-                  transition={{
-                    repeat: Infinity,
-                    duration: isHover || isProcessing ? 0.2 : 0,
-                  }}
+                  whileHover={{ y: 40 }}
                 >
-                  <IconButton
-                    {...register()}
-                    iconName="heart"
-                    animate={
-                      (isStage1 && stage1) ||
-                      (isStage2 && stage2) ||
-                      (isStage3 && stage3) ||
-                      stage0
-                    }
-                    transition={{
-                      duration:
-                        isStage1 || isStage2 || isStage3
-                          ? 0.5
-                          : isProcessing
-                          ? 1
-                          : 0,
+                  <p
+                    style={{
+                      fontSize: 30,
+                      fontWeight: 900,
+                      textAlign: "center",
+                      color: "white",
+                      filter: "drop-shadow(0px 0px 30px white)",
                     }}
-                    style={{ userSelect: "none" }}
-                  />
+                  >
+                    좋아하는 만큼
+                    <br />
+                    꾸욱~ 길게 눌러주세요!
+                  </p>
                 </motion.div>
-              );
-            }}
-            onPressOut={({ percentage }) => {
-              setPop({ isPopping: true, percentage });
-              setTimeout(() => {
-                setPop({ isPopping: false, percentage });
-              }, 2500);
-            }}
-          />
-          <S.IconText>좋아요</S.IconText>
-        </Spacer>
+
+                <LongPress
+                  threshold={2500}
+                  onPressOut={({ percentage }) => {
+                    setPop({ isPopping: true, percentage });
+
+                    close();
+                  }}
+                  onTooLongPress={close}
+                  trigger={({ register, isProcessing, percentage }) => {
+                    const rotate = [-5, 5, -5];
+
+                    const stage0: Variant = { scale: 1 };
+                    const stage1: Variant = { scale: 2 };
+                    const stage2: Variant = { scale: 3 };
+                    const stage3: Variant = { scale: 5 };
+
+                    const isStage1 =
+                      isProcessing &&
+                      percentage > 0 &&
+                      percentage < STAGE_1_MAX_PERCENTAGE;
+                    const isStage2 =
+                      isProcessing &&
+                      percentage > STAGE_1_MAX_PERCENTAGE &&
+                      percentage < STAGE_2_MAX_PERCENTAGE;
+                    const isStage3 =
+                      isProcessing &&
+                      percentage > STAGE_2_MAX_PERCENTAGE &&
+                      percentage < STAGE_3_MAX_PERCENTAGE;
+
+                    return (
+                      <motion.div
+                        onHoverStart={() => setIsHover(true)}
+                        onHoverEnd={() => setIsHover(false)}
+                        animate={{
+                          rotate: isHover || isProcessing ? rotate : 0,
+                        }}
+                        transition={{
+                          repeat: Infinity,
+                          duration: isHover || isProcessing ? 0.2 : 0,
+                        }}
+                      >
+                        <motion.div
+                          {...register()}
+                          animate={
+                            (isStage1 && stage1) ||
+                            (isStage2 && stage2) ||
+                            (isStage3 && stage3) ||
+                            stage0
+                          }
+                          transition={{
+                            duration:
+                              isStage1 || isStage2 || isStage3
+                                ? 0.5
+                                : isProcessing
+                                ? 1
+                                : 0,
+                          }}
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            userSelect: "none",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <Heart
+                            animate={{
+                              scale: 4,
+                              filter: "drop-shadow(0px 0px 30px white)",
+                            }}
+                          />
+                        </motion.div>
+                      </motion.div>
+                    );
+                  }}
+                />
+                <div />
+              </Spacer>
+            </>
+          )}
+        />
         <AnimatePresence exitBeforeEnter>
           {pop.isPopping && (
             <motion.div
@@ -315,98 +379,46 @@ const Actions = {
   },
 };
 
-const Hearts = ({ stage }: { stage: 1 | 2 | 3 }) => (
-  <>
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-    <Heart3D stage={stage} />
-  </>
-);
+const STAGE_1_MAX_PERCENTAGE = 20;
+const STAGE_2_MAX_PERCENTAGE = 50;
+const STAGE_3_MAX_PERCENTAGE = 100;
+
+const Hearts = ({ stage }: { stage: 1 | 2 | 3 }) => {
+  return (
+    <>
+      {Array.from({ length: stage === 3 ? 20 : stage === 2 ? 50 : 40 }).map(
+        (_, index) => (
+          <Heart3D key={index} stage={stage} />
+        )
+      )}
+    </>
+  );
+};
 
 const Heart3D = ({ stage }: { stage: 1 | 2 | 3 }) => {
-  const getRandomHalfToFull = () => Math.random() / 3 + 2 / 3;
-
-  const width = stage * stage * 38;
-
-  const isMinus = Math.random() > 0.5;
+  const getRandomHalfToFull = () => Math.random() / 4 + 3 / 4;
+  const randomMinus = Math.random() > 0.5 ? 1 : -1;
 
   return (
     <motion.div
-      style={{ width, height: width }}
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        marginBottom: stage === 3 ? 140 : 1,
+      }}
       initial={{
-        x: isMinus
-          ? -(window.innerWidth * Math.random())
-          : window.innerWidth * Math.random(),
-        y: 600 * getRandomHalfToFull(),
-        opacity: Math.random() * 0.3 + 0.7,
+        x: (randomMinus * window.innerWidth * Math.random()) / 2,
+        y: 400 * getRandomHalfToFull(),
       }}
       animate={{
-        x: isMinus
-          ? -(window.innerWidth * Math.random())
-          : window.innerWidth * Math.random(),
-        y: -1300 * getRandomHalfToFull(),
+        x: (randomMinus * window.innerWidth * Math.random()) / 2,
+        y: -2000 * getRandomHalfToFull(),
+
         opacity: Math.random() * 0.9 + 0.1,
       }}
-      transition={{ duration: 4 * getRandomHalfToFull() }}
+      transition={{ duration: 3 * getRandomHalfToFull() }}
     >
-      <Image
-        src={"/images/heart.svg"}
-        alt={"icon"}
-        width={width}
-        height={width}
-      />
+      <Heart animate={{ scale: stage === 1 ? 2 : stage * stage }} />
     </motion.div>
   );
 };
