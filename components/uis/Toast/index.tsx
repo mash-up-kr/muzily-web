@@ -12,6 +12,7 @@ const badge = {
 } as const;
 
 export default new Toast({
+  defaultOptions: { duration: 4000, delay: 100, status: "info" },
   Adapter: ({ children }) => (
     <ThemeProvider theme={emotionTheme}>
       <AnimateSharedLayout>{children}</AnimateSharedLayout>
