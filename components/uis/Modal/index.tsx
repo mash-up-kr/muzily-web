@@ -4,6 +4,7 @@ import { useDisclosure } from "~/hooks/commons";
 import Close from "./Close";
 import Context from "./context";
 import Open from "./Open";
+import Overlay from "./Overlay";
 import Portal from "./Portal";
 
 const DEFAULT_PORTAL_ID_PREFIX = "modal-portal";
@@ -66,5 +67,6 @@ export default Modal;
 
 Modal.Open = Open;
 Modal.Close = Close;
+Modal.Overlay = Overlay;
 
 export { useModal } from "./context";
