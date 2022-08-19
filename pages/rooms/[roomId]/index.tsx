@@ -16,8 +16,8 @@ import {
   MoodScreen,
 } from "~/components/domains";
 import QRCodeCard from "~/components/domains/QRCodeCard";
-import { Modal, Spacer, IconButton } from "~/components/uis";
-import { useTimeout, useTimeoutFn } from "~/hooks/commons";
+import { Modal, Spacer, IconButton, Toast } from "~/components/uis";
+import { useTimeoutFn } from "~/hooks/commons";
 import { useRoomStore } from "~/store";
 import type { Music } from "~/types/musics";
 
@@ -260,13 +260,20 @@ const Actions = {
                 </motion.div>
 
                 <LongPress
-                  threshold={2500}
+                  threshold={4000}
                   onPressOut={({ percentage }) => {
                     setPop({ isPopping: true, percentage });
 
                     close();
                   }}
-                  onTooLongPress={close}
+                  onTooLongPress={() => {
+                    Toast.show("4초 안에 이모지를 놓아주세요~", {
+                      status: "info",
+                      delay: 0,
+                    });
+
+                    close();
+                  }}
                   trigger={({ register, isProcessing, percentage }) => {
                     const rotate = [-5, 5, -5];
 
