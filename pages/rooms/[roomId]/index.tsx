@@ -18,6 +18,7 @@ import {
 import QRCodeCard from "~/components/domains/QRCodeCard";
 import { Modal, Spacer, IconButton, Toast } from "~/components/uis";
 import { useTimeoutFn } from "~/hooks/commons";
+import { useRoomDetail } from "~/features/rooms";
 import { useRoomStore } from "~/store";
 import type { Music } from "~/types/musics";
 
@@ -29,6 +30,11 @@ interface Props {
 const RoomPage: NextPage<Props> = ({ musicData, isHost: host }) => {
   const router = useRouter();
   const { roomId } = router.query as { roomId: string };
+
+  const { data: roomData } = useRoomDetail(+roomId);
+
+  console.log("🚀 ~ file: index.tsx ~ line 34 ~ roomData", roomData);
+
   const {
     state: { playingMusicId, playList, isHost, proposedMusicList },
     actions,
