@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
-import { TopBar, TopBarIconButton } from "~/components/uis";
+import { motion } from "framer-motion";
+import { Spacer, TopBar, TopBarIconButton, TypingText } from "~/components/uis";
 import { withRouteGuard } from "~/hocs";
 import { useRoomsQuery } from "~/hooks/api";
 
@@ -10,6 +11,8 @@ const HomePage: NextPage = withRouteGuard(
   { UNCONNECTED: false, CONNECTED: true },
   "/login",
   () => {
+    const [isOpenLine2, setIsOpenLine2] = useState(false);
+    const [isOpenCTA, setIsOpenCTA] = useState(false);
     const [roomTitle, setRoomTitle] = useState("");
     const router = useRouter();
 
@@ -48,12 +51,34 @@ const HomePage: NextPage = withRouteGuard(
             </S.RoomTextContainer>
             <S.Spacer></S.Spacer>
             <S.Header>
-              함께 만드는
-              <br />
-              모두의 플레이리스트
+              <TypingText
+                textList={[`함께 만드는`]}
+                typingTime={30}
+                onTypingEnd={() => setIsOpenLine2(true)}
+              />
+              {isOpenLine2 && (
+                <TypingText
+                  textList={[`모두의 플레이리스트`]}
+                  typingTime={30}
+                  onTypingEnd={() => setIsOpenCTA(true)}
+                />
+              )}
             </S.Header>
-            <S.CreateRoomButton type="submit">방 만들기</S.CreateRoomButton>
-            <S.Description>지금 바로 3초만에 만들어보세요!</S.Description>
+
+            {isOpenCTA && (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1, y: [0, 0, 0, 10, 0, 10, 0] }}
+                style={{ display: "inline" }}
+              >
+                <Spacer type="vertical" align={"center"}>
+                  <S.CreateRoomButton type="submit">
+                    방 만들기
+                  </S.CreateRoomButton>
+                  <S.Description>지금 바로 3초만에 만들어보세요!</S.Description>
+                </Spacer>
+              </motion.div>
+            )}
           </S.InviteContainer>
         </S.Form>
       </>
@@ -140,7 +165,7 @@ const S = {
     border: none;
     cursor: pointer;
   `,
-  Description: styled.span`
+  Description: styled.div`
     margin-top: 18px;
     font-size: 14px;
     line-height: 22.4px;
