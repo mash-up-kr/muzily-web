@@ -31,12 +31,14 @@ const HomePage: NextPage = withRouteGuard(
       }
     }, [data]);
 
+    useEffect(() => {
+      if (isError) {
+        router.replace("/rooms/create");
+      }
+    }, [isError]);
+
     if (isFetching || isLoading || data === undefined) {
       return <div>Loading, Fetching</div>;
-    }
-
-    if (isError) {
-      router.replace("/rooms/create");
     }
 
     return (

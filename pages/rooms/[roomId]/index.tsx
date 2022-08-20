@@ -47,7 +47,7 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   const router = useRouter();
   const { roomId } = router.query as { roomId: string };
 
-  const { data: roomData } = useRoomQuery(Number(roomId));
+  const { data: roomData, isError } = useRoomQuery(Number(roomId));
 
   const {
     state: { playingMusicId, isHost, proposedMusicList },
@@ -84,6 +84,12 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
       contentRef.current.scrollTo({ left: contentWidth / 2 });
     }
   }, [contentRef]);
+
+  useEffect(() => {
+    if (isError) {
+      router.replace("/");
+    }
+  }, [isError]);
 
   return (
     <>
