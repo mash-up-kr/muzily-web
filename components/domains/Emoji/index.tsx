@@ -20,7 +20,7 @@ const Emoji = () => {
   const [localToken] = useLocalToken();
 
   return (
-    <MemberInfo.Only fallback={<>memberInfo loading...</>}>
+    <MemberInfo.Only fallback={<></>}>
       {({ memberInfo }) => (
         <>
           <Modal
@@ -64,8 +64,10 @@ const Emoji = () => {
                   <LongPress
                     threshold={4000}
                     onPressOut={({ percentage }) => {
-                      close();
                       publish({ emojiType: "HEART", intensity: percentage });
+                      setTimeout(() => {
+                        close();
+                      }, 100);
                     }}
                     onTooLongPress={() => {
                       Toast.show("4초 안에 이모지를 놓아주세요~", {

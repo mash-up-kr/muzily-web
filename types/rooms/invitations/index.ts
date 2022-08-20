@@ -1,7 +1,6 @@
 import type { TimeStamp } from "~/types/core";
+import type { EmojiType } from "~/types/emojis";
 import type { Room } from "..";
-
-export type EmojiType = "BOOK" | "HEART" | "MIRROR_BALL";
 
 /*
     CREATOR : 방장
