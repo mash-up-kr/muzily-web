@@ -1,4 +1,5 @@
-import type { Emoji, PlaylistItem } from "~/types";
+import type { Emoji } from "~/types";
+import type { PlaylistItem } from "../playlist";
 
 export const SOCKET_RES_TYPE = {
   error: "ERROR",

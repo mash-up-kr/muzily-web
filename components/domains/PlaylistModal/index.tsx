@@ -2,31 +2,37 @@ import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { DndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
+import { useRecoilState } from "recoil";
 import { Layout, TopBar, TopBarIconButton } from "~/components/uis";
 import { useModal } from "~/components/uis/Modal";
 import { useRoomStore } from "~/store";
+import { playlistAtomState } from "~/store/playlist";
 import MusicItemCard from "./MusicItemCard";
 
 function PlaylistModal() {
   const {
-    state: { playList, playingMusicId, isHost },
+    state: { playingMusicId, isHost },
     actions,
   } = useRoomStore();
   const { close } = useModal();
+
+  const [playlist, setPlaylist] = useRecoilState(playlistAtomState);
 
   const [deleteMode, setDeleteMode] = useState(false);
   const [deleteList, setDeleteList] = useState<string[]>([]);
 
   const moveCard = (from: number, to: number) => {
-    const arr = [...playList];
+    const arr = [...playlist];
     const item = arr.splice(from, 1);
     const newArr = [...arr.slice(0, to), item[0], ...arr.slice(to)];
-    actions.setPlaylist(newArr);
+    setPlaylist(newArr);
   };
 
   const handleClickDeleteButton = () => {
-    const newList = playList.filter((item) => !deleteList.includes(item.id));
-    actions.setPlaylist(newList);
+    const newList = playlist.filter(
+      (item) => !deleteList.includes(item.videoId)
+    );
+    setPlaylist(newList);
     setDeleteList([]);
   };
 
@@ -63,17 +69,17 @@ function PlaylistModal() {
         }}
       >
         <S.MusicList>
-          {playList.map((el, i) => (
+          {playlist.map((el, i) => (
             <MusicItemCard
               item={el}
-              key={el.id}
-              active={el.id === playingMusicId}
+              key={el.videoId}
+              active={el.videoId === playingMusicId}
               deleteMode={deleteMode}
               setDeleteList={setDeleteList}
               index={i}
               onClick={() => {
                 if (isHost) {
-                  actions.setPlayingMusicId(el.id);
+                  actions.setPlayingMusicId(el.videoId);
                 }
               }}
               moveCard={moveCard}

@@ -1,15 +1,18 @@
 import React from "react";
 import Image from "next/image";
 import styled from "@emotion/styled";
+import { useRecoilState } from "recoil";
 import { Modal } from "~/components/uis";
 import { useRoomStore } from "~/store";
-import type { Music } from "~/types/musics";
+import { playlistAtomState } from "~/store/playlist";
+import { getMusicIndex } from "~/store/room/utils";
+import type { PlaylistItem } from "~/types/playlist";
 import AddSongScreen from "../AddSongScreen";
 import Thumbnail from "../Thumbnail";
 
 interface NowPlayingCardProps {
   noPlaylist?: boolean;
-  currentMusic: Music;
+  currentMusic: PlaylistItem;
   player?: any;
 }
 
@@ -19,9 +22,29 @@ function NowPlayingCard({
   player,
 }: NowPlayingCardProps) {
   const {
-    state: { isPlaying, isHost },
+    state: { isPlaying, isHost, playingMusicId },
     actions,
   } = useRoomStore();
+
+  const [playlist] = useRecoilState(playlistAtomState);
+
+  const playPrevMusic = () => {
+    const playingIndex = getMusicIndex(playingMusicId, playlist);
+    if (playingIndex === 0) {
+      return null;
+    }
+
+    actions.setPlayingMusicId(playlist[playingIndex - 1].videoId);
+  };
+
+  const playNextMusic = () => {
+    const playingIndex = getMusicIndex(playingMusicId, playlist);
+    if (playingIndex === playlist.length - 1) {
+      return null;
+    }
+
+    actions.setPlayingMusicId(playlist[playingIndex + 1].videoId);
+  };
 
   // 재생 중인 노래 없는경우
   if (noPlaylist) {
@@ -53,7 +76,10 @@ function NowPlayingCard({
   return (
     <S.Container>
       <S.Title>Now Playing</S.Title>
-      <Thumbnail src={currentMusic.thumbnail} colors={currentMusic.colors} />
+      <Thumbnail
+        src={currentMusic.thumbnail}
+        color={currentMusic.dominantColor}
+      />
 
       {isHost && (
         <S.Controller>
@@ -62,7 +88,7 @@ function NowPlayingCard({
             alt="play-back"
             width={20}
             height={20}
-            onClick={actions.playPrevMusic}
+            onClick={playPrevMusic}
           />
           {isPlaying ? (
             <Image
@@ -87,7 +113,7 @@ function NowPlayingCard({
             alt="play-next"
             width={20}
             height={20}
-            onClick={actions.playNextMusic}
+            onClick={playNextMusic}
           />
         </S.Controller>
       )}

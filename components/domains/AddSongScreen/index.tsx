@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import axios from "axios";
 import YouTube from "react-youtube";
-import { VIDEO_LIST } from "~/assets/dummy";
+import { useRecoilState } from "recoil";
 import {
   BottomButton,
   Layout,
@@ -12,8 +12,9 @@ import {
 } from "~/components/uis";
 import Modal, { useModal } from "~/components/uis/Modal";
 import { useRoomStore } from "~/store";
+import { playlistAtomState } from "~/store/playlist";
 import { getDurationText } from "~/store/room/utils";
-import type { Music } from "~/types/musics";
+import type { AddPlaylistRequestBody, PlaylistItem } from "~/types/playlist";
 import AddSongGuideScreen from "../AddSongGuideScreen";
 
 const defaultEndPoint = process.env
@@ -35,7 +36,7 @@ interface AddSongScreenProps {
 
 function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
   const {
-    state: { playList, proposedMusicList, isHost },
+    state: { proposedMusicList, isHost },
     actions,
   } = useRoomStore();
 
@@ -44,6 +45,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
   const [youtubeId, setYoutubeId] = useState("");
   const [isValid, setIsValid] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [playlist, setPlaylist] = useRecoilState(playlistAtomState);
 
   useEffect(() => {
     setIsValid(false);
@@ -67,28 +69,20 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
         },
       });
 
-      // const socketData = {
-      //   videoId: res.data.id,
-      //   title: res.data.snippet.title,
-      //   duration: res.data.contentDetails.duration,
-      //   thumbnail: res.data.snippet.thumbnails.high.url,
-      //   channelName: "",
-      //   color,
-      // };
-
-      const musicData: Music = {
-        id: res.data.id,
+      const musicData: AddPlaylistRequestBody = {
+        videoId: res.data.id,
+        playlistId: 0,
         title: res.data.snippet.title,
         duration: res.data.contentDetails.duration,
         thumbnail: res.data.snippet.thumbnails.high.url,
-        colors: thumbnailRes.data.colors,
+        dominantColor: thumbnailRes.data.colors[0],
       };
 
-      if (isHost) {
-        actions.addToPlaylist(musicData);
-      } else {
-        actions.addMusicToProposedList(musicData);
-      }
+      // if (isHost) {
+      //   actions.addToPlaylist(musicData);
+      // } else {
+      //   actions.addMusicToProposedList(musicData);
+      // }
 
       close();
 
@@ -163,7 +157,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
               </S.CardHeader>
               <S.CardContent>
                 {proposedMusicList.map((item) => (
-                  <S.CardItem key={item.id}>
+                  <S.CardItem key={item.videoId}>
                     <Spacer type="vertical" style={{ marginRight: 12 }}>
                       <S.MusicTitle>{item.title}</S.MusicTitle>
                       <S.MusicArtist>
@@ -174,8 +168,13 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
                       <S.Button
                         color="#007aff"
                         onClick={() => {
-                          actions.addToPlaylist(item);
-                          actions.removeMusicFromProposedList(item.id);
+                          setPlaylist((prev) => {
+                            const newList = [...prev];
+                            newList.push(item);
+
+                            return newList;
+                          });
+                          actions.removeMusicFromProposedList(item.videoId);
                           // close();
                         }}
                       >
@@ -184,7 +183,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
                       <S.Button
                         color=" #F54031"
                         onClick={() => {
-                          actions.removeMusicFromProposedList(item.id);
+                          actions.removeMusicFromProposedList(item.videoId);
                         }}
                       >
                         거절

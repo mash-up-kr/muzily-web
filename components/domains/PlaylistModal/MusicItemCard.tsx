@@ -2,15 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import styled from "@emotion/styled";
 import { useDrag, useDrop, type XYCoord } from "react-dnd";
-import { IconButton, Spacer } from "~/components/uis";
+import { Spacer } from "~/components/uis";
 import { useRoomStore } from "~/store";
 import { getDurationText } from "~/store/room/utils";
-import type { Music } from "~/types/musics";
+import type { PlaylistItem } from "~/types/playlist";
 
 interface MusicCardItemProps {
   active: boolean;
   onClick: () => void;
-  item: Music;
+  item: PlaylistItem;
   index: number;
   deleteMode: boolean;
   moveCard: (from: number, to: number) => void;
@@ -109,10 +109,10 @@ function MusicItemCard({
 
   return (
     <S.Container ref={(node) => drop(preview(node))} opacity={opacity}>
-      <S.MusicItem key={item.id} active={active} onClick={onClick}>
+      <S.MusicItem key={item.videoId} active={active} onClick={onClick}>
         {deleteMode && (
           <Checkbox
-            onClick={(e) => handleClickCheckButton(e, item.id)}
+            onClick={(e) => handleClickCheckButton(e, item.videoId)}
             color={active ? "blue" : "white"}
             active={checked}
             bgColor={active ? "#007AFF" : "#5EABFF"}

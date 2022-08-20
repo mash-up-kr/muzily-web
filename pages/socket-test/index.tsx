@@ -20,7 +20,7 @@ const SocketTestContentPage: NextPage = () => {
     playlistId: ROOM_ID,
     videoId: "LqfimuFAFJ8",
     title: "라일락",
-    duration: "229",
+    duration: 229,
     thumbnail: "https://i.ytimg.com/vi/LqfimuFAFJ8/maxresdefault.jpg",
     dominantColor: "#FFFFFF",
   });

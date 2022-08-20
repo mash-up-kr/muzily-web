@@ -3,8 +3,9 @@ import type { NextPage, NextPageContext } from "next";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import YouTube from "react-youtube";
-import { useRecoilValue } from "recoil";
-import { VIDEO_LIST } from "~/assets/dummy";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { NEW_VIDEO_LIST, VIDEO_LIST } from "~/assets/dummy";
+import Heart from "~/assets/svgs/Heart";
 import {
   NowPlayingCard,
   PlaylistCard,
@@ -18,6 +19,8 @@ import RoomSocketProvider from "~/contexts/RoomSocket";
 import { useRoomQuery } from "~/hooks/api/rooms";
 import { useRoomStore } from "~/store";
 import { emojiAtomState } from "~/store/emoji";
+import { playlistAtomState } from "~/store/playlist";
+import { getMusicIndex } from "~/store/room/utils";
 
 interface Props {
   isHost: boolean;
@@ -50,19 +53,32 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   const { data: roomData } = useRoomQuery(Number(roomId));
 
   const {
-    state: { playingMusicId, playList, isHost, proposedMusicList },
+    state: { playingMusicId, isHost, proposedMusicList },
     actions,
   } = useRoomStore();
+
+  const [playlist, setPlaylist] = useRecoilState(playlistAtomState);
+
   const contentRef = useRef<HTMLDivElement>(null);
 
   const [player, setPlayer] = useState(null);
   const currentMusic = useMemo(
-    () => playList.find((item) => item.id === playingMusicId) || playList[0],
-    [playingMusicId, playList]
+    () =>
+      playlist.find((item) => item.videoId === playingMusicId) || playlist[0],
+    [playingMusicId, playlist]
   );
 
+  const playNextMusic = () => {
+    const playingIndex = getMusicIndex(playingMusicId, playlist);
+    if (playingIndex === playlist.length - 1) {
+      return null;
+    }
+
+    actions.setPlayingMusicId(playlist[playingIndex + 1].videoId);
+  };
+
   useEffect(() => {
-    actions.init(host ? [] : VIDEO_LIST, host, "");
+    actions.init(host ? [] : NEW_VIDEO_LIST, host, "");
   }, []);
 
   useEffect(() => {
@@ -87,7 +103,7 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
         <S.ContentWrapper ref={contentRef}>
           <QRCodeCard roomId={roomId} />
           <NowPlayingCard
-            noPlaylist={!playList.length}
+            noPlaylist={!playlist.length}
             currentMusic={currentMusic}
             player={player}
           />
@@ -107,7 +123,7 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
         <S.YoutubeWrapper hidden>
           <YouTube
             id="iframe"
-            videoId={currentMusic.id}
+            videoId={currentMusic.videoId}
             opts={{
               width: 300,
               height: 200,
@@ -123,11 +139,11 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
               event.target.playVideo();
             }}
             onEnd={() => {
-              if (playingMusicId === playList[playList.length - 1].id) {
+              if (playingMusicId === playlist[playlist.length - 1].videoId) {
                 return alert("끝!!");
               }
 
-              actions.playNextMusic();
+              playNextMusic();
             }}
           />
         </S.YoutubeWrapper>

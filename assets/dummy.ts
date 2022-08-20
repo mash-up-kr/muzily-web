@@ -1,3 +1,5 @@
+import type { PlaylistItem } from "~/types/playlist";
+
 // export const VIDEO_LIST = [
 //   {
 //     id: "DYrY1E4-9NI",
@@ -64,5 +66,35 @@ export const VIDEO_LIST = [
     title: "ITZY “SNEAKERS” M/V @ITZY",
     thumbnail: "https://i.ytimg.com/vi/Hbb5GPxXF1w/hqdefault.jpg",
     colors: ["#D6595E"],
+  },
+];
+
+export const NEW_VIDEO_LIST: PlaylistItem[] = [
+  {
+    id: 1,
+    videoId: "z2ZjutyxmjA",
+    playlistId: 1,
+    duration: 187,
+    title: "aespa 에스파 'Life's Too Short (English Ver.)' MV",
+    thumbnail: "https://i.ytimg.com/vi/z2ZjutyxmjA/hqdefault.jpg",
+    dominantColor: "#007AFF",
+  },
+  {
+    id: 2,
+    videoId: "HzOjwL7IP_o",
+    playlistId: 1,
+    duration: 230,
+    title: "(MV)오마이걸(OH MY GIRL)_Dun Dun Dance",
+    thumbnail: "https://i.ytimg.com/vi/HzOjwL7IP_o/hqdefault.jpg",
+    dominantColor: "#0092A9",
+  },
+  {
+    id: 3,
+    videoId: "Hbb5GPxXF1w",
+    playlistId: 1,
+    duration: 160,
+    title: "ITZY “SNEAKERS” M/V @ITZY",
+    thumbnail: "https://i.ytimg.com/vi/Hbb5GPxXF1w/hqdefault.jpg",
+    dominantColor: "#D6595E",
   },
 ];

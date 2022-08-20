@@ -1,12 +1,12 @@
 import React from "react";
 import styled from "@emotion/styled";
 
-function Thumbnail({ src, colors }) {
+function Thumbnail({ src, color }) {
   return (
     <StyledContainer>
       <StyledThumbnail>
         <StyledImage src={src} />
-        <StyledGradient color={colors[0]} />
+        <StyledGradient color={color} />
       </StyledThumbnail>
 
       {/* MEMO(@Young-mason) 주석 해제하면 추출되는 색상들 확인 가능 */}

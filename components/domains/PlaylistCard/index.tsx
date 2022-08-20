@@ -1,13 +1,15 @@
 import React from "react";
 import styled from "@emotion/styled";
+import { useRecoilState } from "recoil";
 import { Modal } from "~/components/uis";
 import { useRoomStore } from "~/store";
-import { getDurationText } from "~/store/room/utils";
-import type { Music } from "~/types/musics";
+import { playlistAtomState } from "~/store/playlist";
+import { getDurationText, getMusicIndex } from "~/store/room/utils";
+import type { PlaylistItem } from "~/types/playlist";
 import PlaylistModal from "../PlaylistModal";
 
 interface PlaylistCardProps {
-  currentMusic: Music;
+  currentMusic: PlaylistItem;
 }
 
 const NO_DATA_TEXT = [
@@ -17,16 +19,38 @@ const NO_DATA_TEXT = [
 
 function PlaylistCard({ currentMusic }: PlaylistCardProps) {
   const {
-    state: { playList },
+    state: { playingMusicId },
     actions,
   } = useRoomStore();
-  const noData = !playList || playList.length === 0;
-  const nextMusic = playList[actions.getMusicIndex(currentMusic?.id) + 1];
+
+  const [playlist, setPlaylist] = useRecoilState(playlistAtomState);
+
+  const playPrevMusic = () => {
+    const playingIndex = getMusicIndex(playingMusicId, playlist);
+    if (playingIndex === 0) {
+      return null;
+    }
+
+    actions.setPlayingMusicId(playlist[playingIndex - 1].videoId);
+  };
+
+  const playNextMusic = () => {
+    const playingIndex = getMusicIndex(playingMusicId, playlist);
+    if (playingIndex === playlist.length - 1) {
+      return null;
+    }
+
+    actions.setPlayingMusicId(playlist[playingIndex + 1].videoId);
+  };
+
+  const noData = !playlist || playlist.length === 0;
+  const nextMusic =
+    playlist[getMusicIndex(currentMusic?.videoId, playlist) + 1];
 
   return (
     <S.Container>
       {/* 카드 상단 */}
-      <S.UpperCard onClick={actions.playPrevMusic}>
+      <S.UpperCard onClick={playPrevMusic}>
         <S.Title>Playlist</S.Title>
         <S.Content>
           {noData ? (
@@ -43,7 +67,7 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
       </S.UpperCard>
 
       {/* 카드 중간 */}
-      <S.MiddleCard onClick={actions.playNextMusic}>
+      <S.MiddleCard onClick={playNextMusic}>
         <S.Content>
           {noData ? (
             <S.NoDataText>{NO_DATA_TEXT[1]}</S.NoDataText>

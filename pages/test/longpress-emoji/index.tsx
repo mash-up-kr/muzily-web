@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { LongPress } from "~/components/domains";
+import { LongPress } from "~/components/uis";
 
 const LongPressEmojiTestPage = () => {
   return (
