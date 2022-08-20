@@ -99,26 +99,26 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
 
   return (
     <>
-      <TopBar
-        leftIconButton={<TopBarIconButton iconName="star" />}
-        rightIconButton={
-          roomData?.currentUser.role === "CREATOR" ? (
-            <TopBarIconButton
-              iconName="setting"
-              onClick={() => {
-                router.push(`/rooms/${roomId}/setting`);
-              }}
-            />
-          ) : (
-            <></>
-          )
-        }
-      ></TopBar>
       <Spacer
         type="vertical"
         justify="space-between"
         style={{ height: "100%" }}
       >
+        <TopBar
+          leftIconButton={<TopBarIconButton iconName="star" />}
+          rightIconButton={
+            roomData?.currentUser.role === "CREATOR" ? (
+              <TopBarIconButton
+                iconName="setting"
+                onClick={() => {
+                  router.push(`/rooms/${roomId}/setting`);
+                }}
+              />
+            ) : (
+              <></>
+            )
+          }
+        />
         <S.Header>
           <S.Title>{roomData?.name}</S.Title>
           <S.Desc>곡을 추가하거나 좋아요를 해보세요!</S.Desc>
@@ -208,7 +208,7 @@ export default RoomPage;
 
 const S = {
   Header: styled.div`
-    margin: 30px 0 0 16px;
+    margin: 8px 0 0 16px;
   `,
   Title: styled.h1`
     font-weight: 700;
@@ -221,9 +221,9 @@ const S = {
     line-height: 145%;
     letter-spacing: -0.02em;
     color: #6b6b6b;
-    margin-bottom: 34px;
   `,
   ContentWrapper: styled.div`
+    flex: 1;
     display: flex;
     align-items: center;
     gap: 20px;
