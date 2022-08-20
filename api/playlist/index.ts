@@ -1,5 +1,5 @@
 import http from "~/api/core";
-import type { Playlist, PlaylistItem } from "~/types/playlist";
+import type { Playlist, PlaylistItem } from "~/types";
 
 export const getPlaylist = (playlistId: number): Promise<Playlist> => {
   return http.get(`/playlists/${playlistId}`);
