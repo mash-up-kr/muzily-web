@@ -13,7 +13,13 @@ import {
   Emoji,
 } from "~/components/domains";
 import QRCodeCard from "~/components/domains/QRCodeCard";
-import { Modal, Spacer, IconButton } from "~/components/uis";
+import {
+  Modal,
+  Spacer,
+  IconButton,
+  TopBar,
+  TopBarIconButton,
+} from "~/components/uis";
 import RoomSocketProvider from "~/contexts/RoomSocket";
 import { useRoomQuery } from "~/hooks/api/rooms";
 import { useRoomStore } from "~/store";
@@ -93,6 +99,21 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
 
   return (
     <>
+      <TopBar
+        leftIconButton={<TopBarIconButton iconName="star" />}
+        rightIconButton={
+          roomData?.currentUser.role === "CREATOR" ? (
+            <TopBarIconButton
+              iconName="setting"
+              onClick={() => {
+                router.push(`/rooms/${roomId}/setting`);
+              }}
+            />
+          ) : (
+            <></>
+          )
+        }
+      ></TopBar>
       <Spacer
         type="vertical"
         justify="space-between"

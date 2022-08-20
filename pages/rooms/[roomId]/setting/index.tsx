@@ -5,7 +5,11 @@ import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import { AxiosError } from "axios";
 import { BottomButton, TopBar, TopBarIconButton } from "~/components/uis";
-import { useDeleteRoomMutation, usePostLogoutMutation } from "~/hooks/api";
+import {
+  useDeleteRoomMutation,
+  usePostLogoutMutation,
+  useRoomQuery,
+} from "~/hooks/api";
 import type { Mood, MoodWithImageName } from "~/types/rooms";
 
 const tokenKey = process.env.NEXT_PUBLIC_LOCAL_TOKEN_KEY as string;
@@ -31,6 +35,7 @@ const moodConstants: MoodWithImageName[] = [
 const RoomSettingPage: NextPage = () => {
   const router = useRouter();
   const [roomId, setRoomId] = useState(0);
+  const { data: roomData } = useRoomQuery(Number(roomId));
 
   useEffect(() => {
     const { roomId } = router.query as { roomId: string };
