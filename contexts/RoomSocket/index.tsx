@@ -12,15 +12,15 @@ import type { StompCallbackMessage } from "~/types/webSocket";
 interface InitialState {
   socket: Client;
 }
-const SocketContext = createContext({} as InitialState);
+const RoomSocketContext = createContext({} as InitialState);
 
 interface Props {
+  roomId: string;
   children: React.ReactNode;
 }
 
 const STOMP_SERVER_URL = process.env
   .NEXT_PUBLIC_SERVER_STOMP_END_POINT as string;
-const ROOM_ID = 1; // XXX: For test
 const tokenKey = process.env.NEXT_PUBLIC_LOCAL_TOKEN_KEY as string;
 const localStorageToken: string | null = isBrowser
   ? JSON.parse(localStorage.getItem(tokenKey) as string)
@@ -48,13 +48,13 @@ if (typeof WebSocket !== "function") {
   };
 }
 
-const SocketProvider = ({ children }: Props) => {
+const RoomSocketProvider = ({ roomId, children }: Props) => {
   const [, setProposedPlaylist] = useRecoilState(proposedPlaylistAtomState);
   const [, setEmoji] = useRecoilState(emojiAtomState);
   const [, setPlaylist] = useRecoilState(playlistAtomState);
   const subscribe = () => {
     socket.subscribe(
-      `/topic/v1/rooms/${ROOM_ID}`,
+      `/topic/v1/rooms/${roomId}`,
       (message: IMessage) => {
         if (message.body) {
           const newMessage: StompCallbackMessage = JSON.parse(message.body);
@@ -134,16 +134,16 @@ const SocketProvider = ({ children }: Props) => {
   }, []);
 
   return (
-    <SocketContext.Provider
+    <RoomSocketContext.Provider
       value={{
         socket,
       }}
     >
       {children}
-    </SocketContext.Provider>
+    </RoomSocketContext.Provider>
   );
 };
 
-export const useSocket = () => useContext(SocketContext);
+export const useRoomSocket = () => useContext(RoomSocketContext);
 
-export default SocketProvider;
+export default RoomSocketProvider;

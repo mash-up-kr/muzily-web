@@ -8,7 +8,6 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import { RecoilRoot } from "recoil";
 import { Layout } from "~/components/uis";
 import { MemberInfo } from "~/contexts";
-import SocketProvider from "~/contexts/Socket";
 import { emotionTheme } from "~/theme";
 
 const queryClient = new QueryClient();
@@ -22,9 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <QueryClientProvider client={queryClient}>
             <ThemeProvider theme={emotionTheme}>
               <MemberInfo.Provider>
-                <SocketProvider>
-                  <Component {...pageProps} />
-                </SocketProvider>
+                <Component {...pageProps} />
               </MemberInfo.Provider>
             </ThemeProvider>
             <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />

@@ -17,6 +17,7 @@ import {
 } from "~/components/domains";
 import QRCodeCard from "~/components/domains/QRCodeCard";
 import { Modal, Spacer, IconButton, Toast } from "~/components/uis";
+import RoomSocketProvider from "~/contexts/RoomSocket";
 import { useRoomDetail } from "~/hooks/api/rooms";
 import { useTimeoutFn } from "~/hooks/commons";
 import { useRoomStore } from "~/store";
@@ -27,7 +28,7 @@ interface Props {
   isHost: boolean;
 }
 
-const RoomPage: NextPage<Props> = ({ musicData, isHost: host }) => {
+const RoomContentPage: NextPage<Props> = ({ musicData, isHost: host }) => {
   const router = useRouter();
   const { roomId } = router.query as { roomId: string };
 
@@ -163,7 +164,7 @@ const S = {
   `,
 };
 
-RoomPage.getInitialProps = async (ctx: NextPageContext) => {
+RoomContentPage.getInitialProps = async (ctx: NextPageContext) => {
   const isHost = ctx.query.isHost === "true";
   const list = [...VIDEO_LIST];
   const musicData: Music[] = await Promise.all(
@@ -191,8 +192,6 @@ RoomPage.getInitialProps = async (ctx: NextPageContext) => {
     musicData,
   };
 };
-
-export default RoomPage;
 
 const Actions = {
   NewMusic: ({ value }: { value: number }) => (
@@ -425,3 +424,16 @@ const getStage = (percentage: number) =>
       percentage < STAGE_2_MAX_PERCENTAGE
     ? 2
     : 3;
+
+const RoomPage: NextPage<Props> = ({ musicData, isHost }) => {
+  const router = useRouter();
+  const { roomId } = router.query as { roomId: string };
+
+  return (
+    <RoomSocketProvider roomId={roomId}>
+      <RoomContentPage musicData={musicData} isHost={isHost} />
+    </RoomSocketProvider>
+  );
+};
+
+export default RoomPage;

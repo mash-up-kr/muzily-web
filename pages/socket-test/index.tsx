@@ -2,12 +2,13 @@
 import { useEffect } from "react";
 import type { NextPage } from "next";
 import { useRecoilValue } from "recoil";
+import RoomSocketProvider from "~/contexts/RoomSocket";
 import { useEmoji, useAddPlaylistItemRequest } from "~/hooks/webSocket";
 import { emojiAtomState } from "~/store/emoji";
 import { playlistAtomState, proposedPlaylistAtomState } from "~/store/playlist";
 
 const ROOM_ID = 1; // XXX: for test. room 정보 api 연동되면 삭제
-const SocketTestPage: NextPage = () => {
+const SocketTestContentPage: NextPage = () => {
   const emoji = useRecoilValue(emojiAtomState);
   const playlist = useRecoilValue(playlistAtomState);
   const proposedPlaylist = useRecoilValue(proposedPlaylistAtomState);
@@ -36,6 +37,14 @@ const SocketTestPage: NextPage = () => {
       <br />
       <button onClick={() => publishPlaylist()}>플레이리스트 추가하기</button>
     </div>
+  );
+};
+
+const SocketTestPage: NextPage = () => {
+  return (
+    <RoomSocketProvider roomId="1">
+      <SocketTestContentPage />
+    </RoomSocketProvider>
   );
 };
 

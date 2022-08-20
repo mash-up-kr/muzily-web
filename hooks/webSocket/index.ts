@@ -1,5 +1,5 @@
 import type { IPublishParams } from "@stomp/stompjs";
-import { useSocket } from "~/contexts/Socket";
+import { useRoomSocket } from "~/contexts/RoomSocket";
 import type { Emoji } from "~/types/emoji";
 import type { PlaylistItem } from "~/types/playlist";
 
@@ -8,7 +8,7 @@ export const useWebSocketPublish = (
   url: string,
   params: Omit<IPublishParams, "destination">
 ) => {
-  const { socket } = useSocket();
+  const { socket } = useRoomSocket();
   const publish = async () => {
     if (socket.connected) {
       await socket.publish({
