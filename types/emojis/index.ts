@@ -1,5 +1,7 @@
+export type EmojiType = "HEART" | "MIRROR_BALL" | "BOOK";
+
 export interface Emoji {
-  emojiType: "HEART" | "MIRROR_BALL" | "BOOK";
+  emojiType: EmojiType;
   intensity: number;
   senderId: number;
 }
