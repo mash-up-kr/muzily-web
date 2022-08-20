@@ -2,13 +2,14 @@ import React from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
+import { requestJoinToRoom } from "~/api/invite";
 import { TopBar, TopBarIconButton } from "~/components/uis";
 
 const RoomInvitePage: NextPage = () => {
   const router = useRouter();
-  const { roomId } = router.query;
+  const { roomId, inviteKey } = router.query;
 
-  const onJoinClick = () => {
+  const onJoinClick = async () => {
     router.push(`/rooms/${roomId}/`);
   };
 
@@ -37,10 +38,11 @@ const RoomInvitePage: NextPage = () => {
 
 const S = {
   TopBarRightItem: styled.div`
+    cursor: pointer;
     color: #007aff;
     font-weight: 700;
     font-size: 17px;
-    font-height: 155%;
+    line-height: 155%;
     letter-spacing: -0.478073px;
 
     display: flex;

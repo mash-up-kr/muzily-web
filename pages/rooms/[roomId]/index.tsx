@@ -17,7 +17,7 @@ import {
 } from "~/components/domains";
 import QRCodeCard from "~/components/domains/QRCodeCard";
 import { Modal, Spacer, IconButton, Toast } from "~/components/uis";
-import { useRoomDetail } from "~/features/rooms";
+import { useRoomDetail } from "~/hooks/api/rooms";
 import { useTimeoutFn } from "~/hooks/commons";
 import { useRoomStore } from "~/store";
 import type { Music } from "~/types/musics";
