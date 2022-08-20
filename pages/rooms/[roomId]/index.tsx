@@ -393,11 +393,9 @@ const STAGE_3_MAX_PERCENTAGE = 100;
 const Hearts = ({ stage }: { stage: 1 | 2 | 3 }) => {
   return (
     <>
-      {Array.from({ length: stage === 3 ? 20 : stage === 2 ? 50 : 40 }).map(
-        (_, index) => (
-          <Heart3D key={index} stage={stage} />
-        )
-      )}
+      {Array.from({ length: stage === 3 ? 15 : 35 }).map((_, index) => (
+        <Heart3D key={index} stage={stage} />
+      ))}
     </>
   );
 };
