@@ -20,10 +20,7 @@ const HomePage: NextPage = withRouteGuard(
 
     const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      router.push({
-        pathname: "/rooms/create",
-        query: { roomTitle },
-      });
+      router.push({ pathname: "/rooms/create" });
     };
 
     useEffect(() => {
@@ -43,12 +40,24 @@ const HomePage: NextPage = withRouteGuard(
         <TopBar leftIconButton={<TopBarIconButton iconName="star" />} />
         <S.Form onSubmit={onSubmit}>
           <S.InviteContainer>
-            <S.RoomTextContainer>
-              <S.RoomInputText
-                type="text"
-                onChange={(e) => setRoomTitle(e.target.value)}
-              ></S.RoomInputText>
-            </S.RoomTextContainer>
+            <TypingText
+              textList={[
+                "# 가족들과 함께",
+                "# 자동차에서 친구들과",
+                "# 방송에서 라이브로",
+                "# 친구들과 함께",
+              ]}
+              typingTime={100}
+              onTypingEnd={() => setIsOpenLine2(true)}
+              style={{
+                fontSize: 23,
+                background: "#333333",
+                padding: "8px 12px",
+                borderRadius: 12,
+                height: 44,
+              }}
+            />
+
             <S.Spacer></S.Spacer>
             <S.Header>
               <TypingText
@@ -122,13 +131,6 @@ const S = {
     padding-top: 48px;
     padding-bottom: constant(safe-area-inset-bottom);
     padding-bottom: env(safe-area-inset-bottom);
-  `,
-  RoomTextContainer: styled.div`
-    width: 100%;
-    height: 45px;
-    padding: 4px 8px;
-    background-color: #333;
-    border-radius: 7px;
   `,
   RoomInputText: styled.input`
     width: 100%;
