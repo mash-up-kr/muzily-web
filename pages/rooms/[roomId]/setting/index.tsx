@@ -30,7 +30,7 @@ const moodConstants: MoodWithImageName[] = [
 
 const RoomSettingPage: NextPage = () => {
   const router = useRouter();
-  const [roomId, setRoomId] = useState(-1);
+  const [roomId, setRoomId] = useState(0);
 
   useEffect(() => {
     const { roomId } = router.query as { roomId: string };
@@ -174,13 +174,14 @@ const S = {
     margin-top: 10px;
   `,
 
-  ChangeMoodButton: styled.button`
+  ChangeMoodButton: styled.a`
     border: none;
     background-color: transparent;
     font-weight: 300;
     font-size: 12px;
     line-height: 155%;
     color: white;
+    cursor: pointer;
   `,
 
   HorizontalLine: styled.hr`
