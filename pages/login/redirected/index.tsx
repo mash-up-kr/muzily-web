@@ -51,7 +51,7 @@ export const useAuthRedirected = () => {
           router.replace(`/rooms/${roomId}?isHost=true`);
         } catch (error) {
           console.log(error);
-          router.replace("/rooms/create");
+          router.replace("/");
         }
       },
     }

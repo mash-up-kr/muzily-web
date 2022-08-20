@@ -44,11 +44,7 @@ const createApiMethod =
     return _axiosInstance({
       ...handleRequest({ url, ...config }),
       method,
-    })
-      .then((res) => handleResponse(res))
-      .catch((err) => {
-        throw new Error(err);
-      });
+    }).then((res) => handleResponse(res));
   };
 
 export default {

@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
+import { AxiosError } from "axios";
 import {
   BottomButton,
   Spacer,
@@ -48,12 +49,26 @@ const RoomCreateMoodPage: NextPage = () => {
       postMoodData = selectedMood;
     }
 
-    postRoomMutation.mutate(postMoodData, {
-      onSuccess: (data) => {
-        const { roomId } = data;
-        router.push(`/rooms/${roomId}/?isHost=true`);
+    const { roomName } = router.query as { roomName: string };
+
+    postRoomMutation.mutate(
+      {
+        name: roomName,
+        emojiType: postMoodData.emojiType,
       },
-    });
+      {
+        onSuccess: (data) => {
+          const { roomId } = data;
+          router.push(`/rooms/${roomId}/?isHost=true`);
+        },
+        onError: (error: AxiosError) => {
+          if (error instanceof AxiosError) {
+            window.alert(error.response?.data.message);
+          }
+          console.error(error);
+        },
+      }
+    );
   };
 
   return (

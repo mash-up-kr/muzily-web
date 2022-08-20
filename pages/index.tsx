@@ -31,13 +31,7 @@ const HomePage: NextPage = withRouteGuard(
       }
     }, [data]);
 
-    useEffect(() => {
-      if (isError) {
-        router.replace("/rooms/create");
-      }
-    }, [isError]);
-
-    if (isFetching || isLoading || data === undefined) {
+    if ((isFetching || isLoading) && isError) {
       return <div>Loading, Fetching</div>;
     }
 

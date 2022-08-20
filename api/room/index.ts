@@ -3,7 +3,9 @@ import type { Mood, Room } from "~/types/rooms";
 
 export const getRooms = (): Promise<Room> => http.get("/rooms");
 
-export const postRooms = (roomReq: Mood): Promise<Room> =>
+export const postRooms = (
+  roomReq: Pick<Room, "name" | "emojiType">
+): Promise<Room> =>
   http.post("/rooms", {
     data: roomReq,
   });
