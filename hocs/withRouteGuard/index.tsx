@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { Spinner } from "~/components/uis";
@@ -10,8 +11,14 @@ const withRouteGuard = <P extends object>(
   Page: NextPage<P>
 ) => {
   return (props: P) => {
-    const { memberInfo } = MemberInfo.use();
+    const { memberInfo, isError, refetchMemberInfo } = MemberInfo.use();
     const router = useRouter();
+
+    useEffect(() => {
+      if (isError && memberInfo === null) {
+        refetchMemberInfo();
+      }
+    }, [memberInfo, refetchMemberInfo, isError]);
 
     if (memberInfo === null) {
       return <Spinner.FullPage />;
