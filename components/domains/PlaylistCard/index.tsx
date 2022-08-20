@@ -5,7 +5,7 @@ import { Modal } from "~/components/uis";
 import { useRoomStore } from "~/store";
 import { playlistAtomState } from "~/store/playlist";
 import { getDurationText, getMusicIndex } from "~/store/room/utils";
-import type { PlaylistItem } from "~/types/playlist";
+import type { PlaylistItem } from "~/types";
 import PlaylistModal from "../PlaylistModal";
 
 interface PlaylistCardProps {

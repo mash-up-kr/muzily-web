@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 import { NEW_VIDEO_LIST, VIDEO_LIST } from "~/assets/dummy";
-import type { Playlist } from "~/types/playlist";
+import type { Playlist } from "~/types";
 
 export const playlistAtomState = atom<Playlist>({
   key: "playlist",

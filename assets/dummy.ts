@@ -1,4 +1,4 @@
-import type { PlaylistItem } from "~/types/playlist";
+import type { PlaylistItem } from "~/types";
 
 // export const VIDEO_LIST = [
 //   {

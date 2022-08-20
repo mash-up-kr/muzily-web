@@ -14,7 +14,7 @@ import Modal, { useModal } from "~/components/uis/Modal";
 import { useRoomStore } from "~/store";
 import { playlistAtomState } from "~/store/playlist";
 import { getDurationText } from "~/store/room/utils";
-import type { AddPlaylistRequestBody, PlaylistItem } from "~/types/playlist";
+import type { AddPlaylistRequestBody, PlaylistItem } from "~/types";
 import AddSongGuideScreen from "../AddSongGuideScreen";
 
 const defaultEndPoint = process.env

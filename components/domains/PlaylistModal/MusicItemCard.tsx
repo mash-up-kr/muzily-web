@@ -5,7 +5,7 @@ import { useDrag, useDrop, type XYCoord } from "react-dnd";
 import { Spacer } from "~/components/uis";
 import { useRoomStore } from "~/store";
 import { getDurationText } from "~/store/room/utils";
-import type { PlaylistItem } from "~/types/playlist";
+import type { PlaylistItem } from "~/types";
 
 interface MusicCardItemProps {
   active: boolean;

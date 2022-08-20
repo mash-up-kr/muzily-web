@@ -6,7 +6,7 @@ import { Modal } from "~/components/uis";
 import { useRoomStore } from "~/store";
 import { playlistAtomState } from "~/store/playlist";
 import { getMusicIndex } from "~/store/room/utils";
-import type { PlaylistItem } from "~/types/playlist";
+import type { PlaylistItem } from "~/types";
 import AddSongScreen from "../AddSongScreen";
 import Thumbnail from "../Thumbnail";
 

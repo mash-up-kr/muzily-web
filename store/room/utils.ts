@@ -1,4 +1,4 @@
-import type { Playlist } from "~/types/playlist";
+import type { Playlist } from "~/types";
 
 /** 
  * 재생 시간 계산

@@ -3,7 +3,7 @@ import type { WritableDraft } from "immer/dist/internal";
 import { atom, selector, useRecoilState } from "recoil";
 import type { SetterOrUpdater } from "recoil";
 import { NEW_VIDEO_LIST } from "~/assets/dummy";
-import type { Playlist, PlaylistItem } from "~/types/playlist";
+import type { Playlist, PlaylistItem } from "~/types";
 
 interface RoomState {
   proposedMusicList: Playlist;

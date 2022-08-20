@@ -1,18 +1,22 @@
 import type { Room } from "../rooms";
 
-// export interface PlaylistItem {
-//   id: number;
-//   playlistId: number;
-//   videoId: string;
-//   title: string;
-//   thumbnail: string;
-//   duration: number;
-//   dominantColor: string;
-// }
+export interface PlaylistItem {
+  id: number;
+  playlistId: number;
+  videoId: string;
+  title: string;
+  thumbnail: string;
+  duration: number;
+  dominantColor: string;
+}
 
-// export interface Playlist {
-//   id: number;
-//   order: PlaylistItem["id"][];
-//   playlistItems: PlaylistItem[];
-//   roomId: Room["roomId"];
-// }
+export type Playlist = PlaylistItem[];
+
+export type PlaylistReponse = {
+  playlistId: number;
+  order: PlaylistItem["playlistId"][];
+  playlistItems: PlaylistItem[];
+  roomId: Room["roomId"];
+};
+
+export type AddPlaylistRequestBody = Omit<PlaylistItem, "id">;
