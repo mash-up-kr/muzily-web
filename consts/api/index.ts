@@ -17,4 +17,4 @@ export const HTTP_ERROR = {
   INTERNAL_SERVER_ERROR: 500,
   NOT_IMPLEMENTED: 501,
   BAD_GATEWAY: 502,
-} as const
+} as const;
