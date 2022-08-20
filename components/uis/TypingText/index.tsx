@@ -100,9 +100,9 @@ const TypingText = ({
       <AnimatePresence key={textListIndex}>
         {isShow && (
           <MotionSentence
-            initial={{ opacity: 1, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -40 }}
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             style={style}
             cursor={onTap ? "pointer" : "default"}
             whileTap={{ scale: 0.9 }}

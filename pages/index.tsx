@@ -40,24 +40,26 @@ const HomePage: NextPage = withRouteGuard(
         <TopBar leftIconButton={<TopBarIconButton iconName="star" />} />
         <S.Form onSubmit={onSubmit}>
           <S.InviteContainer>
-            <TypingText
-              textList={[
-                "# 가족들과 함께",
-                "# 자동차에서 친구들과",
-                "# 방송에서 라이브로",
-                "# 친구들과 함께",
-              ]}
-              typingTime={100}
-              onTypingEnd={() => setIsOpenLine2(true)}
-              style={{
-                fontSize: 23,
-                background: "#333333",
-                padding: "8px 12px",
-                borderRadius: 12,
-                height: 44,
-              }}
-            />
-
+            <div style={{ height: 44 }}>
+              {isOpenCTA && (
+                <TypingText
+                  textList={[
+                    "# 가족들과 함께",
+                    "# 자동차에서 친구들과",
+                    "# 방송에서 라이브로",
+                    "# 친구들과 함께",
+                  ]}
+                  typingTime={100}
+                  style={{
+                    fontSize: 16,
+                    background: "#333333",
+                    padding: "8px 12px",
+                    borderRadius: 12,
+                    height: 34,
+                  }}
+                />
+              )}
+            </div>
             <S.Spacer></S.Spacer>
             <S.Header>
               <TypingText
