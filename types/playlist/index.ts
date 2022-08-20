@@ -1,4 +1,4 @@
-export interface Playlist {
+export interface PlaylistItem {
   playlistItemId: number;
   playlistId: number;
   videoId: string;
@@ -7,3 +7,5 @@ export interface Playlist {
   duration: string;
   dominantColor: string;
 }
+
+export type Playlist = PlaylistItem[];

@@ -4,14 +4,13 @@ import type { NextPage } from "next";
 import { useRecoilValue } from "recoil";
 import { useEmoji, useAddPlaylistItemRequest } from "~/hooks/webSocket";
 import { emojiAtomState } from "~/store/emoji";
-import { playlistAtomState } from "~/store/playlist";
-import { userQueueAtomState } from "~/store/user";
+import { playlistAtomState, proposedPlaylistAtomState } from "~/store/playlist";
 
-const ROOM_ID = 2; // XXX: for test. room 정보 api 연동되면 삭제
+const ROOM_ID = 1; // XXX: for test. room 정보 api 연동되면 삭제
 const SocketTestPage: NextPage = () => {
   const emoji = useRecoilValue(emojiAtomState);
   const playlist = useRecoilValue(playlistAtomState);
-  const userQueue = useRecoilValue(userQueueAtomState);
+  const proposedPlaylist = useRecoilValue(proposedPlaylistAtomState);
   const { publish: publishEmoji } = useEmoji(ROOM_ID, {
     emojiType: "HEART",
     intensity: 100,
@@ -27,8 +26,8 @@ const SocketTestPage: NextPage = () => {
   useEffect(() => {
     console.log("emoji", emoji);
     console.log("playlist", playlist);
-    console.log("userQueue", userQueue);
-  }, [emoji, playlist, userQueue]);
+    console.log("userQueue", proposedPlaylist);
+  }, [emoji, playlist, proposedPlaylist]);
 
   return (
     <div>

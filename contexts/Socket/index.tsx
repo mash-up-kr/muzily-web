@@ -6,10 +6,7 @@ import { useRecoilState } from "recoil";
 import SockJS from "sockjs-client";
 import { isBrowser } from "~/consts";
 import { emojiAtomState } from "~/store/emoji";
-import { playlistAtomState } from "~/store/playlist";
-import { userQueueAtomState } from "~/store/user";
-import type { Emoji } from "~/types/emoji";
-import type { Playlist } from "~/types/playlist";
+import { playlistAtomState, proposedPlaylistAtomState } from "~/store/playlist";
 import type { StompCallbackMessage } from "~/types/webSocket";
 
 interface InitialState {
@@ -23,7 +20,7 @@ interface Props {
 
 const STOMP_SERVER_URL = process.env
   .NEXT_PUBLIC_SERVER_STOMP_END_POINT as string;
-const ROOM_ID = 2; // XXX: For test
+const ROOM_ID = 1; // XXX: For test
 const tokenKey = process.env.NEXT_PUBLIC_LOCAL_TOKEN_KEY as string;
 const localStorageToken: string | null = isBrowser
   ? JSON.parse(localStorage.getItem(tokenKey) as string)
@@ -52,7 +49,7 @@ if (typeof WebSocket !== "function") {
 }
 
 const SocketProvider = ({ children }: Props) => {
-  const [, setUserQueue] = useRecoilState(userQueueAtomState);
+  const [, setProposedPlaylist] = useRecoilState(proposedPlaylistAtomState);
   const [, setEmoji] = useRecoilState(emojiAtomState);
   const [, setPlaylist] = useRecoilState(playlistAtomState);
   const subscribe = () => {
@@ -67,13 +64,10 @@ const SocketProvider = ({ children }: Props) => {
               console.error(newMessage.code, newMessage.message);
               break;
             case "EMOJI":
-              setEmoji(newMessage.data as Emoji);
+              setEmoji(newMessage.data);
               break;
             case "PLAYLIST_ITEM_ADD":
-              setPlaylist((_playlist: Playlist[]) => [
-                ..._playlist,
-                newMessage.data as Playlist,
-              ]);
+              setPlaylist((_playlist) => [..._playlist, newMessage.data]);
               break;
             default:
               console.error("등록되지 않은 메시지 타입입니다.");
@@ -96,9 +90,9 @@ const SocketProvider = ({ children }: Props) => {
               console.error(newMessage.code, newMessage.message);
               break;
             case "PLAYLIST_ITEM_REQUEST":
-              setUserQueue((_userQueue: Playlist[]) => [
-                ..._userQueue,
-                newMessage.data as Playlist,
+              setProposedPlaylist((_playlist) => [
+                ..._playlist,
+                newMessage.data,
               ]);
               break;
             default:
