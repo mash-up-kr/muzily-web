@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
-import { postRoom } from "~/api/room";
+import { postRooms } from "~/api/room";
 import {
   BottomButton,
   Spacer,

@@ -1,7 +1,6 @@
 import type { IPublishParams } from "@stomp/stompjs";
 import { useRoomSocket } from "~/contexts/RoomSocket";
-import type { Emoji } from "~/types/emoji";
-import type { PlaylistItem } from "~/types/playlist";
+import type { PlaylistItem, Emoji } from "~/types";
 
 // 웹소켓 베이스 use hook
 export const useWebSocketPublish = <Body extends { [x: string]: any }>(

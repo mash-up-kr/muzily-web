@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import type { Playlist } from "~/types/playlist";
+import type { Playlist } from "~/types";
 
 export const playlistAtomState = atom<Playlist>({
   key: "playlist",

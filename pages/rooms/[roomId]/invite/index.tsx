@@ -2,7 +2,7 @@ import React from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
-import { requestJoinToRoom } from "~/api/invite";
+import { postRooms } from "~/api";
 import { TopBar, TopBarIconButton } from "~/components/uis";
 
 const RoomInvitePage: NextPage = () => {
