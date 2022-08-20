@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { NextPage } from "next";
 import { useRecoilState } from "recoil";
-import { useMemberQuery, usePutMemberMutation } from "~/hooks/api";
+import { useMemberQuery, usePutMemberMutation } from "~/hooks/api/members";
 import { videoIdAtomState } from "~/store";
 import type { Member } from "~/types/members";
 

@@ -1,5 +1,7 @@
+import type { Room } from "../rooms";
+
 export interface PlaylistItem {
-  playlistItemId: number;
+  id: number;
   playlistId: number;
   videoId: string;
   title: string;
@@ -8,4 +10,9 @@ export interface PlaylistItem {
   dominantColor: string;
 }
 
-export type Playlist = PlaylistItem[];
+export interface Playlist {
+  id: number;
+  order: PlaylistItem["id"][];
+  playlistItems: PlaylistItem[];
+  roomId: Room["roomId"];
+}

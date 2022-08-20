@@ -1,14 +1,26 @@
 import http from "~/api/core";
-import type { Room } from "~/types/rooms";
+import type { Mood, Room } from "~/types/rooms";
 
-export const getRoom = (): Promise<Room> => http.get("/rooms");
+export const getRooms = (): Promise<Room> => http.get("/rooms");
 
-export const postRoom = (
-  roomReq: Pick<Room, "description" | "moods">
-): Promise<Room> =>
+export const postRooms = (roomReq: Mood): Promise<Room> =>
   http.post("/rooms", {
     data: roomReq,
   });
 
-export const getRoomDetail = (roomId: Room["roomId"]): Promise<Room> =>
+export const getRoom = (roomId: Room["roomId"]): Promise<Room> =>
   http.get(`/rooms/${roomId}`);
+
+export const putRoom = ({
+  roomId,
+  moodReq,
+}: {
+  roomId: Room["roomId"];
+  moodReq: Mood;
+}): Promise<Room> =>
+  http.put(`/rooms/${roomId}`, {
+    data: moodReq,
+  });
+
+export const deleteRoom = (roomId: Room["roomId"]): Promise<void> =>
+  http.delete(`/rooms/${roomId}`);
