@@ -27,20 +27,35 @@ import { emojiAtomState } from "~/store/emoji";
 import type { Music } from "~/types/musics";
 
 interface Props {
-  musicData: Music[];
   isHost: boolean;
 }
 
-const RoomContentPage: NextPage<Props> = ({ musicData, isHost: host }) => {
+const RoomPage: NextPage<Props> = ({ isHost }) => {
   const router = useRouter();
   const { roomId } = router.query as { roomId: string };
+
+  return (
+    <RoomSocketProvider roomId={roomId}>
+      <RoomContentPage isHost={isHost} />
+    </RoomSocketProvider>
+  );
+};
+
+RoomPage.getInitialProps = async (ctx: NextPageContext) => {
+  const isHost = ctx.query.isHost === "true";
+
+  return {
+    isHost,
+  };
+};
+
+const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
+  const router = useRouter();
+  const { roomId } = router.query as { roomId: string };
+  console.log("🚀 ~ file: index.tsx ~ line 36 ~ roomId", roomId);
   const emojiState = useRecoilValue(emojiAtomState);
 
-  console.log(emojiState);
-
-  const { data: roomData } = useRoomDetail(+roomId);
-
-  console.log("🚀 ~ file: index.tsx ~ line 34 ~ roomData", roomData);
+  const { data: roomData } = useRoomDetail(Number(roomId));
 
   const {
     state: { playingMusicId, playList, isHost, proposedMusicList },
@@ -168,35 +183,6 @@ const S = {
     text-align: center;
     letter-spacing: -0.498081px;
   `,
-};
-
-RoomContentPage.getInitialProps = async (ctx: NextPageContext) => {
-  const isHost = ctx.query.isHost === "true";
-  const list = [...VIDEO_LIST];
-  const musicData: Music[] = await Promise.all(
-    list.map(async (el) => {
-      try {
-        const palette = await Vibrant.from(el.thumbnail).getPalette();
-        const colors = Object.values(palette).map(
-          (swatches) => swatches?.hex || ""
-        );
-
-        return {
-          ...el,
-          colors,
-        };
-      } catch (error) {
-        console.error(error);
-
-        return el;
-      }
-    })
-  );
-
-  return {
-    isHost,
-    musicData,
-  };
 };
 
 const Actions = {
@@ -434,16 +420,5 @@ const getStage = (percentage: number) =>
       percentage < STAGE_2_MAX_PERCENTAGE
     ? 2
     : 3;
-
-const RoomPage: NextPage<Props> = ({ musicData, isHost }) => {
-  const router = useRouter();
-  const { roomId } = router.query as { roomId: string };
-
-  return (
-    <RoomSocketProvider roomId={roomId}>
-      <RoomContentPage musicData={musicData} isHost={isHost} />
-    </RoomSocketProvider>
-  );
-};
 
 export default RoomPage;
