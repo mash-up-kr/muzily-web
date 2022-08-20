@@ -6,6 +6,7 @@ import type { Variant } from "framer-motion";
 import { AnimatePresence, motion } from "framer-motion";
 import Vibrant from "node-vibrant";
 import YouTube from "react-youtube";
+import { useRecoilValue } from "recoil";
 import { VIDEO_LIST } from "~/assets/dummy";
 import Heart from "~/assets/svgs/Heart";
 import {
@@ -22,6 +23,7 @@ import { useRoomDetail } from "~/hooks/api/rooms";
 import { useTimeoutFn } from "~/hooks/commons";
 import { useEmoji } from "~/hooks/webSocket";
 import { useRoomStore } from "~/store";
+import { emojiAtomState } from "~/store/emoji";
 import type { Music } from "~/types/musics";
 
 interface Props {
@@ -32,6 +34,9 @@ interface Props {
 const RoomContentPage: NextPage<Props> = ({ musicData, isHost: host }) => {
   const router = useRouter();
   const { roomId } = router.query as { roomId: string };
+  const emojiState = useRecoilValue(emojiAtomState);
+
+  console.log(emojiState);
 
   const { data: roomData } = useRoomDetail(+roomId);
 
@@ -273,7 +278,7 @@ const Actions = {
                   threshold={4000}
                   onPressOut={({ percentage }) => {
                     setPop({ isPopping: true, percentage });
-
+                    publish({ emojiType: "HEART", intensity: percentage });
                     close();
                   }}
                   onTooLongPress={() => {
