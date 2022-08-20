@@ -17,8 +17,8 @@ import {
 } from "~/components/domains";
 import QRCodeCard from "~/components/domains/QRCodeCard";
 import { Modal, Spacer, IconButton, Toast } from "~/components/uis";
-import { useTimeoutFn } from "~/hooks/commons";
 import { useRoomDetail } from "~/features/rooms";
+import { useTimeoutFn } from "~/hooks/commons";
 import { useRoomStore } from "~/store";
 import type { Music } from "~/types/musics";
 
@@ -281,12 +281,10 @@ const Actions = {
                     close();
                   }}
                   trigger={({ register, isProcessing, percentage }) => {
-                    const rotate = [-5, 5, -5];
-
-                    const stage0: Variant = { scale: 1 };
-                    const stage1: Variant = { scale: 2 };
-                    const stage2: Variant = { scale: 3 };
-                    const stage3: Variant = { scale: 5 };
+                    const stage0: Variant = { scale: 0.8 };
+                    const stage1: Variant = { scale: 1.2 };
+                    const stage2: Variant = { scale: 1.6 };
+                    const stage3: Variant = { scale: 2 };
 
                     const isStage1 =
                       isProcessing &&
@@ -302,32 +300,16 @@ const Actions = {
                       percentage < STAGE_3_MAX_PERCENTAGE;
 
                     return (
-                      <motion.div
-                        onHoverStart={() => setIsHover(true)}
-                        onHoverEnd={() => setIsHover(false)}
-                        animate={{
-                          rotate: isHover || isProcessing ? rotate : 0,
-                        }}
-                        transition={{
-                          repeat: Infinity,
-                          duration: isHover || isProcessing ? 0.2 : 0,
-                        }}
-                      >
-                        <motion.div
+                      <motion.div>
+                        <Heart
                           {...register()}
-                          animate={
-                            (isStage1 && stage1) ||
-                            (isStage2 && stage2) ||
-                            (isStage3 && stage3) ||
-                            stage0
-                          }
-                          transition={{
-                            duration:
-                              isStage1 || isStage2 || isStage3
-                                ? 0.5
-                                : isProcessing
-                                ? 1
-                                : 0,
+                          initial={{
+                            scale: 4,
+                            filter: "drop-shadow(0px 0px 0px white)",
+                          }}
+                          whileTap={{
+                            rotate: [0, 5, 0, 0, -5, 0],
+                            transition: { repeat: Infinity, duration: 0.3 },
                           }}
                           style={{
                             display: "flex",
@@ -336,14 +318,16 @@ const Actions = {
                             userSelect: "none",
                             cursor: "pointer",
                           }}
-                        >
-                          <Heart
-                            animate={{
-                              scale: 4,
-                              filter: "drop-shadow(0px 0px 30px white)",
-                            }}
-                          />
-                        </motion.div>
+                          animate={{
+                            scale: (
+                              (isStage1 && stage1) ||
+                              (isStage2 && stage2) ||
+                              (isStage3 && stage3) ||
+                              stage0
+                            ).scale,
+                            filter: "drop-shadow(0px 0px 30px white)",
+                          }}
+                        />
                       </motion.div>
                     );
                   }}
@@ -429,7 +413,7 @@ const Heart3D = ({ stage }: { stage: 1 | 2 | 3 }) => {
       }}
       transition={{ duration: 3 * getRandomHalfToFull() }}
     >
-      <Heart animate={{ scale: stage === 1 ? 2 : stage * stage }} />
+      <Heart animate={{ scale: stage === 1 ? 0.6 : stage * stage * 0.4 }} />
     </motion.div>
   );
 };

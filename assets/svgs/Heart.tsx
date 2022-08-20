@@ -5,13 +5,13 @@ const Heart = ({ ...props }: ComponentProps<typeof motion.div>) => {
   return (
     <motion.div {...props}>
       <svg
-        width="56"
-        height="58"
-        viewBox="0 0 56 58"
+        width="150"
+        height="150"
+        viewBox="0 0 150 150"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <rect x="0" y="2" width="56" height="56" fill="url(#pattern0)" />
+        <rect x="0" y="2" width="150" height="150" fill="url(#pattern0)" />
         <defs>
           <pattern
             id="pattern0"
