@@ -20,6 +20,7 @@ import { Modal, Spacer, IconButton, Toast } from "~/components/uis";
 import RoomSocketProvider from "~/contexts/RoomSocket";
 import { useRoomDetail } from "~/hooks/api/rooms";
 import { useTimeoutFn } from "~/hooks/commons";
+import { useEmoji } from "~/hooks/webSocket";
 import { useRoomStore } from "~/store";
 import type { Music } from "~/types/musics";
 
@@ -206,7 +207,11 @@ const Actions = {
     </Spacer>
   ),
   Emoji: () => {
-    const [isHover, setIsHover] = useState(false);
+    const { query } = useRouter();
+    const { publish } = useEmoji(Number(query.roomId), {
+      emojiType: "HEART",
+      intensity: 100,
+    });
     const [pop, setPop] = useState({ isPopping: false, percentage: 0 });
 
     const [run, clear] = useTimeoutFn(() => {

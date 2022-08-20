@@ -4,15 +4,16 @@ import type { Emoji } from "~/types/emoji";
 import type { PlaylistItem } from "~/types/playlist";
 
 // 웹소켓 베이스 use hook
-export const useWebSocketPublish = (
+export const useWebSocketPublish = <Body extends { [x: string]: any }>(
   url: string,
-  params: Omit<IPublishParams, "destination">
+  defaultParams: Omit<IPublishParams, "destination"> = {}
 ) => {
   const { socket } = useRoomSocket();
-  const publish = async () => {
+  const publish = async (body?: Body) => {
     if (socket.connected) {
       await socket.publish({
-        ...params,
+        ...defaultParams,
+        body: JSON.stringify(body),
         destination: url,
         skipContentLengthHeader: true,
       });
@@ -22,17 +23,15 @@ export const useWebSocketPublish = (
   return { publish };
 };
 
-export const useEmoji = (roomId: number, body: Omit<Emoji, "senderId">) => {
-  return useWebSocketPublish(`/app/v1/rooms/${roomId}/send-emoji`, {
+type EmojiBody = Omit<Emoji, "senderId">;
+export const useEmoji = (roomId: number, body: EmojiBody) =>
+  useWebSocketPublish<EmojiBody>(`/app/v1/rooms/${roomId}/send-emoji`, {
     body: JSON.stringify(body),
   });
-};
 
-export const useAddPlaylistItemRequest = (
-  roomId: number,
-  body: Omit<PlaylistItem, "playlistItemId">
-) => {
-  return useWebSocketPublish(`/app/v1/rooms/${roomId}/add-playlist-item`, {
-    body: JSON.stringify(body),
-  });
-};
+type PlaylistBody = Omit<PlaylistItem, "playlistItemId">;
+export const useAddPlaylistItemRequest = (roomId: number, body: PlaylistBody) =>
+  useWebSocketPublish<PlaylistBody>(
+    `/app/v1/rooms/${roomId}/add-playlist-item`,
+    { body: JSON.stringify(body) }
+  );
