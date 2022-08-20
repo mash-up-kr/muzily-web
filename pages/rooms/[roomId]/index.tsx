@@ -99,7 +99,7 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
         style={{ height: "100%" }}
       >
         <S.Header>
-          <S.Title>매쇼~쉬는탐</S.Title>
+          <S.Title>{roomData?.name}</S.Title>
           <S.Desc>곡을 추가하거나 좋아요를 해보세요!</S.Desc>
         </S.Header>
 

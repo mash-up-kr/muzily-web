@@ -44,7 +44,7 @@ type ChangePlaylistItemOrderBody = {
 };
 
 export const useChangePlaylistOrder = (
-  roomId: number,
+  roomId: number | undefined,
   body: ChangePlaylistItemOrderBody
 ) =>
   useWebSocketPublish<ChangePlaylistItemOrderBody>(

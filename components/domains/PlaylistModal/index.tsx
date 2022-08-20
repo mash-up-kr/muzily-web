@@ -3,16 +3,14 @@ import styled from "@emotion/styled";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { Layout, TopBar, TopBarIconButton } from "~/components/uis";
 import { useModal } from "~/components/uis/Modal";
 import { useChangePlaylistOrder } from "~/hooks/webSocket";
 import { useRoomStore } from "~/store";
 import { playlistAtomState } from "~/store/playlist";
+import { playlistIdAtomState, roomIdAtomState } from "~/store/room";
 import MusicItemCard from "./MusicItemCard";
-
-const ROOM_ID = 2; // 임시
-const PLAYLIST_ID = 2; // 임시
 
 function PlaylistModal() {
   const {
@@ -23,10 +21,13 @@ function PlaylistModal() {
 
   const [playlist, setPlaylist] = useRecoilState(playlistAtomState);
 
+  const roomId = useRecoilValue(roomIdAtomState);
+  const playlistId = useRecoilValue(playlistIdAtomState);
+
   const [deleteMode, setDeleteMode] = useState(false);
   const [deleteList, setDeleteList] = useState<string[]>([]);
 
-  const { publish: changePlaylistOrder } = useChangePlaylistOrder(ROOM_ID, {
+  const { publish: changePlaylistOrder } = useChangePlaylistOrder(roomId, {
     playlistId: -1,
     prevPlaylistItemIdToMove: -1,
     playlistItemId: -1,
@@ -34,7 +35,7 @@ function PlaylistModal() {
 
   const moveCard = (fromIndex: number, toIndex: number) => {
     changePlaylistOrder({
-      playlistId: PLAYLIST_ID,
+      playlistId,
       prevPlaylistItemIdToMove: playlist[toIndex].id,
       playlistItemId: playlist[fromIndex].id,
     });

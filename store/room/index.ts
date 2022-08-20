@@ -5,6 +5,16 @@ import type { SetterOrUpdater } from "recoil";
 import { NEW_VIDEO_LIST } from "~/assets/dummy";
 import type { Playlist, PlaylistItem } from "~/types";
 
+export const roomIdAtomState = atom<number>({
+  key: "roomId",
+  default: 0,
+});
+
+export const playlistIdAtomState = atom<number>({
+  key: "playlistId",
+  default: 0,
+});
+
 interface RoomState {
   proposedMusicList: Playlist;
   playingMusicId: string;
