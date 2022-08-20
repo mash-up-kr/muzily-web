@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import { TopBar, TopBarIconButton } from "~/components/uis";
 import { withRouteGuard } from "~/hocs";
+import { useRoomsQuery } from "~/hooks/api";
 
 const HomePage: NextPage = withRouteGuard(
   { UNCONNECTED: false, CONNECTED: true },
@@ -12,6 +13,8 @@ const HomePage: NextPage = withRouteGuard(
     const [roomTitle, setRoomTitle] = useState("");
     const router = useRouter();
 
+    const { data, isLoading, isFetching, isError } = useRoomsQuery();
+
     const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       router.push({
@@ -19,6 +22,22 @@ const HomePage: NextPage = withRouteGuard(
         query: { roomTitle },
       });
     };
+
+    useEffect(() => {
+      if (data) {
+        const { roomId } = data;
+
+        router.replace(`/rooms/${roomId}?isHost=true`);
+      }
+    }, [data]);
+
+    if (isFetching || isLoading || data === undefined) {
+      return <div>Loading, Fetching</div>;
+    }
+
+    if (isError) {
+      router.replace("/rooms/create");
+    }
 
     return (
       <>

@@ -33,9 +33,26 @@ export const useAuthRedirected = () => {
       return data;
     },
     {
-      onSuccess: () => {
+      onSuccess: async ({ token }) => {
         refetchMemberInfo();
-        router.replace("/rooms/create");
+
+        try {
+          const { data } = await axios.get<{ roomId: number }>(
+            `${defaultEndPoint}/api/v1/rooms`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          console.log(data);
+          const { roomId } = data;
+
+          router.replace(`/rooms/${roomId}?isHost=true`);
+        } catch (error) {
+          console.log(error);
+          router.replace("/rooms/create");
+        }
       },
     }
   );
