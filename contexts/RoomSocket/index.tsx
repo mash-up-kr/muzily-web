@@ -7,7 +7,7 @@ import SockJS from "sockjs-client";
 import { isBrowser } from "~/consts";
 import { emojiAtomState } from "~/store/emoji";
 import { playlistAtomState, proposedPlaylistAtomState } from "~/store/playlist";
-import type { PlaylistItem } from "~/types/playlist";
+import type { PlaylistItem } from "~/types/playlists";
 import type { StompCallbackMessage } from "~/types/webSocket";
 
 interface InitialState {
