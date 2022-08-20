@@ -13,7 +13,7 @@ export const useWebSocketPublish = <Body extends { [x: string]: any }>(
     if (socket.connected) {
       await socket.publish({
         ...defaultParams,
-        body: JSON.stringify(body),
+        body: body ? JSON.stringify(body) : defaultParams.body,
         destination: url,
         skipContentLengthHeader: true,
       });
