@@ -15,6 +15,7 @@ const Emoji = () => {
   const { publish } = useEmoji(Number(query.roomId), {
     emojiType: "HEART",
     intensity: 100,
+    messageText: "좋아요",
   });
 
   const [localToken] = useLocalToken();
@@ -64,7 +65,11 @@ const Emoji = () => {
                   <LongPress
                     threshold={4000}
                     onPressOut={({ percentage }) => {
-                      publish({ emojiType: "HEART", intensity: percentage });
+                      publish({
+                        emojiType: "HEART",
+                        intensity: percentage,
+                        messageText: "좋아요",
+                      });
                       setTimeout(() => {
                         close();
                       }, 100);

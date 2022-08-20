@@ -15,6 +15,7 @@ const SocketTestContentPage: NextPage = () => {
   const { publish: publishEmoji } = useEmoji(ROOM_ID, {
     emojiType: "HEART",
     intensity: 100,
+    messageText: "test",
   });
   const { publish: publishPlaylist } = useAddPlaylistItemRequest(ROOM_ID, {
     playlistId: ROOM_ID,

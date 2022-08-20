@@ -4,4 +4,5 @@ export interface Emoji {
   emojiType: EmojiType;
   intensity: number;
   senderId: number;
+  messageText: string;
 }
