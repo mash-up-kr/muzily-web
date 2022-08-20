@@ -1,7 +1,9 @@
 import React from "react";
 import Image from "next/image";
 import styled from "@emotion/styled";
+import Lottie from "react-lottie";
 import { useRecoilState } from "recoil";
+import * as animationData from "~/assets/lotties/lottie-playing.json";
 import { Modal } from "~/components/uis";
 import { useRoomStore } from "~/store";
 import { playlistAtomState } from "~/store/playlist";
@@ -81,7 +83,7 @@ function NowPlayingCard({
         color={currentMusic.dominantColor}
       />
 
-      {isHost && (
+      {isHost ? (
         <S.Controller>
           <Image
             src="/images/play-back.svg"
@@ -114,6 +116,20 @@ function NowPlayingCard({
             width={20}
             height={20}
             onClick={playNextMusic}
+          />
+        </S.Controller>
+      ) : (
+        <S.Controller>
+          <Lottie
+            height={60}
+            width={70}
+            isClickToPauseDisabled
+            options={{
+              animationData,
+              loop: true,
+              autoplay: true,
+            }}
+            // isPaused={!isPlaying}
           />
         </S.Controller>
       )}

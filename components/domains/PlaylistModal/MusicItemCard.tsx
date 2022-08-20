@@ -3,7 +3,7 @@ import Image from "next/image";
 import styled from "@emotion/styled";
 import { useDrag, useDrop, type XYCoord } from "react-dnd";
 import Lottie from "react-lottie";
-import * as animationData from "~/assets/lotties/lottie-playing.json";
+import * as animationData from "~/assets/lotties/lottie-playing-blue.json";
 import { Spacer } from "~/components/uis";
 import { useRoomStore } from "~/store";
 import { getDurationText } from "~/store/room/utils";
