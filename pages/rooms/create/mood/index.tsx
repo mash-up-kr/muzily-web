@@ -3,42 +3,57 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
-import { postRooms } from "~/api/room";
 import {
   BottomButton,
   Spacer,
   TopBar,
   TopBarIconButton,
 } from "~/components/uis";
-import { useRoomStore } from "~/store";
-import type { Mood } from "~/types/rooms";
+import { usePostRoomMutation } from "~/hooks/api";
+import type { Mood, MoodWithImageName } from "~/types/rooms";
 
-const MOOD_EXAMPLE = [
+const moodConstants: MoodWithImageName[] = [
   {
     name: "# 조용~ 집중 빡 공부 모드",
-    emoji: "book-3d",
+    emojiType: "BOOK",
+    emojiTypeImageName: "book-3d",
   },
   {
     name: "# 쉣댓 부레 엉덩이~! 흔들어버려",
-    emoji: "mirror-3d",
+    emojiType: "MIRROR_BALL",
+    emojiTypeImageName: "mirror-3d",
   },
   {
     name: "# 잔잔한 내적 댄스 유발",
-    emoji: "heart-3d",
+    emojiType: "HEART",
+    emojiTypeImageName: "heart-3d",
   },
 ];
 
 const RoomCreateMoodPage: NextPage = () => {
   const router = useRouter();
-  const {
-    state: { mood: initialMood },
-    actions,
-  } = useRoomStore();
-  const [mood, setMood] = useState(initialMood);
 
-  const createRoom = () => {
-    actions.setMood(mood);
-    router.push(`/rooms/123/?isHost=true`);
+  const [mood, setMood] = useState({} as Mood);
+  const [isEdit, setIsEdit] = useState(false);
+  const [selectedMood, setSelectedMood] = useState({
+    name: "",
+    emojiType: moodConstants[0].emojiType,
+  } as Mood);
+
+  const postRoomMutation = usePostRoomMutation();
+
+  const onClickCreateRoom = () => {
+    let postMoodData: Mood = mood;
+    if (isEdit && selectedMood) {
+      postMoodData = selectedMood;
+    }
+
+    postRoomMutation.mutate(postMoodData, {
+      onSuccess: (data) => {
+        const { roomId } = data;
+        router.push(`/rooms/${roomId}/?isHost=true`);
+      },
+    });
   };
 
   return (
@@ -58,30 +73,82 @@ const RoomCreateMoodPage: NextPage = () => {
         </StyledTitle>
         <StyledSubTitle>무드에 맞춘 이모지를 제공해드려요!</StyledSubTitle>
         <StyledButtonGroup type="vertical" gap={15}>
-          {MOOD_EXAMPLE.map((v) => (
+          {moodConstants.map((moodConstant) => (
             <StyledButton
-              key={v.name}
-              onClick={() => setMood(v.name)}
-              isActive={mood === v.name}
+              key={moodConstant.name}
+              onClick={() => {
+                setIsEdit(false);
+                setMood(moodConstant);
+              }}
+              isActive={mood.name === moodConstant.name}
             >
-              <StyledButtonText>{v.name}</StyledButtonText>
+              <StyledButtonText>{moodConstant.name}</StyledButtonText>
               <Image
-                src={`/images/${v.emoji}.svg`}
+                src={`/images/${moodConstant.emojiTypeImageName}.svg`}
                 alt="icon"
                 width={56}
                 height={58}
               />
             </StyledButton>
           ))}
+          <StyledButton
+            key={mood.emojiType}
+            onClick={() => {
+              if (!isEdit) {
+                setSelectedMood({
+                  emojiType: moodConstants[0].emojiType,
+                  name: selectedMood.name,
+                });
+                setMood({
+                  ...selectedMood,
+                  name: "",
+                });
+                setIsEdit(!isEdit);
+              }
+            }}
+            isActive={isEdit}
+          >
+            <StyledMoodPrefixText isActive={isEdit}>#</StyledMoodPrefixText>
+            <StyledMoodInputText
+              placeholder="직접 입력"
+              value={selectedMood.name}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setSelectedMood({
+                  name: e.target.value,
+                  emojiType: selectedMood.emojiType,
+                });
+              }}
+              isActive={isEdit}
+            ></StyledMoodInputText>
+            <StyledMoodGroupContainer>
+              {moodConstants.map((moodConstant) => (
+                <StyledMoodSelectedContainer
+                  key={moodConstant.name}
+                  isSelectedMood={
+                    moodConstant.emojiType === selectedMood.emojiType
+                  }
+                >
+                  <Image
+                    src={`/images/${moodConstant.emojiTypeImageName}.svg`}
+                    alt="icon"
+                    width={56}
+                    height={58}
+                    onClick={() => {
+                      if (isEdit) {
+                        setSelectedMood({
+                          name: selectedMood.name,
+                          emojiType: moodConstant.emojiType,
+                        });
+                      }
+                    }}
+                  />
+                </StyledMoodSelectedContainer>
+              ))}
+            </StyledMoodGroupContainer>
+          </StyledButton>
         </StyledButtonGroup>
-        <StyledNoticeTextWrapper gap={4}>
-          <StyledBottomButton>
-            직접 입력&nbsp;
-            <Image src={`/images/plus.svg`} alt="icon" width={14} height={14} />
-          </StyledBottomButton>
-        </StyledNoticeTextWrapper>
       </StyledContainer>
-      <BottomButton label="방 만들기" onClick={createRoom} />
+      <BottomButton label="방 만들기" onClick={onClickCreateRoom} />
     </>
   );
 };
@@ -129,19 +196,52 @@ const StyledButtonText = styled.p`
   font-weight: 700;
 `;
 
-const StyledNoticeTextWrapper = styled(Spacer)`
-  position: absolute;
-  bottom: 32px;
-  align-items: flex-start;
+const StyledMoodPrefixText = styled.span<{ isActive: boolean }>`
+  color: ${(p) => (p.isActive ? "#007AFF" : "white")};
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 19px;
+  background-color: transparent;
 `;
 
-const StyledBottomButton = styled.button`
-  display: flex;
-  align-items: center;
+const StyledMoodInputText = styled.input<{ isActive: boolean }>`
+  color: ${(p) => (p.isActive ? "#007AFF" : "white")};
   font-size: 16px;
-  color: white;
+  font-weight: 700;
+  line-height: 19px;
   background-color: transparent;
   border: none;
+  height: 100%;
+
+  &::placeholder {
+    color: ${(p) => (p.isActive ? "#007AFF" : "white")};
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 19px;
+  }
+`;
+
+const StyledMoodGroupContainer = styled.div`
+  height: 80%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color: #f0f0f0;
+  border-radius: 16px;
+`;
+
+const StyledMoodSelectedContainer = styled.div<{ isSelectedMood: boolean }>`
+  height: 100%;
+  width: 100%;
+  border-radius: 16px;
+  background-color: ${(p) => (p.isSelectedMood ? "#e2e2e2" : "transparent")};
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: relative;
 `;
 
 export default RoomCreateMoodPage;
