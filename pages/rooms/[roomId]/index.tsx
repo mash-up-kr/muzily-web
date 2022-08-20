@@ -3,9 +3,8 @@ import type { NextPage, NextPageContext } from "next";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import YouTube from "react-youtube";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { NEW_VIDEO_LIST, VIDEO_LIST } from "~/assets/dummy";
-import Heart from "~/assets/svgs/Heart";
+import { useRecoilState } from "recoil";
+import { NEW_VIDEO_LIST } from "~/assets/dummy";
 import {
   NowPlayingCard,
   PlaylistCard,
@@ -18,7 +17,6 @@ import { Modal, Spacer, IconButton } from "~/components/uis";
 import RoomSocketProvider from "~/contexts/RoomSocket";
 import { useRoomQuery } from "~/hooks/api/rooms";
 import { useRoomStore } from "~/store";
-import { emojiAtomState } from "~/store/emoji";
 import { playlistAtomState } from "~/store/playlist";
 import { getMusicIndex } from "~/store/room/utils";
 
@@ -48,7 +46,6 @@ RoomPage.getInitialProps = async (ctx: NextPageContext) => {
 const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   const router = useRouter();
   const { roomId } = router.query as { roomId: string };
-  const emojiState = useRecoilValue(emojiAtomState);
 
   const { data: roomData } = useRoomQuery(Number(roomId));
 

@@ -6,3 +6,4 @@ export { default as useTimeout } from "./useTimeout";
 export { default as useTimeoutFn } from "./useTimeoutFn";
 export { default as useLongPress } from "./useLongPress";
 export { default as useDisclosure } from "./useDisclosure";
+export { default as useThrottle } from "./useThrottle";
