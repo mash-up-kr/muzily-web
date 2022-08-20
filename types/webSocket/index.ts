@@ -31,4 +31,14 @@ export type StompCallbackMessage =
       code: string;
       message: string;
       data: PlaylistItem;
+    }
+  | {
+      type: SocketResType["playlistItemChangeOrder"];
+      code: string;
+      message: string;
+      data: {
+        playlistId: number;
+        playlistItemId: number;
+        order: number[];
+      };
     };

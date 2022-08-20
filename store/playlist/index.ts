@@ -4,7 +4,7 @@ import type { Playlist } from "~/types";
 
 export const playlistAtomState = atom<Playlist>({
   key: "playlist",
-  default: NEW_VIDEO_LIST,
+  default: [],
 });
 
 // 방장만 확인 가능: 신청된 곡 목록

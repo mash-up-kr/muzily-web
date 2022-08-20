@@ -36,3 +36,18 @@ export const useAddPlaylistItemRequest = (
     `/app/v1/rooms/${roomId}/add-playlist-item`,
     { body: JSON.stringify(body) }
   );
+
+type ChangePlaylistItemOrderBody = {
+  playlistId: number;
+  prevPlaylistItemIdToMove: number;
+  playlistItemId: number;
+};
+
+export const useChangePlaylistOrder = (
+  roomId: number,
+  body: ChangePlaylistItemOrderBody
+) =>
+  useWebSocketPublish<ChangePlaylistItemOrderBody>(
+    `/app/v1/rooms/${roomId}/change-order-playlist-item`,
+    { body: JSON.stringify(body) }
+  );

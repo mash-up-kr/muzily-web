@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import styled from "@emotion/styled";
 import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { useRecoilState } from "recoil";
 import { Layout, TopBar, TopBarIconButton } from "~/components/uis";
 import { useModal } from "~/components/uis/Modal";
+import { useChangePlaylistOrder } from "~/hooks/webSocket";
 import { useRoomStore } from "~/store";
 import { playlistAtomState } from "~/store/playlist";
 import MusicItemCard from "./MusicItemCard";
+
+const ROOM_ID = 2; // 임시
+const PLAYLIST_ID = 2; // 임시
 
 function PlaylistModal() {
   const {
@@ -21,11 +26,18 @@ function PlaylistModal() {
   const [deleteMode, setDeleteMode] = useState(false);
   const [deleteList, setDeleteList] = useState<string[]>([]);
 
-  const moveCard = (from: number, to: number) => {
-    const arr = [...playlist];
-    const item = arr.splice(from, 1);
-    const newArr = [...arr.slice(0, to), item[0], ...arr.slice(to)];
-    setPlaylist(newArr);
+  const { publish: changePlaylistOrder } = useChangePlaylistOrder(ROOM_ID, {
+    playlistId: -1,
+    prevPlaylistItemIdToMove: -1,
+    playlistItemId: -1,
+  });
+
+  const moveCard = (fromIndex: number, toIndex: number) => {
+    changePlaylistOrder({
+      playlistId: PLAYLIST_ID,
+      prevPlaylistItemIdToMove: playlist[toIndex].id,
+      playlistItemId: playlist[fromIndex].id,
+    });
   };
 
   const handleClickDeleteButton = () => {
@@ -63,10 +75,10 @@ function PlaylistModal() {
       </TopBar>
 
       <DndProvider
-        backend={TouchBackend}
-        options={{
-          enableMouseEvents: true,
-        }}
+        backend={HTML5Backend}
+        // options={{
+        //   enableMouseEvents: true,
+        // }}
       >
         <S.MusicList>
           {playlist.map((el, i) => (

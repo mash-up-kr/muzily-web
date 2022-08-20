@@ -7,6 +7,7 @@ import SockJS from "sockjs-client";
 import { isBrowser } from "~/consts";
 import { emojiAtomState } from "~/store/emoji";
 import { playlistAtomState, proposedPlaylistAtomState } from "~/store/playlist";
+import type { PlaylistItem } from "~/types/playlist";
 import type { StompCallbackMessage } from "~/types/webSocket";
 
 interface InitialState {
@@ -68,6 +69,22 @@ const RoomSocketProvider = ({ roomId, children }: Props) => {
               break;
             case "PLAYLIST_ITEM_ADD":
               setPlaylist((_playlist) => [..._playlist, newMessage.data]);
+              break;
+
+            case "PLAYLIST_ITEM_CHANGE_ORDER":
+              setPlaylist((_playlist) => {
+                // 여기서 순서 수정
+                console.log("debug", newMessage.data.order);
+
+                const { order } = newMessage.data;
+
+                const newList = order.map(
+                  (id) =>
+                    _playlist.find((item) => item.id === id) as PlaylistItem
+                );
+
+                return newList;
+              });
               break;
             default:
               console.error("등록되지 않은 메시지 타입입니다.");

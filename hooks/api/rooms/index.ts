@@ -1,7 +1,9 @@
 import { useQueryClient } from "react-query";
+import { useSetRecoilState } from "recoil";
 import { getPlaylist } from "~/api/playlist";
 import { deleteRoom, getRoom, getRooms, postRooms, putRoom } from "~/api/room";
 import { queryKeys } from "~/consts/react-query";
+import { playlistAtomState } from "~/store/playlist";
 import type { Room } from "~/types/rooms";
 import { useCoreMutation, useCoreQuery } from "../core";
 
@@ -15,13 +17,24 @@ export const usePostRoomMutation = () => {
   });
 };
 
-export const useRoomQuery = (roomId: Room["roomId"]) =>
-  useCoreQuery(queryKeys.roomsById(roomId), async () => {
-    const room = await getRoom(roomId);
-    const playlist = await getPlaylist(room.playlist.playlistId);
+export const useRoomQuery = (roomId: Room["roomId"]) => {
+  const setPlaylist = useSetRecoilState(playlistAtomState);
 
-    return { ...room, playlist };
-  });
+  return useCoreQuery(
+    queryKeys.roomsById(roomId),
+    async () => {
+      const room = await getRoom(roomId);
+      const playlist = await getPlaylist(room.playlist.playlistId);
+
+      return { ...room, playlist };
+    },
+    {
+      onSuccess: async (data) => {
+        setPlaylist(data.playlist.playlistItems);
+      },
+    }
+  );
+};
 
 export const usePutRoomMutation = (roomId: Room["roomId"]) => {
   const queryClient = useQueryClient();
