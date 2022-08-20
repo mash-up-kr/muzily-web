@@ -1,17 +1,44 @@
-import React from "react";
+import React, { useEffect } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
-import { postRooms } from "~/api";
-import { TopBar, TopBarIconButton } from "~/components/uis";
+import { Spinner, Toast, TopBar, TopBarIconButton } from "~/components/uis";
+import {
+  usePutRoomInvitationMutation,
+  useRoomInvitationQuery,
+} from "~/hooks/api";
 
 const RoomInvitePage: NextPage = () => {
   const router = useRouter();
   const { roomId, inviteKey } = router.query;
 
+  useEffect(() => {
+    if (router.isReady) {
+      if (typeof inviteKey !== "string") {
+        Toast.show("유효하지 않은 초대장입니다.", {
+          status: "error",
+          delay: 0,
+        });
+        router.replace("/");
+      }
+    }
+  }, [router.isReady]);
+
+  const { isFetching, isLoading, data } = useRoomInvitationQuery(
+    inviteKey as string
+  );
+  const { mutate } = usePutRoomInvitationMutation(inviteKey as string);
+
   const onJoinClick = async () => {
-    router.push(`/rooms/${roomId}/`);
+    if (data !== undefined && data.currentUser.role === null) {
+      await mutate(inviteKey as string);
+    }
+    await router.push(`/rooms/${roomId}/`);
   };
+
+  if (isFetching || isLoading || data === undefined) {
+    return <Spinner.FullPage />;
+  }
 
   return (
     <>
@@ -24,10 +51,12 @@ const RoomInvitePage: NextPage = () => {
           <S.LightSpan>함께 만드는 플레이리스트, </S.LightSpan>
           <S.BoldSpan>MUZILY</S.BoldSpan>
         </S.MuzilyTitle>
-        <S.RoomTitle>매쇼~쉬는탐</S.RoomTitle>
+        <S.RoomTitle>{data.name}</S.RoomTitle>
         <S.RoomStatusContainer>
-          <S.UserNumberStatusSpan>98</S.UserNumberStatusSpan>
-          <S.PlayListStatusSpan>24</S.PlayListStatusSpan>
+          <S.UserNumberStatusSpan>
+            {data.participantsCount}
+          </S.UserNumberStatusSpan>
+          <S.PlayListStatusSpan>{data.playListItemsCount}</S.PlayListStatusSpan>
         </S.RoomStatusContainer>
         <S.RoomJoinButton onClick={onJoinClick}>방 입장하기</S.RoomJoinButton>
       </S.InviteContainer>

@@ -16,6 +16,7 @@ export interface RoomInvitation extends TimeStamp {
   name: string;
   emojiType: EmojiType;
   participantsCount: number; // 접속자수
+  playListItemsCount: number;
   currentUser: {
     role: Role;
   };
