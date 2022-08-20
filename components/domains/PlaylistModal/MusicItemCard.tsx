@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import styled from "@emotion/styled";
 import { useDrag, useDrop, type XYCoord } from "react-dnd";
+import Lottie from "react-lottie";
+import * as animationData from "~/assets/lotties/lottie-playing.json";
 import { Spacer } from "~/components/uis";
 import { useRoomStore } from "~/store";
 import { getDurationText } from "~/store/room/utils";
@@ -123,11 +125,18 @@ function MusicItemCard({
           <S.Title>
             {item.title}
             {active && (
-              <Image
-                src="/images/music-status-bar.svg"
-                alt="music-status-bar"
-                width={14}
-                height={11}
+              <Lottie
+                height={20}
+                width={30}
+                style={{
+                  color: "red",
+                }}
+                isClickToPauseDisabled
+                options={{
+                  animationData,
+                  loop: true,
+                  autoplay: true,
+                }}
               />
             )}
           </S.Title>
