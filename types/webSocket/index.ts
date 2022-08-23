@@ -60,4 +60,13 @@ export type StompCallbackMessage =
       data: {
         playlistItemId: number;
       };
+    }
+  | {
+      type: SocketResType["playlistItemRemove"];
+      code: string;
+      message: string;
+      data: {
+        playlistId: number;
+        playlistItemId: number;
+      };
     };

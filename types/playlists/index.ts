@@ -21,7 +21,7 @@ export type PlaylistReponse = {
 
 export type AddPlaylistRequestBody = Omit<PlaylistItem, "id">;
 
-export type AcceptPlaylistItemRequest = {
+export type PlaylistItemRequest = {
   playlistId: number;
   playlistItemId: number;
 };

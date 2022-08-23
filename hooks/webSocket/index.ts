@@ -3,7 +3,7 @@ import { useRoomSocket } from "~/contexts/RoomSocket";
 import type {
   Emoji,
   AddPlaylistRequestBody,
-  AcceptPlaylistItemRequest,
+  PlaylistItemRequest,
 } from "~/types";
 
 // 웹소켓 베이스 use hook
@@ -78,7 +78,7 @@ export const useSendPlaylistItemRequest = (
 
 export const useAcceptPlaylistItemRequest = (
   roomId: number,
-  body: AcceptPlaylistItemRequest
+  body: PlaylistItemRequest
 ) =>
   useWebSocketPublish(`/app/v1/rooms/${roomId}/accept-playlist-item-request`, {
     body: JSON.stringify(body),
@@ -86,8 +86,16 @@ export const useAcceptPlaylistItemRequest = (
 
 export const useDeclinePlaylistItemRequest = (
   roomId: number,
-  body: AcceptPlaylistItemRequest
+  body: PlaylistItemRequest
 ) =>
   useWebSocketPublish(`/app/v1/rooms/${roomId}/decline-playlist-item-request`, {
+    body: JSON.stringify(body),
+  });
+
+export const useRemovePlaylistItem = (
+  roomId: number,
+  body: PlaylistItemRequest
+) =>
+  useWebSocketPublish(`/app/v1/rooms/${roomId}/remove-playlist-item`, {
     body: JSON.stringify(body),
   });

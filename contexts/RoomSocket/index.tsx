@@ -92,6 +92,13 @@ const RoomSocketProvider = ({ roomId, children }: Props) => {
                 playingMusicId: newMessage.data.playlistItemId,
               });
               break;
+            case "PLAYLIST_ITEM_REMOVE":
+              setProposedPlaylist((_playlist) => [
+                ..._playlist.filter(
+                  (item) => item.id !== newMessage.data.playlistItemId
+                ),
+              ]);
+              break;
             default:
               console.error("등록되지 않은 메시지 타입입니다.");
               break;
