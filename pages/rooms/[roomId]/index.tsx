@@ -21,6 +21,7 @@ import {
   TopBarIconButton,
 } from "~/components/uis";
 import RoomSocketProvider from "~/contexts/RoomSocket";
+import { useGetPlaylistPendingItems } from "~/hooks/api";
 import { useRoomQuery } from "~/hooks/api/rooms";
 import usePlayerActions from "~/hooks/domains/usePlayerActions";
 import { useUpdatePlayerState } from "~/hooks/webSocket";
@@ -66,6 +67,8 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   const [playerState, setPlayerState] = useRecoilState(playerAtomState);
   const [playlist] = useRecoilState(playlistAtomState);
   const playlistId = useRecoilValue(playlistIdAtomState);
+  const { data: pendingData, isError: pendingDataError } =
+    useGetPlaylistPendingItems(playlistId);
   const contentRef = useRef<HTMLDivElement>(null);
 
   const { playNextMusic } = usePlayerActions();
@@ -93,10 +96,10 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   }, [contentRef]);
 
   useEffect(() => {
-    if (isError) {
+    if (isError || pendingDataError) {
       router.replace("/");
     }
-  }, [isError]);
+  }, [isError, pendingDataError]);
 
   return (
     <>
@@ -137,7 +140,11 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
         </S.ContentWrapper>
 
         <Spacer justify="center" gap={36} style={{ margin: "0 0 32px 0" }}>
-          <Actions.NewMusic value={isHost ? proposedMusicList.length : 0} />
+          <Actions.NewMusic
+            value={
+              isHost && pendingData !== undefined ? pendingData?.length : 0
+            }
+          />
           <Actions.Emoji />
           {/* XXX: User test를 위한 임시값 */}
           <Actions.ChangeMood value={isHost ? 2 : 0} />
