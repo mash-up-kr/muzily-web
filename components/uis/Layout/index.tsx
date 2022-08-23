@@ -28,6 +28,7 @@ const S = {
     max-width: 450px;
     width: 100%;
     height: 100%;
+    overflow-y: auto;
     background: ${(p) => p.screenColor};
     color: #fff;
     position: relative;
