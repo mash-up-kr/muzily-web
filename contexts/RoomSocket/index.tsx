@@ -7,6 +7,7 @@ import SockJS from "sockjs-client";
 import { isBrowser } from "~/consts";
 import { emojiAtomState } from "~/store/emoji";
 import { playlistAtomState, proposedPlaylistAtomState } from "~/store/playlist";
+import { playerAtomState } from "~/store/room";
 import type { PlaylistItem } from "~/types/playlists";
 import type { StompCallbackMessage } from "~/types/webSocket";
 
@@ -53,6 +54,8 @@ const RoomSocketProvider = ({ roomId, children }: Props) => {
   const [, setProposedPlaylist] = useRecoilState(proposedPlaylistAtomState);
   const [, setEmoji] = useRecoilState(emojiAtomState);
   const [, setPlaylist] = useRecoilState(playlistAtomState);
+  const [, setPlayerState] = useRecoilState(playerAtomState);
+
   const subscribe = () => {
     socket.subscribe(
       `/topic/v1/rooms/${roomId}`,
@@ -73,9 +76,6 @@ const RoomSocketProvider = ({ roomId, children }: Props) => {
 
             case "PLAYLIST_ITEM_CHANGE_ORDER":
               setPlaylist((_playlist) => {
-                // 여기서 순서 수정
-                console.log("debug", newMessage.data.order);
-
                 const { order } = newMessage.data;
 
                 const newList = order.map(
@@ -85,6 +85,14 @@ const RoomSocketProvider = ({ roomId, children }: Props) => {
 
                 return newList;
               });
+              break;
+
+            case "PLAY_INFORMATION_UPDATE":
+              setPlayerState({
+                isPlaying: newMessage.data.playStatus === "PLAY",
+                playingMusicId: newMessage.data.playlistItemId,
+              });
+
               break;
             default:
               console.error("등록되지 않은 메시지 타입입니다.");

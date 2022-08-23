@@ -8,6 +8,7 @@ export const SOCKET_RES_TYPE = {
   playlistItemRequestDecline: "PLAYLIST_ITEM_REQUEST_DECLINE",
   playlistItemRemove: "PLAYLIST_ITEM_REMOVE",
   playlistItemChangeOrder: "PLAYLIST_ITEM_CHANGE_ORDER",
+  playInformationUpdate: "PLAY_INFORMATION_UPDATE",
 } as const;
 type SocketResType = typeof SOCKET_RES_TYPE;
 
@@ -40,5 +41,15 @@ export type StompCallbackMessage =
         playlistId: number;
         playlistItemId: number;
         order: number[];
+      };
+    }
+  | {
+      type: SocketResType["playInformationUpdate"];
+      code: string;
+      message: string;
+      data: {
+        playlistId: number;
+        playlistItemId: number;
+        playStatus: "PLAY" | "PAUSE";
       };
     };

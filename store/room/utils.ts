@@ -15,8 +15,8 @@ export function getDurationText(duration: number) {
   return `${min > 9 ? min : `0${min}`}:${sec > 9 ? sec : `0${sec}`}`;
 }
 
-export const getMusicIndex = (id: string, playlist: Playlist) => {
-  const index = playlist.findIndex((item) => item.videoId === id);
+export const getMusicIndex = (id: number, playlist: Playlist) => {
+  const index = playlist.findIndex((item) => item.id === id);
 
   return index === -1 ? 0 : index;
 };

@@ -15,10 +15,21 @@ export const playlistIdAtomState = atom<number>({
   default: 0,
 });
 
+export interface PlayerState {
+  playingMusicId: number;
+  isPlaying: boolean;
+}
+
+export const playerAtomState = atom<PlayerState>({
+  key: "player",
+  default: {
+    playingMusicId: -1,
+    isPlaying: false,
+  },
+});
+
 interface RoomState {
   proposedMusicList: Playlist;
-  playingMusicId: string;
-  isPlaying: boolean;
   isHost: boolean;
   mood: string;
 }
@@ -28,12 +39,9 @@ const roomAtomState = atom<RoomState>({
   default: {
     // Youtube Player
     isHost: false,
-    isPlaying: false,
 
     // Playlist
     proposedMusicList: [],
-
-    playingMusicId: "",
 
     // Mood
     mood: "",
@@ -56,29 +64,11 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
     init(musicData: Playlist, isHost: boolean, mood: string) {
       update((draft) => {
         draft.proposedMusicList = NEW_VIDEO_LIST;
-        draft.playingMusicId = musicData[0]?.videoId || "";
         draft.isHost = isHost;
         draft.mood = mood;
       });
     },
 
-    setPlayingMusicId(id: string) {
-      update((draft) => {
-        draft.playingMusicId = id;
-      });
-    },
-
-    // addToPlaylist(music: PlaylistItem) {
-    //   update((draft) => {
-    //     draft.playList.push(music);
-    //   });
-    // },
-
-    setIsPlaying(isPlaying: boolean) {
-      update((draft) => {
-        draft.isPlaying = isPlaying;
-      });
-    },
     removeMusicFromProposedList(id: string) {
       update((draft) => {
         draft.proposedMusicList = state.proposedMusicList.filter(

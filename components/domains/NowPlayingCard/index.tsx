@@ -5,9 +5,9 @@ import Lottie from "react-lottie";
 import { useRecoilState } from "recoil";
 import * as animationData from "~/assets/lotties/lottie-playing.json";
 import { Modal } from "~/components/uis";
+import usePlayerActions from "~/hooks/domains/usePlayerActions";
 import { useRoomStore } from "~/store";
-import { playlistAtomState } from "~/store/playlist";
-import { getMusicIndex } from "~/store/room/utils";
+import { playerAtomState } from "~/store/room";
 import type { PlaylistItem } from "~/types";
 import AddSongScreen from "../AddSongScreen";
 import Thumbnail from "../Thumbnail";
@@ -24,29 +24,12 @@ function NowPlayingCard({
   player,
 }: NowPlayingCardProps) {
   const {
-    state: { isPlaying, isHost, playingMusicId },
-    actions,
+    state: { isHost },
   } = useRoomStore();
 
-  const [playlist] = useRecoilState(playlistAtomState);
+  const [playerState] = useRecoilState(playerAtomState);
 
-  const playPrevMusic = () => {
-    const playingIndex = getMusicIndex(playingMusicId, playlist);
-    if (playingIndex === 0) {
-      return null;
-    }
-
-    actions.setPlayingMusicId(playlist[playingIndex - 1].videoId);
-  };
-
-  const playNextMusic = () => {
-    const playingIndex = getMusicIndex(playingMusicId, playlist);
-    if (playingIndex === playlist.length - 1) {
-      return null;
-    }
-
-    actions.setPlayingMusicId(playlist[playingIndex + 1].videoId);
-  };
+  const { playNextMusic, playPrevMusic } = usePlayerActions();
 
   // 재생 중인 노래 없는경우
   if (noPlaylist) {
@@ -92,7 +75,7 @@ function NowPlayingCard({
             height={20}
             onClick={playPrevMusic}
           />
-          {isPlaying ? (
+          {playerState.isPlaying ? (
             <Image
               src="/images/pause-button.svg"
               alt="play-back"
@@ -129,7 +112,7 @@ function NowPlayingCard({
               loop: true,
               autoplay: true,
             }}
-            // isPaused={!isPlaying}
+            isPaused={!playerState.isPlaying}
           />
         </S.Controller>
       )}

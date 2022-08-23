@@ -9,16 +9,21 @@ import { useModal } from "~/components/uis/Modal";
 import { useChangePlaylistOrder } from "~/hooks/webSocket";
 import { useRoomStore } from "~/store";
 import { playlistAtomState } from "~/store/playlist";
-import { playlistIdAtomState, roomIdAtomState } from "~/store/room";
+import {
+  playerAtomState,
+  playlistIdAtomState,
+  roomIdAtomState,
+} from "~/store/room";
 import MusicItemCard from "./MusicItemCard";
 
 function PlaylistModal() {
   const {
-    state: { playingMusicId, isHost },
+    state: { isHost },
     actions,
   } = useRoomStore();
   const { close } = useModal();
 
+  const [playerState, setPlayerState] = useRecoilState(playerAtomState);
   const [playlist, setPlaylist] = useRecoilState(playlistAtomState);
 
   const roomId = useRecoilValue(roomIdAtomState);
@@ -86,13 +91,16 @@ function PlaylistModal() {
             <MusicItemCard
               item={el}
               key={el.videoId}
-              active={el.videoId === playingMusicId}
+              active={el.id === playerState.playingMusicId}
               deleteMode={deleteMode}
               setDeleteList={setDeleteList}
               index={i}
               onClick={() => {
                 if (isHost) {
-                  actions.setPlayingMusicId(el.videoId);
+                  setPlayerState((prev) => ({
+                    ...prev,
+                    playingMusicId: el.id,
+                  }));
                 }
               }}
               moveCard={moveCard}

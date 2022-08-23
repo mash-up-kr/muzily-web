@@ -3,7 +3,7 @@ import type { NextPage, NextPageContext } from "next";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import YouTube from "react-youtube";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { NEW_VIDEO_LIST } from "~/assets/dummy";
 import {
   NowPlayingCard,
@@ -22,9 +22,11 @@ import {
 } from "~/components/uis";
 import RoomSocketProvider from "~/contexts/RoomSocket";
 import { useRoomQuery } from "~/hooks/api/rooms";
+import usePlayerActions from "~/hooks/domains/usePlayerActions";
+import { useUpdatePlayerState } from "~/hooks/webSocket";
 import { useRoomStore } from "~/store";
 import { playlistAtomState } from "~/store/playlist";
-import { getMusicIndex } from "~/store/room/utils";
+import { playerAtomState, playlistIdAtomState } from "~/store/room";
 
 interface Props {
   isHost: boolean;
@@ -56,29 +58,26 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   const { data: roomData, isError } = useRoomQuery(Number(roomId));
 
   const {
-    state: { playingMusicId, isHost, proposedMusicList },
+    state: { isHost, proposedMusicList },
     actions,
   } = useRoomStore();
 
-  const [playlist, setPlaylist] = useRecoilState(playlistAtomState);
-
+  const [player, setPlayer] = useState(null);
+  const [playerState, setPlayerState] = useRecoilState(playerAtomState);
+  const [playlist] = useRecoilState(playlistAtomState);
+  const playlistId = useRecoilValue(playlistIdAtomState);
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const [player, setPlayer] = useState(null);
+  const { playNextMusic } = usePlayerActions();
+
+  const { publish: publishPlayerState } = useUpdatePlayerState(+roomId);
+
   const currentMusic = useMemo(
     () =>
-      playlist.find((item) => item.videoId === playingMusicId) || playlist[0],
-    [playingMusicId, playlist]
+      playlist.find((item) => item.id === playerState.playingMusicId) ||
+      playlist[0],
+    [playerState.playingMusicId, playlist]
   );
-
-  const playNextMusic = () => {
-    const playingIndex = getMusicIndex(playingMusicId, playlist);
-    if (playingIndex === playlist.length - 1) {
-      return null;
-    }
-
-    actions.setPlayingMusicId(playlist[playingIndex + 1].videoId);
-  };
 
   useEffect(() => {
     actions.init(host ? [] : NEW_VIDEO_LIST, host, "");
@@ -87,7 +86,9 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   useEffect(() => {
     if (contentRef.current) {
       const contentWidth = contentRef.current.offsetWidth;
-      contentRef.current.scrollTo({ left: contentWidth / 2 });
+      contentRef.current.scrollTo({
+        left: contentWidth / 2 - contentWidth / 4,
+      });
     }
   }, [contentRef]);
 
@@ -156,14 +157,32 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
                 controls: 1,
               },
             }}
-            onPlay={() => actions.setIsPlaying(true)}
-            onPause={() => actions.setIsPlaying(false)}
+            onPlay={() =>
+              publishPlayerState({
+                playlistId,
+                playlistItemId: playerState.playingMusicId,
+                playStatus: "PLAY",
+              })
+            }
+            onPause={() =>
+              publishPlayerState({
+                playlistId,
+                playlistItemId: playerState.playingMusicId,
+                playStatus: "PAUSE",
+              })
+            }
             onReady={(event) => {
               setPlayer(event.target);
+              setPlayerState((prev) => ({
+                ...prev,
+                playingMusicId: currentMusic.id,
+              }));
               event.target.playVideo();
             }}
             onEnd={() => {
-              if (playingMusicId === playlist[playlist.length - 1].videoId) {
+              if (
+                playerState.playingMusicId === playlist[playlist.length - 1].id
+              ) {
                 return alert("끝!!");
               }
 

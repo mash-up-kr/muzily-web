@@ -4,6 +4,7 @@ import { useRecoilState } from "recoil";
 import { Modal } from "~/components/uis";
 import { useRoomStore } from "~/store";
 import { playlistAtomState } from "~/store/playlist";
+import { playerAtomState } from "~/store/room";
 import { getDurationText, getMusicIndex } from "~/store/room/utils";
 import type { PlaylistItem } from "~/types";
 import PlaylistModal from "../PlaylistModal";
@@ -18,34 +19,35 @@ const NO_DATA_TEXT = [
 ];
 
 function PlaylistCard({ currentMusic }: PlaylistCardProps) {
-  const {
-    state: { playingMusicId },
-    actions,
-  } = useRoomStore();
-
+  const [playerState, setPlayerState] = useRecoilState(playerAtomState);
   const [playlist, setPlaylist] = useRecoilState(playlistAtomState);
 
   const playPrevMusic = () => {
-    const playingIndex = getMusicIndex(playingMusicId, playlist);
+    const playingIndex = getMusicIndex(playerState.playingMusicId, playlist);
     if (playingIndex === 0) {
       return null;
     }
 
-    actions.setPlayingMusicId(playlist[playingIndex - 1].videoId);
+    setPlayerState((prev) => ({
+      ...prev,
+      playingMusicId: playlist[playingIndex - 1].id,
+    }));
   };
 
   const playNextMusic = () => {
-    const playingIndex = getMusicIndex(playingMusicId, playlist);
+    const playingIndex = getMusicIndex(playerState.playingMusicId, playlist);
     if (playingIndex === playlist.length - 1) {
       return null;
     }
 
-    actions.setPlayingMusicId(playlist[playingIndex + 1].videoId);
+    setPlayerState((prev) => ({
+      ...prev,
+      playingMusicId: playlist[playingIndex + 1].id,
+    }));
   };
 
   const noData = !playlist || playlist.length === 0;
-  const nextMusic =
-    playlist[getMusicIndex(currentMusic?.videoId, playlist) + 1];
+  const nextMusic = playlist[getMusicIndex(currentMusic?.id, playlist) + 1];
 
   return (
     <S.Container>
