@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import type { NextPage } from "next";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import { Spinner, Toast, TopBar, TopBarIconButton } from "~/components/uis";
@@ -54,9 +55,23 @@ const RoomInvitePage: NextPage = () => {
         <S.RoomTitle>{data.name}</S.RoomTitle>
         <S.RoomStatusContainer>
           <S.UserNumberStatusSpan>
+            <Image
+              src="/images/icon-user-mono.svg"
+              alt=""
+              width={12}
+              height={12}
+            />
             {data.participantsCount}
           </S.UserNumberStatusSpan>
-          <S.PlayListStatusSpan>{data.playListItemsCount}</S.PlayListStatusSpan>
+          <S.PlayListStatusSpan>
+            <Image
+              src="/images/music-note-white.svg"
+              alt=""
+              width={12}
+              height={12}
+            />
+            {data.playListItemsCount}
+          </S.PlayListStatusSpan>
         </S.RoomStatusContainer>
         <S.RoomJoinButton onClick={onJoinClick}>방 입장하기</S.RoomJoinButton>
       </S.InviteContainer>
@@ -149,67 +164,43 @@ const S = {
   `,
 
   UserNumberStatusSpan: styled.span`
-    & {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      padding: 5px 14px;
-      gap: 6px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 14px;
+    gap: 6px;
 
-      width: 65px;
-      height: 33px;
+    width: 65px;
+    height: 33px;
 
-      background: #252525;
-      border-radius: 5px;
+    background: #252525;
+    border-radius: 5px;
 
-      color: white;
-      font-size: 15px;
-      line-height: 155%;
-      font-weight: 500;
-      line-spacing: -0.544648px;
-    }
-    & :before {
-      content: "";
-      display: block;
-      background: url("/images/usernumber.png") no-repeat;
-      width: 10px;
-      height: 10px;
-      float: left;
-    }
+    color: white;
+    font-size: 15px;
+    line-height: 155%;
+    font-weight: 500;
   `,
 
   PlayListStatusSpan: styled.span`
-    & {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      padding: 5px 14px;
-      gap: 6px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 14px;
+    gap: 6px;
 
-      width: 65px;
-      height: 33px;
+    width: 65px;
+    height: 33px;
 
-      background: #252525;
-      border-radius: 5px;
+    background: #252525;
+    border-radius: 5px;
 
-      color: white;
-      font-size: 15px;
-      line-height: 155%;
-      font-weight: 500;
-      line-spacing: -0.544648px;
-    }
-    & :before {
-      content: "";
-      display: block;
-      background: url("/images/playlistnumber.png") no-repeat;
-      background-size: contain;
-      width: 10px;
-      height: 10px;
-      margin-left: 5px;
-      float: left;
-    }
+    color: white;
+    font-size: 15px;
+    line-height: 155%;
+    font-weight: 500;
   `,
 
   BottomGifImage: styled.img`
