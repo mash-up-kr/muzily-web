@@ -1,10 +1,9 @@
 import React from "react";
 import Image from "next/image";
 import styled from "@emotion/styled";
-import Lottie from "react-lottie";
 import { useRecoilState } from "recoil";
-import * as animationData from "~/assets/lotties/lottie-playing.json";
 import { Modal } from "~/components/uis";
+import LottieAnimation from "~/components/uis/LottieAnimation";
 import usePlayerActions from "~/hooks/domains/usePlayerActions";
 import { useRoomStore } from "~/store";
 import { playerAtomState } from "~/store/room";
@@ -103,15 +102,10 @@ function NowPlayingCard({
         </S.Controller>
       ) : (
         <S.Controller>
-          <Lottie
+          <LottieAnimation.Equalizer
             height={60}
             width={70}
-            isClickToPauseDisabled
-            options={{
-              animationData,
-              loop: true,
-              autoplay: true,
-            }}
+            color="white"
             isPaused={!playerState.isPlaying}
           />
         </S.Controller>

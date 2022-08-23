@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import styled from "@emotion/styled";
 import { useDrag, useDrop, type XYCoord } from "react-dnd";
-import Lottie from "react-lottie";
-import * as animationData from "~/assets/lotties/lottie-playing-blue.json";
+import { useRecoilState } from "recoil";
 import { Spacer } from "~/components/uis";
+import LottieAnimation from "~/components/uis/LottieAnimation";
 import { useRoomStore } from "~/store";
+import { playerAtomState } from "~/store/room";
 import { getDurationText } from "~/store/room/utils";
 import type { PlaylistItem } from "~/types";
 
@@ -42,6 +43,7 @@ function MusicItemCard({
 
   const dragRef = useRef<HTMLDivElement>(null);
   const [checked, setChecked] = useState(false);
+  const [playerState] = useRecoilState(playerAtomState);
 
   const handleClickCheckButton = (
     e: React.MouseEvent<HTMLDivElement>,
@@ -125,18 +127,11 @@ function MusicItemCard({
           <S.Title>
             {item.title}
             {active && (
-              <Lottie
+              <LottieAnimation.Equalizer
                 height={20}
                 width={30}
-                style={{
-                  color: "red",
-                }}
-                isClickToPauseDisabled
-                options={{
-                  animationData,
-                  loop: true,
-                  autoplay: true,
-                }}
+                color="blue"
+                isPaused={!playerState.isPlaying}
               />
             )}
           </S.Title>
