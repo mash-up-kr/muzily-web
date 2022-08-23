@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import axios from "axios";
+import { useQueryClient } from "react-query";
 import YouTube from "react-youtube";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
@@ -11,10 +12,12 @@ import {
   TopBarIconButton,
 } from "~/components/uis";
 import Modal, { useModal } from "~/components/uis/Modal";
+import { queryKeys } from "~/consts/react-query";
 import { useGetPlaylistPendingItems } from "~/hooks/api";
 import {
   useAcceptPlaylistItemRequest,
   useAddPlaylistItemRequest,
+  useDeclinePlaylistItemRequest,
   useSendPlaylistItemRequest,
 } from "~/hooks/webSocket";
 import { useRoomStore } from "~/store";
@@ -52,6 +55,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
   const [youtubeId, setYoutubeId] = useState("");
   const [isValid, setIsValid] = useState(false);
   const [isError, setIsError] = useState(false);
+  const queryClient = useQueryClient();
   const [proposedPlaylist, setProposedPlaylist] = useRecoilState(
     proposedPlaylistAtomState
   );
@@ -79,6 +83,11 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
   );
   const { publish: publishAcceptPlaylistItemRequest } =
     useAcceptPlaylistItemRequest(roomId, {
+      playlistId: -1,
+      playlistItemId: -1,
+    });
+  const { publish: publishDecinePlaylistItemRequest } =
+    useDeclinePlaylistItemRequest(roomId, {
       playlistId: -1,
       playlistItemId: -1,
     });
@@ -132,14 +141,25 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
     }
   };
 
-  const handleAcceptPlaylist = (item: PlaylistItem) => {
-    publishAcceptPlaylistItemRequest({
+  const handleAcceptPlaylist = async (item: PlaylistItem) => {
+    // TODO: 통신 진행중일 때 loading UI 추가
+    await publishAcceptPlaylistItemRequest({
       playlistId: item.playlistId,
       playlistItemId: item.id,
     });
-    setProposedPlaylist(
+    await setProposedPlaylist(
       proposedPlaylist.filter((listItem) => listItem.id !== item.id)
     );
+    await queryClient.invalidateQueries(queryKeys.pendingPlaylist(playlistId));
+  };
+
+  const handleDeclinePlaylist = async (item: PlaylistItem) => {
+    // TODO: 통신 진행중일 때 loading UI 추가
+    await publishDecinePlaylistItemRequest({
+      playlistId: item.playlistId,
+      playlistItemId: item.id,
+    });
+    await queryClient.invalidateQueries(queryKeys.pendingPlaylist(playlistId));
   };
 
   return (
@@ -223,9 +243,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
                       </S.Button>
                       <S.Button
                         color=" #F54031"
-                        onClick={() => {
-                          actions.removeMusicFromProposedList(item.videoId);
-                        }}
+                        onClick={() => handleDeclinePlaylist(item)}
                       >
                         거절
                       </S.Button>

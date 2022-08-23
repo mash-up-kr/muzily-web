@@ -52,4 +52,12 @@ export type StompCallbackMessage =
         playlistItemId: number;
         playStatus: "PLAY" | "PAUSE";
       };
+    }
+  | {
+      type: SocketResType["playlistItemRequestDecline"];
+      code: string;
+      message: string;
+      data: {
+        playlistItemId: number;
+      };
     };

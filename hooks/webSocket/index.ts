@@ -83,3 +83,11 @@ export const useAcceptPlaylistItemRequest = (
   useWebSocketPublish(`/app/v1/rooms/${roomId}/accept-playlist-item-request`, {
     body: JSON.stringify(body),
   });
+
+export const useDeclinePlaylistItemRequest = (
+  roomId: number,
+  body: AcceptPlaylistItemRequest
+) =>
+  useWebSocketPublish(`/app/v1/rooms/${roomId}/decline-playlist-item-request`, {
+    body: JSON.stringify(body),
+  });

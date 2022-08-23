@@ -11,6 +11,6 @@ export const useGetPlaylists = (playlistId: Room["playlist"]["playlistId"]) =>
 export const useGetPlaylistPendingItems = (
   playlistId: Room["playlist"]["playlistId"]
 ) =>
-  useCoreQuery(queryKeys.playlist(playlistId), async () =>
+  useCoreQuery(queryKeys.pendingPlaylist(playlistId), async () =>
     getPlaylistPendingItems(playlistId)
   );

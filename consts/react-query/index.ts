@@ -11,6 +11,10 @@ export const queryKeys = {
     "playlist",
     playlistId,
   ],
+  pendingPlaylist: (playlistId: Room["playlist"]["playlistId"]) => [
+    "pendingPlaylist",
+    playlistId,
+  ],
   rooms: ["rooms"],
   roomsById: (roomId: Room["roomId"]) => ["rooms", roomId],
   roomInvitationByKey: (invitationKey: Room["invitation"]["invitationKey"]) => [

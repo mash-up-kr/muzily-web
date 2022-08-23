@@ -73,7 +73,6 @@ const RoomSocketProvider = ({ roomId, children }: Props) => {
             case "PLAYLIST_ITEM_ADD":
               setPlaylist((_playlist) => [..._playlist, newMessage.data]);
               break;
-
             case "PLAYLIST_ITEM_CHANGE_ORDER":
               setPlaylist((_playlist) => {
                 const { order } = newMessage.data;
@@ -92,7 +91,6 @@ const RoomSocketProvider = ({ roomId, children }: Props) => {
                 isPlaying: newMessage.data.playStatus === "PLAY",
                 playingMusicId: newMessage.data.playlistItemId,
               });
-
               break;
             default:
               console.error("등록되지 않은 메시지 타입입니다.");
@@ -118,6 +116,13 @@ const RoomSocketProvider = ({ roomId, children }: Props) => {
               setProposedPlaylist((_playlist) => [
                 ..._playlist,
                 newMessage.data,
+              ]);
+              break;
+            case "PLAYLIST_ITEM_REQUEST_DECLINE":
+              setProposedPlaylist((_playlist) => [
+                ..._playlist.filter(
+                  (item) => item.id !== newMessage.data.playlistItemId
+                ),
               ]);
               break;
             default:
