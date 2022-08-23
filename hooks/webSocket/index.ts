@@ -1,7 +1,10 @@
 import type { IPublishParams } from "@stomp/stompjs";
 import { useRoomSocket } from "~/contexts/RoomSocket";
-import type { PlayerState } from "~/store/room";
-import type { Emoji, AddPlaylistRequestBody } from "~/types";
+import type {
+  Emoji,
+  AddPlaylistRequestBody,
+  AcceptPlaylistItemRequest,
+} from "~/types";
 
 // 웹소켓 베이스 use hook
 export const useWebSocketPublish = <Body extends { [x: string]: any }>(
@@ -63,3 +66,20 @@ export const useUpdatePlayerState = (roomId: number) =>
   useWebSocketPublish<PlayerStateRequestBody>(
     `/app/v1/rooms/${roomId}/update-play-information`
   );
+
+export const useSendPlaylistItemRequest = (
+  roomId: number,
+  body: AddPlaylistRequestBody
+) =>
+  useWebSocketPublish<AddPlaylistRequestBody>(
+    `/app/v1/rooms/${roomId}/send-playlist-item-request`,
+    { body: JSON.stringify(body) }
+  );
+
+export const useAcceptPlaylistItemRequest = (
+  roomId: number,
+  body: AcceptPlaylistItemRequest
+) =>
+  useWebSocketPublish(`/app/v1/rooms/${roomId}/accept-playlist-item-request`, {
+    body: JSON.stringify(body),
+  });

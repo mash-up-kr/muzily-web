@@ -20,3 +20,19 @@ export const getMusicIndex = (id: number, playlist: Playlist) => {
 
   return index === -1 ? 0 : index;
 };
+
+/**
+ * duration을 초 형태로 변경
+ * ex) PT3M19S -> 199
+ */
+export const convertDurationToSecond = (duration: string) => {
+  const [rawMinute, rawSecond] = duration.slice(2, -1).split("M");
+  const totalSecond = (() => {
+    const minute = Number.isNaN(Number(rawMinute)) ? 0 : Number(rawMinute);
+    const second = Number.isNaN(Number(rawSecond)) ? 0 : Number(rawSecond);
+
+    return minute * 60 + second;
+  })();
+
+  return totalSecond;
+};
