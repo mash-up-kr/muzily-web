@@ -6,6 +6,7 @@ import { useRecoilState } from "recoil";
 import { Spacer } from "~/components/uis";
 import LottieAnimation from "~/components/uis/LottieAnimation";
 import { useRoomStore } from "~/store";
+import { removeListAtomState } from "~/store/playlist";
 import { playerAtomState } from "~/store/room";
 import { getDurationText } from "~/store/room/utils";
 import type { PlaylistItem } from "~/types";
@@ -17,7 +18,6 @@ interface MusicCardItemProps {
   index: number;
   deleteMode: boolean;
   moveCard: (from: number, to: number) => void;
-  setDeleteList: React.Dispatch<React.SetStateAction<string[]>>;
 }
 
 interface DragItem {
@@ -34,7 +34,6 @@ function MusicItemCard({
   item,
   index,
   moveCard,
-  setDeleteList,
   deleteMode,
 }: MusicCardItemProps) {
   const {
@@ -44,24 +43,25 @@ function MusicItemCard({
   const dragRef = useRef<HTMLDivElement>(null);
   const [checked, setChecked] = useState(false);
   const [playerState] = useRecoilState(playerAtomState);
+  const [, setRemoveList] = useRecoilState(removeListAtomState);
 
   const handleClickCheckButton = (
     e: React.MouseEvent<HTMLDivElement>,
-    id: string
+    id: number
   ) => {
     e.stopPropagation();
     setChecked((prev) => !prev);
 
     if (!checked) {
-      return setDeleteList((list) => [...list, id]);
+      return setRemoveList((list) => [...list, id]);
     }
-    setDeleteList((list) => list.filter((item) => item !== id));
+    setRemoveList((list) => list.filter((item) => item !== id));
   };
 
   useEffect(() => {
     setChecked(false);
-    setDeleteList([]);
-  }, [deleteMode, setDeleteList]);
+    setRemoveList([]);
+  }, [deleteMode, setRemoveList]);
 
   const [{ opacity, isDragging }, drag, preview] = useDrag({
     type: DRAG_TYPE,
@@ -116,7 +116,7 @@ function MusicItemCard({
       <S.MusicItem key={item.videoId} active={active} onClick={onClick}>
         {deleteMode && (
           <Checkbox
-            onClick={(e) => handleClickCheckButton(e, item.videoId)}
+            onClick={(e) => handleClickCheckButton(e, item.id)}
             color={active ? "blue" : "white"}
             active={checked}
             bgColor={active ? "#007AFF" : "#5EABFF"}

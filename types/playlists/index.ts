@@ -23,5 +23,5 @@ export type AddPlaylistRequestBody = Omit<PlaylistItem, "id">;
 
 export type PlaylistItemRequest = {
   playlistId: number;
-  playlistItemId: number;
+  playlistItemIds: number[];
 };

@@ -6,9 +6,12 @@ import { TouchBackend } from "react-dnd-touch-backend";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Layout, TopBar, TopBarIconButton } from "~/components/uis";
 import { useModal } from "~/components/uis/Modal";
-import { useChangePlaylistOrder } from "~/hooks/webSocket";
+import {
+  useChangePlaylistOrder,
+  useRemovePlaylistItem,
+} from "~/hooks/webSocket";
 import { useRoomStore } from "~/store";
-import { playlistAtomState } from "~/store/playlist";
+import { playlistAtomState, removeListAtomState } from "~/store/playlist";
 import {
   playerAtomState,
   playlistIdAtomState,
@@ -30,7 +33,15 @@ function PlaylistModal() {
   const playlistId = useRecoilValue(playlistIdAtomState);
 
   const [deleteMode, setDeleteMode] = useState(false);
-  const [deleteList, setDeleteList] = useState<string[]>([]);
+  const [removeList, setRemoveList] = useRecoilState(removeListAtomState);
+
+  const { publish: publishRemovePlaylistItemRequest } = useRemovePlaylistItem(
+    roomId,
+    {
+      playlistId: -1,
+      playlistItemIds: [],
+    }
+  );
 
   const { publish: changePlaylistOrder } = useChangePlaylistOrder(roomId, {
     playlistId: -1,
@@ -47,11 +58,10 @@ function PlaylistModal() {
   };
 
   const handleClickDeleteButton = () => {
-    const newList = playlist.filter(
-      (item) => !deleteList.includes(item.videoId)
-    );
-    setPlaylist(newList);
-    setDeleteList([]);
+    publishRemovePlaylistItemRequest({
+      playlistId,
+      playlistItemIds: removeList,
+    });
   };
 
   return (
@@ -93,7 +103,6 @@ function PlaylistModal() {
               key={el.videoId}
               active={el.id === playerState.playingMusicId}
               deleteMode={deleteMode}
-              setDeleteList={setDeleteList}
               index={i}
               onClick={() => {
                 if (isHost) {
@@ -109,9 +118,9 @@ function PlaylistModal() {
         </S.MusicList>
       </DndProvider>
 
-      {deleteList.length ? (
+      {removeList.length ? (
         <S.DeleteButton onClick={handleClickDeleteButton}>
-          {`${deleteList.length}`.padStart(2, "0")} 삭제하기
+          {`${removeList.length}`.padStart(2, "0")} 삭제하기
         </S.DeleteButton>
       ) : (
         <></>

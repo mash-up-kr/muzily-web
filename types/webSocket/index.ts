@@ -67,6 +67,6 @@ export type StompCallbackMessage =
       message: string;
       data: {
         playlistId: number;
-        playlistItemId: number;
+        playlistItemIds: number[];
       };
     };

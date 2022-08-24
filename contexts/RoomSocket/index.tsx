@@ -6,7 +6,11 @@ import { useRecoilState } from "recoil";
 import SockJS from "sockjs-client";
 import { isBrowser } from "~/consts";
 import { emojiAtomState } from "~/store/emoji";
-import { playlistAtomState, proposedPlaylistAtomState } from "~/store/playlist";
+import {
+  playlistAtomState,
+  proposedPlaylistAtomState,
+  removeListAtomState,
+} from "~/store/playlist";
 import { playerAtomState } from "~/store/room";
 import type { PlaylistItem } from "~/types/playlists";
 import type { StompCallbackMessage } from "~/types/webSocket";
@@ -55,6 +59,7 @@ const RoomSocketProvider = ({ roomId, children }: Props) => {
   const [, setEmoji] = useRecoilState(emojiAtomState);
   const [, setPlaylist] = useRecoilState(playlistAtomState);
   const [, setPlayerState] = useRecoilState(playerAtomState);
+  const [, setRemoveList] = useRecoilState(removeListAtomState);
 
   const subscribe = () => {
     socket.subscribe(
@@ -92,12 +97,14 @@ const RoomSocketProvider = ({ roomId, children }: Props) => {
                 playingMusicId: newMessage.data.playlistItemId,
               });
               break;
+
             case "PLAYLIST_ITEM_REMOVE":
-              setProposedPlaylist((_playlist) => [
-                ..._playlist.filter(
-                  (item) => item.id !== newMessage.data.playlistItemId
-                ),
-              ]);
+              setPlaylist((_playlist) =>
+                _playlist.filter(
+                  (item) => !newMessage.data.playlistItemIds.includes(item.id)
+                )
+              );
+              setRemoveList([]);
               break;
             default:
               console.error("등록되지 않은 메시지 타입입니다.");
