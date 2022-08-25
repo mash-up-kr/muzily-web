@@ -85,7 +85,7 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   const [playlist] = useRecoilState(playlistAtomState);
   const playlistId = useRecoilValue(playlistIdAtomState);
   const { data: pendingData, isError: pendingDataError } =
-    useGetPlaylistPendingItems(playlistId);
+    useGetPlaylistPendingItems(playlistId, isHost);
   const contentRef = useRef<HTMLDivElement>(null);
 
   const { playNextMusic } = usePlayerActions();
@@ -104,10 +104,10 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   }, []);
 
   useEffect(() => {
-    if (isError || pendingDataError) {
+    if (isError) {
       router.replace("/");
     }
-  }, [isError, pendingDataError]);
+  }, [isError]);
 
   const [centerIdx, setCenterIdx] = useState(INITIAL_SLIDE_INDEX);
 

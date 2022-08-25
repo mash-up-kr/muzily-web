@@ -61,7 +61,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
   );
   const roomId = useRecoilValue(roomIdAtomState);
   const playlistId = useRecoilValue(playlistIdAtomState);
-  const { data } = useGetPlaylistPendingItems(playlistId);
+  const { data } = useGetPlaylistPendingItems(playlistId, isHost);
   const { publish: publishAddPlaylist } = useAddPlaylistItemRequest(roomId, {
     playlistId,
     videoId: "",

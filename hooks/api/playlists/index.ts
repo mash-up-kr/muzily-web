@@ -9,8 +9,11 @@ export const useGetPlaylists = (playlistId: Room["playlist"]["playlistId"]) =>
   );
 
 export const useGetPlaylistPendingItems = (
-  playlistId: Room["playlist"]["playlistId"]
+  playlistId: Room["playlist"]["playlistId"],
+  isHost: boolean
 ) =>
-  useCoreQuery(queryKeys.pendingPlaylist(playlistId), async () =>
-    getPlaylistPendingItems(playlistId)
+  useCoreQuery(
+    queryKeys.pendingPlaylist(playlistId),
+    async () => getPlaylistPendingItems(playlistId),
+    { enabled: isHost }
   );
