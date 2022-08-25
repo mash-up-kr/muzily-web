@@ -127,7 +127,7 @@ const S = {
     border-radius: 20px;
     padding: 20px;
 
-    flex-shrink: 0;
+    /* flex-shrink: 0; */
   `,
 
   Title: styled.h3`

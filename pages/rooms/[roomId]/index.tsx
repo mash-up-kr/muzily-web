@@ -1,7 +1,10 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import type { NextPage, NextPageContext } from "next";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
+import Slider from "react-slick";
 import YouTube from "react-youtube";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { NEW_VIDEO_LIST } from "~/assets/dummy";
@@ -52,6 +55,20 @@ RoomPage.getInitialProps = async (ctx: NextPageContext) => {
   };
 };
 
+const INITIAL_SLIDE_INDEX = 1;
+
+const sliderSettings = {
+  infinite: false,
+  speed: 500,
+  slidesToShow: 1,
+  initialSlide: INITIAL_SLIDE_INDEX,
+  adaptiveHeight: true,
+
+  centerPadding: "20%",
+  centerMode: true,
+  arrows: false,
+};
+
 const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   const router = useRouter();
   const { roomId } = router.query as { roomId: string };
@@ -59,7 +76,7 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   const { data: roomData, isError } = useRoomQuery(Number(roomId));
 
   const {
-    state: { isHost, proposedMusicList },
+    state: { isHost },
     actions,
   } = useRoomStore();
 
@@ -87,19 +104,12 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   }, []);
 
   useEffect(() => {
-    if (contentRef.current) {
-      const contentWidth = contentRef.current.offsetWidth;
-      contentRef.current.scrollTo({
-        left: contentWidth / 2 - contentWidth / 4,
-      });
-    }
-  }, [contentRef]);
-
-  useEffect(() => {
     if (isError || pendingDataError) {
       router.replace("/");
     }
   }, [isError, pendingDataError]);
+
+  const [centerIdx, setCenterIdx] = useState(INITIAL_SLIDE_INDEX);
 
   return (
     <>
@@ -129,14 +139,22 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
         </S.Header>
 
         <S.ContentWrapper ref={contentRef}>
-          <QRCodeCard roomId={roomId} />
-          <NowPlayingCard
-            noPlaylist={!playlist.length}
-            currentMusic={currentMusic}
-            player={player}
-          />
+          <S.Slider
+            {...sliderSettings}
+            beforeChange={(curr, next) => {
+              setCenterIdx(next);
+            }}
+            centerIdx={centerIdx}
+          >
+            <QRCodeCard roomId={roomId} />
+            <NowPlayingCard
+              noPlaylist={!playlist.length}
+              currentMusic={currentMusic}
+              player={player}
+            />
 
-          <PlaylistCard currentMusic={currentMusic} />
+            <PlaylistCard currentMusic={currentMusic} />
+          </S.Slider>
         </S.ContentWrapper>
 
         <Spacer justify="center" gap={36} style={{ margin: "0 0 32px 0" }}>
@@ -270,5 +288,28 @@ const S = {
     align-items: center;
     text-align: center;
     letter-spacing: -0.498081px;
+  `,
+  Slider: styled(Slider)<{ centerIdx: number }>`
+    width: 100%;
+
+    .slick-list {
+    }
+
+    .slick-slide {
+      transition: all 300ms;
+      z-index: 0;
+    }
+    .slick-slide[data-index="${(p) => p.centerIdx - 1}"] {
+      transform: rotate(10deg);
+      z-index: 999;
+    }
+
+    .slick-slide[data-index="${(p) => p.centerIdx}"] {
+      transform: rotate(0);
+    }
+
+    .slick-slide[data-index="${(p) => p.centerIdx + 1}"] {
+      transform: rotate(-20deg);
+    }
   `,
 };

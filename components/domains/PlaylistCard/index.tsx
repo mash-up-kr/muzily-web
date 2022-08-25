@@ -22,37 +22,13 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
   const [playerState, setPlayerState] = useRecoilState(playerAtomState);
   const [playlist, setPlaylist] = useRecoilState(playlistAtomState);
 
-  const playPrevMusic = () => {
-    const playingIndex = getMusicIndex(playerState.playingMusicId, playlist);
-    if (playingIndex === 0) {
-      return null;
-    }
-
-    setPlayerState((prev) => ({
-      ...prev,
-      playingMusicId: playlist[playingIndex - 1].id,
-    }));
-  };
-
-  const playNextMusic = () => {
-    const playingIndex = getMusicIndex(playerState.playingMusicId, playlist);
-    if (playingIndex === playlist.length - 1) {
-      return null;
-    }
-
-    setPlayerState((prev) => ({
-      ...prev,
-      playingMusicId: playlist[playingIndex + 1].id,
-    }));
-  };
-
   const noData = !playlist || playlist.length === 0;
   const nextMusic = playlist[getMusicIndex(currentMusic?.id, playlist) + 1];
 
   return (
     <S.Container>
       {/* 카드 상단 */}
-      <S.UpperCard onClick={playPrevMusic}>
+      <S.UpperCard>
         <S.Title>Playlist</S.Title>
         <S.Content>
           {noData ? (
@@ -69,7 +45,7 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
       </S.UpperCard>
 
       {/* 카드 중간 */}
-      <S.MiddleCard onClick={playNextMusic}>
+      <S.MiddleCard>
         <S.Content>
           {noData ? (
             <S.NoDataText>{NO_DATA_TEXT[1]}</S.NoDataText>
@@ -101,7 +77,7 @@ const S = {
     height: 314px;
     display: flex;
     flex-direction: column;
-    flex-shrink: 0;
+    /* flex-shrink: 0; */
   `,
   Title: styled.h3`
     font-weight: 800;
@@ -119,7 +95,6 @@ const S = {
     border-bottom: 2px dashed #000000;
   `,
   MiddleCard: styled.div`
-    cursor: pointer;
     height: 30%;
     background: #ff793a;
 
@@ -132,7 +107,6 @@ const S = {
     align-items: center;
   `,
   LowerCard: styled.div`
-    cursor: pointer;
     height: 20%;
     background: #ff5100;
     backdrop-filter: blur(20px);

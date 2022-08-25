@@ -47,7 +47,7 @@ const S = {
     background: rgba(0, 0, 0, 1);
     border-radius: 20px;
 
-    flex-shrink: 0;
+    /* flex-shrink: 0; */
   `,
 
   UpContainer: styled.div<{ noPlaylist?: boolean }>`

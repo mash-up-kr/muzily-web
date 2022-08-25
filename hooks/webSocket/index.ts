@@ -102,5 +102,11 @@ export const useDeclinePlaylistItemRequest = (
 /** (방장) 플레이리스트 곡 삭제 웹소켓 요청 */
 export const useRemovePlaylistItem = (
   roomId: number,
-  body: PlaylistItemRequest
-) => useWebSocketPublish(`/app/v1/rooms/${roomId}/remove-playlist-item`);
+  body: {
+    playlistId: number;
+    playlistItemIds: number[];
+  }
+) =>
+  useWebSocketPublish(`/app/v1/rooms/${roomId}/remove-playlist-item`, {
+    body: JSON.stringify(body),
+  });
