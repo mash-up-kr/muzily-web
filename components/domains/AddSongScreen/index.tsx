@@ -182,6 +182,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
           </S.HeadingText>
 
           <S.Input
+            type="url"
             placeholder="링크 입력해주세요"
             value={youtubeLink}
             onChange={(e) => setYoutubeLink(e.target.value)}
@@ -311,6 +312,7 @@ const S = {
   `,
 
   Input: styled.input`
+    font-size: 14px;
     margin-top: 24px;
     width: 100%;
     height: 49px;

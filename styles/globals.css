@@ -2,6 +2,11 @@
   user-select: none;
 }
 
+input,
+textarea {
+  user-select: auto;
+}
+
 html,
 body,
 div,
