@@ -5,37 +5,13 @@ import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import { AxiosError } from "axios";
 import { BottomButton, TopBar, TopBarIconButton } from "~/components/uis";
-import {
-  useDeleteRoomMutation,
-  usePostLogoutMutation,
-  useRoomQuery,
-} from "~/hooks/api";
-import type { Mood, MoodWithImageName } from "~/types/rooms";
+import { useDeleteRoomMutation, usePostLogoutMutation } from "~/hooks/api";
 
 const tokenKey = process.env.NEXT_PUBLIC_LOCAL_TOKEN_KEY as string;
-
-const moodConstants: MoodWithImageName[] = [
-  {
-    name: "# 조용~ 집중 빡 공부 모드",
-    emojiType: "BOOK",
-    emojiTypeImageName: "book-3d",
-  },
-  {
-    name: "# 쉣댓 부레 엉덩이~! 흔들어버려",
-    emojiType: "MIRROR_BALL",
-    emojiTypeImageName: "mirror-3d",
-  },
-  {
-    name: "# 잔잔한 내적 댄스 유발",
-    emojiType: "HEART",
-    emojiTypeImageName: "heart-3d",
-  },
-];
 
 const RoomSettingPage: NextPage = () => {
   const router = useRouter();
   const [roomId, setRoomId] = useState(0);
-  const { data: roomData } = useRoomQuery(Number(roomId));
 
   useEffect(() => {
     const { roomId } = router.query as { roomId: string };
