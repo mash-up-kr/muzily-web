@@ -20,12 +20,12 @@ const LoginPage: NextPage = withRouteGuard({ UNCONNECTED: true }, "/", () => {
 
       <Spacer type="vertical" style={{ height: "100%" }}>
         <TopBar leftIconButton={<TopBarIconButton iconName="star" />} />
-        <Spacer type="vertical" style={{ flex: 1, padding: 16 }}>
+        <Spacer type="vertical" style={{ padding: 16 }}>
           <S.Header>
-            방을 만드려면<br></br>
+            방을 만드려면
+            <br />
             로그인이 필요해요
           </S.Header>
-
           <KakaoLoginButton
             restApiKey={
               process.env.NEXT_PUBLIC_KAKAO_APP_KEY_REST_API_KEY as string
@@ -33,6 +33,7 @@ const LoginPage: NextPage = withRouteGuard({ UNCONNECTED: true }, "/", () => {
             redirectUri={
               process.env.NEXT_PUBLIC_KAKAO_LOGIN_REDIRECT_URI as string
             }
+            style={{ marginTop: "42px" }}
           />
         </Spacer>
       </Spacer>

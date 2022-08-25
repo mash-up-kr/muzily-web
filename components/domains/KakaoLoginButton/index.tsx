@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
+import Image from "next/image";
 import { useRouter } from "next/router";
-import { useTheme } from "@emotion/react";
+import styled from "@emotion/styled";
 
 interface Props {
   restApiKey: string;
@@ -9,12 +10,7 @@ interface Props {
   style?: CSSProperties;
 }
 
-const KakaoLoginButton = ({
-  restApiKey,
-  redirectUri,
-  children = "",
-  style,
-}: Props) => {
+const KakaoLoginButton = ({ restApiKey, redirectUri, style }: Props) => {
   const router = useRouter();
 
   const handleButtonClick = () => {
@@ -24,24 +20,35 @@ const KakaoLoginButton = ({
   };
 
   return (
-    <button
-      type="button"
-      style={{
-        ...style,
-        width: "100%",
-        height: "51px",
-        background: "url('images/kakao_login_large_wide.png')",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "auto",
-        cursor: "pointer",
-        border: "none",
-      }}
-      onClick={handleButtonClick}
-    >
-      {children}
-    </button>
+    <S.Button style={{ ...style }} onClick={handleButtonClick}>
+      <S.ButtonIcon>
+        <Image src="/images/icon-kakao.svg" alt="" width={21} height={19} />
+      </S.ButtonIcon>
+      카카오로 시작하기
+    </S.Button>
   );
+};
+
+const S = {
+  Button: styled.div`
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    padding: 0 50px;
+    gap: 8px;
+    color: #000;
+    background-color: #fee500;
+    border-radius: 6px;
+  `,
+  ButtonIcon: styled.div`
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+  `,
 };
 
 export default KakaoLoginButton;
