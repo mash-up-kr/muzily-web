@@ -20,7 +20,7 @@ type Props = {
     | ReactNode
     | ((args: {
         close: ReturnType<UseDisclosure>["close"];
-        isWaiting: boolean;
+        isWaiting?: boolean;
       }) => ReactElement);
   initialIsOpen?: Parameters<UseDisclosure>[0]["initialState"];
   onOpen?: Parameters<UseDisclosure>[0]["onOpen"];

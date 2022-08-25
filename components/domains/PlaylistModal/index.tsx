@@ -1,142 +1,108 @@
-import React, { useState } from "react";
+import type { ComponentPropsWithoutRef } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import styled from "@emotion/styled";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { TouchBackend } from "react-dnd-touch-backend";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { Layout, TopBar, TopBarIconButton } from "~/components/uis";
-import { useModal } from "~/components/uis/Modal";
-import {
-  useChangePlaylistOrder,
-  useRemovePlaylistItem,
-} from "~/hooks/webSocket";
+import { Layout, Modal, TopBar, TopBarIconButton } from "~/components/uis";
+import { useRemovePlaylistItem } from "~/hooks/webSocket";
 import { useRoomStore } from "~/store";
-import { playlistAtomState, removeListAtomState } from "~/store/playlist";
-import {
-  playerAtomState,
-  playlistIdAtomState,
-  roomIdAtomState,
-} from "~/store/room";
-import MusicItemCard from "./MusicItemCard";
+import { playlistAtomState } from "~/store/playlist";
+import { playlistIdAtomState } from "~/store/room";
+import { PlaylistContext } from "./context";
+import Playlist from "./Playlist";
 
-function PlaylistModal() {
+const PlaylistModal = ({
+  trigger,
+}: {
+  trigger: ComponentPropsWithoutRef<typeof Modal>["trigger"];
+}) => {
   const {
     state: { isHost },
     actions,
   } = useRoomStore();
-  const { close } = useModal();
 
-  const [playerState, setPlayerState] = useRecoilState(playerAtomState);
-  const [playlist, setPlaylist] = useRecoilState(playlistAtomState);
+  const router = useRouter();
+  const { roomId } = router.query;
 
-  const roomId = useRecoilValue(roomIdAtomState);
-  const playlistId = useRecoilValue(playlistIdAtomState);
-
-  const [deleteMode, setDeleteMode] = useState(false);
-  const [removeList, setRemoveList] = useRecoilState(removeListAtomState);
-
-  const { publish: publishRemovePlaylistItemRequest } = useRemovePlaylistItem(
-    roomId,
-    {
-      playlistId: -1,
-      playlistItemIds: [],
-    }
-  );
-
-  const { publish: changePlaylistOrder } = useChangePlaylistOrder(roomId, {
+  const { publish: removeItem } = useRemovePlaylistItem(Number(roomId), {
     playlistId: -1,
-    prevPlaylistItemIdToMove: -1,
-    playlistItemId: -1,
+    playlistItemIds: [],
   });
 
-  const moveCard = (fromIndex: number, toIndex: number) => {
-    changePlaylistOrder({
-      playlistId,
-      prevPlaylistItemIdToMove: playlist[toIndex].playlistItemId,
-      playlistItemId: playlist[fromIndex].playlistItemId,
-    });
-  };
+  const [playlist] = useRecoilState(playlistAtomState);
+  const playlistId = useRecoilValue(playlistIdAtomState);
 
-  const handleClickDeleteButton = () => {
-    publishRemovePlaylistItemRequest({
-      playlistId,
-      playlistItemIds: removeList,
-    });
-  };
+  const [isDeletingMode, setIsDeletingMode] = useState(false);
+  const [deletingIds, setDeletingIds] = useState<number[]>([]);
+
+  useEffect(() => {
+    // setPlaylist in socket
+  }, [playlist]);
 
   return (
-    <Layout screenColor="rgba(0, 0, 0, 0.85)">
-      <TopBar
-        leftIconButton={
-          <TopBarIconButton iconName="arrow-left" onClick={close} />
-        }
-        rightIconButton={
-          isHost ? (
-            deleteMode ? (
-              <S.CancelText onClick={() => setDeleteMode(false)}>
-                취소
-              </S.CancelText>
-            ) : (
-              <TopBarIconButton
-                iconName="bin"
-                onClick={() => setDeleteMode(true)}
-              />
-            )
-          ) : (
-            <></>
-          )
-        }
-      >
-        {deleteMode ? "삭제할 음악을 선택해주세요" : "Playlist"}
-      </TopBar>
-
-      <DndProvider
-        backend={HTML5Backend}
-        // options={{
-        //   enableMouseEvents: true,
-        // }}
-      >
-        <S.MusicList>
-          {playlist.map((el, i) => (
-            <MusicItemCard
-              item={el}
-              key={el.videoId}
-              active={el.playlistItemId === playerState.playingMusicId}
-              deleteMode={deleteMode}
-              index={i}
-              onClick={() => {
-                if (isHost) {
-                  setPlayerState((prev) => ({
-                    ...prev,
-                    playingMusicId: el.playlistItemId,
-                  }));
+    <PlaylistContext.Provider
+      value={{
+        isDeletingMode,
+        setIsDeletingMode,
+        deletingIds,
+        setDeletingIds,
+      }}
+    >
+      <Modal
+        trigger={trigger}
+        modal={({ close }) => {
+          return (
+            <Layout screenColor="rgba(0, 0, 0, 0.85)">
+              <TopBar
+                leftIconButton={
+                  <TopBarIconButton iconName="arrow-left" onClick={close} />
                 }
-              }}
-              moveCard={moveCard}
-            />
-          ))}
-        </S.MusicList>
-      </DndProvider>
+                rightIconButton={
+                  isHost ? (
+                    isDeletingMode ? (
+                      <S.CancelText onClick={() => setIsDeletingMode(false)}>
+                        취소
+                      </S.CancelText>
+                    ) : (
+                      <TopBarIconButton
+                        iconName="bin"
+                        onClick={() => setIsDeletingMode(true)}
+                      />
+                    )
+                  ) : (
+                    <></>
+                  )
+                }
+              >
+                {isDeletingMode ? "삭제할 음악을 선택해주세요" : "Playlist"}
+              </TopBar>
+              {isHost ? <Playlist.Host /> : <Playlist.Guest />}
 
-      {removeList.length ? (
-        <S.DeleteButton onClick={handleClickDeleteButton}>
-          {`${removeList.length}`.padStart(2, "0")} 삭제하기
-        </S.DeleteButton>
-      ) : (
-        <></>
-      )}
-    </Layout>
+              {isHost && deletingIds.length ? (
+                <S.DeleteButton
+                  onClick={() => {
+                    removeItem({ playlistId, playlistItemIds: deletingIds });
+                    setDeletingIds([]);
+                    close();
+                  }}
+                >
+                  {`${deletingIds.length}`.padStart(2, "0")} 삭제하기
+                </S.DeleteButton>
+              ) : (
+                <></>
+              )}
+            </Layout>
+          );
+        }}
+      />
+    </PlaylistContext.Provider>
   );
-}
+};
+
+export default PlaylistModal;
 
 const S = {
-  MusicList: styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 20px;
-    padding: 0 16px;
-  `,
+  MusicList: styled.ul``,
   DeleteButton: styled.button`
     cursor: pointer;
     display: flex;
@@ -170,5 +136,3 @@ const S = {
     color: #7c7c7c;
   `,
 };
-
-export default PlaylistModal;

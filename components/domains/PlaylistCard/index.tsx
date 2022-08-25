@@ -1,10 +1,7 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { useRecoilState } from "recoil";
-import { Modal } from "~/components/uis";
-import { useRoomStore } from "~/store";
 import { playlistAtomState } from "~/store/playlist";
-import { playerAtomState } from "~/store/room";
 import { getDurationText, getMusicIndex } from "~/store/room/utils";
 import type { PlaylistItem } from "~/types";
 import PlaylistModal from "../PlaylistModal";
@@ -19,7 +16,6 @@ const NO_DATA_TEXT = [
 ];
 
 function PlaylistCard({ currentMusic }: PlaylistCardProps) {
-  const [playerState, setPlayerState] = useRecoilState(playerAtomState);
   const [playlist, setPlaylist] = useRecoilState(playlistAtomState);
 
   const noData = !playlist || playlist.length === 0;
@@ -28,7 +24,6 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
 
   return (
     <S.Container>
-      {/* 카드 상단 */}
       <S.UpperCard>
         <S.Title>Playlist</S.Title>
         <S.Content>
@@ -44,8 +39,6 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
           )}
         </S.Content>
       </S.UpperCard>
-
-      {/* 카드 중간 */}
       <S.MiddleCard>
         <S.Content>
           {noData ? (
@@ -60,13 +53,10 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
           )}
         </S.Content>
       </S.MiddleCard>
-
-      {/* 카드 하단 */}
-      <Modal
+      <PlaylistModal
         trigger={({ open }) => (
           <S.LowerCard onClick={open}>+ 더보기</S.LowerCard>
         )}
-        modal={<PlaylistModal />}
       />
     </S.Container>
   );

@@ -44,7 +44,6 @@ const StyledContainer = styled.div<{ sticky?: boolean }>`
       z-index: 5;
     `}
   padding: 16px;
-  background-color: black;
   display: flex;
   align-items: center;
   height: 60px;
