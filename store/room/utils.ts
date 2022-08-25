@@ -16,7 +16,7 @@ export function getDurationText(duration: number) {
 }
 
 export const getMusicIndex = (id: number, playlist: Playlist) => {
-  const index = playlist.findIndex((item) => item.id === id);
+  const index = playlist.findIndex((item) => item.playlistItemId === id);
 
   return index === -1 ? 0 : index;
 };

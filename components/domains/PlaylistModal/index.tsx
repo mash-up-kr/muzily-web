@@ -52,8 +52,8 @@ function PlaylistModal() {
   const moveCard = (fromIndex: number, toIndex: number) => {
     changePlaylistOrder({
       playlistId,
-      prevPlaylistItemIdToMove: playlist[toIndex].id,
-      playlistItemId: playlist[fromIndex].id,
+      prevPlaylistItemIdToMove: playlist[toIndex].playlistItemId,
+      playlistItemId: playlist[fromIndex].playlistItemId,
     });
   };
 
@@ -101,14 +101,14 @@ function PlaylistModal() {
             <MusicItemCard
               item={el}
               key={el.videoId}
-              active={el.id === playerState.playingMusicId}
+              active={el.playlistItemId === playerState.playingMusicId}
               deleteMode={deleteMode}
               index={i}
               onClick={() => {
                 if (isHost) {
                   setPlayerState((prev) => ({
                     ...prev,
-                    playingMusicId: el.id,
+                    playingMusicId: el.playlistItemId,
                   }));
                 }
               }}

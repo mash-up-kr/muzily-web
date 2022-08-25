@@ -7,7 +7,6 @@ import styled from "@emotion/styled";
 import Slider from "react-slick";
 import YouTube from "react-youtube";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { NEW_VIDEO_LIST } from "~/assets/dummy";
 import {
   NowPlayingCard,
   PlaylistCard,
@@ -94,13 +93,14 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
 
   const currentMusic = useMemo(
     () =>
-      playlist.find((item) => item.id === playerState.playingMusicId) ||
-      playlist[0],
+      playlist.find(
+        (item) => item.playlistItemId === playerState.playingMusicId
+      ) || playlist[0],
     [playerState.playingMusicId, playlist]
   );
 
   useEffect(() => {
-    actions.init(host ? [] : NEW_VIDEO_LIST, host, "");
+    actions.init(host ? [] : [], host, "");
   }, []);
 
   useEffect(() => {
@@ -200,13 +200,14 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
               setPlayer(event.target);
               setPlayerState((prev) => ({
                 ...prev,
-                playingMusicId: currentMusic.id,
+                playingMusicId: currentMusic.playlistItemId,
               }));
               event.target.playVideo();
             }}
             onEnd={() => {
               if (
-                playerState.playingMusicId === playlist[playlist.length - 1].id
+                playerState.playingMusicId ===
+                playlist[playlist.length - 1].playlistItemId
               ) {
                 return alert("끝!!");
               }

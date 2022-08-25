@@ -145,10 +145,12 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
     // TODO: 통신 진행중일 때 loading UI 추가
     await publishAcceptPlaylistItemRequest({
       playlistId: item.playlistId,
-      playlistItemId: item.id,
+      playlistItemId: item.playlistItemId,
     });
     await setProposedPlaylist(
-      proposedPlaylist.filter((listItem) => listItem.id !== item.id)
+      proposedPlaylist.filter(
+        (listItem) => listItem.playlistItemId !== item.playlistItemId
+      )
     );
     await queryClient.invalidateQueries(queryKeys.pendingPlaylist(playlistId));
   };
@@ -157,7 +159,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
     // TODO: 통신 진행중일 때 loading UI 추가
     await publishDecinePlaylistItemRequest({
       playlistId: item.playlistId,
-      playlistItemId: item.id,
+      playlistItemId: item.playlistItemId,
     });
     await queryClient.invalidateQueries(queryKeys.pendingPlaylist(playlistId));
   };

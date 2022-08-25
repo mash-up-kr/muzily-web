@@ -116,7 +116,7 @@ function MusicItemCard({
       <S.MusicItem key={item.videoId} active={active} onClick={onClick}>
         {deleteMode && (
           <Checkbox
-            onClick={(e) => handleClickCheckButton(e, item.id)}
+            onClick={(e) => handleClickCheckButton(e, item.playlistItemId)}
             color={active ? "blue" : "white"}
             active={checked}
             bgColor={active ? "#007AFF" : "#5EABFF"}

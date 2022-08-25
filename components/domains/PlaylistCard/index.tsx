@@ -23,7 +23,8 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
   const [playlist, setPlaylist] = useRecoilState(playlistAtomState);
 
   const noData = !playlist || playlist.length === 0;
-  const nextMusic = playlist[getMusicIndex(currentMusic?.id, playlist) + 1];
+  const nextMusic =
+    playlist[getMusicIndex(currentMusic?.playlistItemId, playlist) + 1];
 
   return (
     <S.Container>

@@ -2,7 +2,6 @@ import produce from "immer";
 import type { WritableDraft } from "immer/dist/internal";
 import { atom, selector, useRecoilState } from "recoil";
 import type { SetterOrUpdater } from "recoil";
-import { NEW_VIDEO_LIST } from "~/assets/dummy";
 import type { Playlist, PlaylistItem } from "~/types";
 
 export const roomIdAtomState = atom<number>({
@@ -63,7 +62,7 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
   return {
     init(musicData: Playlist, isHost: boolean, mood: string) {
       update((draft) => {
-        draft.proposedMusicList = NEW_VIDEO_LIST;
+        draft.proposedMusicList = [];
         draft.isHost = isHost;
         draft.mood = mood;
       });

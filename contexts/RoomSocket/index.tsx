@@ -84,7 +84,9 @@ const RoomSocketProvider = ({ roomId, children }: Props) => {
 
                 const newList = order.map(
                   (id) =>
-                    _playlist.find((item) => item.id === id) as PlaylistItem
+                    _playlist.find(
+                      (item) => item.playlistItemId === id
+                    ) as PlaylistItem
                 );
 
                 return newList;
@@ -101,7 +103,10 @@ const RoomSocketProvider = ({ roomId, children }: Props) => {
             case "PLAYLIST_ITEM_REMOVE":
               setPlaylist((_playlist) =>
                 _playlist.filter(
-                  (item) => !newMessage.data.playlistItemIds.includes(item.id)
+                  (item) =>
+                    !newMessage.data.playlistItemIds.includes(
+                      item.playlistItemId
+                    )
                 )
               );
               setRemoveList([]);
@@ -135,7 +140,8 @@ const RoomSocketProvider = ({ roomId, children }: Props) => {
             case "PLAYLIST_ITEM_REQUEST_DECLINE":
               setProposedPlaylist((_playlist) => [
                 ..._playlist.filter(
-                  (item) => item.id !== newMessage.data.playlistItemId
+                  (item) =>
+                    item.playlistItemId !== newMessage.data.playlistItemId
                 ),
               ]);
               break;

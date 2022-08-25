@@ -13,7 +13,7 @@ export const proposedPlaylistAtomState = atom<Playlist>({
 });
 
 /**  방장만 확인 가능: 삭제할 곡 목록 */
-export const removeListAtomState = atom<PlaylistItem["id"][]>({
+export const removeListAtomState = atom<PlaylistItem["playlistItemId"][]>({
   key: "remove-list",
   default: [],
 });

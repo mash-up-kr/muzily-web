@@ -1,7 +1,7 @@
 import type { Room } from "../rooms";
 
 export interface PlaylistItem {
-  id: number;
+  playlistItemId: number;
   playlistId: number;
   videoId: string;
   title: string;
@@ -19,7 +19,7 @@ export type PlaylistReponse = {
   roomId: Room["roomId"];
 };
 
-export type AddPlaylistRequestBody = Omit<PlaylistItem, "id">;
+export type AddPlaylistRequestBody = Omit<PlaylistItem, "playlistItemId">;
 
 export type PlaylistItemRequest = {
   playlistId: number;

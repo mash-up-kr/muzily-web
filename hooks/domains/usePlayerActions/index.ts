@@ -15,7 +15,7 @@ export default function usePlayerActions() {
 
     setPlayerState((prev) => ({
       ...prev,
-      playingMusicId: playlist[playingIndex - 1].id,
+      playingMusicId: playlist[playingIndex - 1].playlistItemId,
     }));
   }
 
@@ -27,7 +27,7 @@ export default function usePlayerActions() {
 
     setPlayerState((prev) => ({
       ...prev,
-      playingMusicId: playlist[playingIndex + 1].id,
+      playingMusicId: playlist[playingIndex + 1].playlistItemId,
     }));
   };
 
