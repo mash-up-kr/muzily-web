@@ -32,6 +32,7 @@ const Item = ({ item }: Props) => {
   return (
     <ItemName
       {...(isHost ? {} : { layout: true })}
+      whileDrag={{ cursor: "grabbing" }}
       value={item}
       id={`${item.playlistItemId}`}
       css={css`
@@ -44,6 +45,7 @@ const Item = ({ item }: Props) => {
         align-items: center;
         justify-content: space-between;
         gap: 12px;
+        cursor: ${isHost ? "grab" : "none"};
       `}
       style={{ boxShadow, y }}
     >
