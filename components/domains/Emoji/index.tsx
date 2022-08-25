@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import type { Variant } from "framer-motion";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Book, Heart, MirrorBall } from "~/assets/svgs";
 import { IconButton, Modal, Spacer, LongPress, Toast } from "~/components/uis";
 import { MemberInfo } from "~/contexts";
@@ -72,7 +72,9 @@ const Emoji = () => {
                         intensity: percentage,
                         messageText: "좋아요",
                       });
-                      close();
+                      setTimeout(() => {
+                        close();
+                      }, 10);
                     }}
                     onTooLongPress={() => {
                       Toast.show("4초 안에 이모지를 놓아주세요~", {
@@ -145,6 +147,7 @@ const Emoji = () => {
               </>
             )}
           />
+
           <Watcher />
         </>
       )}
