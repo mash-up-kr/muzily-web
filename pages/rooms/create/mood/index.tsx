@@ -6,39 +6,44 @@ import styled from "@emotion/styled";
 import { AxiosError } from "axios";
 import {
   BottomButton,
+  Layout,
   Spacer,
   TopBar,
   TopBarIconButton,
 } from "~/components/uis";
 import { usePostRoomMutation } from "~/hooks/api";
-import type { Mood, MoodWithImageName } from "~/types/rooms";
+import type { Mood } from "~/types/rooms";
 
-const moodConstants: MoodWithImageName[] = [
+const MOOD_EMOJI_IMAGES = {
+  BOOK: "book-3d",
+  MIRROR_BALL: "mirror-3d",
+  HEART: "heart-3d",
+};
+
+const MOOD_ITEM_LIST: Mood[] = [
   {
     name: "# 조용~ 집중 빡 공부 모드",
     emojiType: "BOOK",
-    emojiTypeImageName: "book-3d",
   },
   {
     name: "# 쉣댓 부레 엉덩이~! 흔들어버려",
     emojiType: "MIRROR_BALL",
-    emojiTypeImageName: "mirror-3d",
   },
   {
     name: "# 잔잔한 내적 댄스 유발",
     emojiType: "HEART",
-    emojiTypeImageName: "heart-3d",
   },
 ];
 
 const RoomCreateMoodPage: NextPage = () => {
   const router = useRouter();
-
-  const [mood, setMood] = useState({} as Mood);
+  const { roomName } = router.query as { roomName: string };
+  const [mood, setMood] = useState(MOOD_ITEM_LIST[0]);
   const [isEdit, setIsEdit] = useState(false);
+  const [isCustomButtonActive, setIsCustomButtonActive] = useState(false);
   const [selectedMood, setSelectedMood] = useState({
-    name: "",
-    emojiType: moodConstants[0].emojiType,
+    name: "", // TODO: API 구현 완료되면 무드 이름도 추가해야 함
+    emojiType: MOOD_ITEM_LIST[0].emojiType,
   } as Mood);
 
   const postRoomMutation = usePostRoomMutation();
@@ -48,8 +53,6 @@ const RoomCreateMoodPage: NextPage = () => {
     if (isEdit && selectedMood) {
       postMoodData = selectedMood;
     }
-
-    const { roomName } = router.query as { roomName: string };
 
     postRoomMutation.mutate(
       {
@@ -72,99 +75,103 @@ const RoomCreateMoodPage: NextPage = () => {
   };
 
   return (
-    <>
-      <TopBar leftIconButton={<TopBarIconButton iconName="arrow-left" />}>
+    <Layout screenColor="linear-gradient(#000, 90%, #01356E)">
+      <TopBar
+        sticky
+        leftIconButton={<TopBarIconButton iconName="arrow-left" />}
+      >
         방 만들기
       </TopBar>
       <S.Container>
         <S.Title>
-          <Image
-            src={`/images/ticket.svg`}
-            alt="icon"
-            width={118}
-            height={38}
-          />
-          &nbsp; 의&nbsp;무드는?
+          <S.Ticket>{roomName}</S.Ticket>의 무드는?
         </S.Title>
         <S.SubTitle>무드에 맞춘 이모지를 제공해드려요!</S.SubTitle>
         <S.ButtonGroup type="vertical" gap={15}>
-          {moodConstants.map((moodConstant) => (
+          {MOOD_ITEM_LIST.map((item) => (
             <S.Button
-              key={moodConstant.name}
+              key={item.name}
               onClick={() => {
                 setIsEdit(false);
-                setMood(moodConstant);
+                setMood(item);
               }}
-              isActive={mood.name === moodConstant.name}
+              isActive={mood.name === item.name}
             >
-              <S.ButtonText>{moodConstant.name}</S.ButtonText>
+              <S.ButtonText>{item.name}</S.ButtonText>
               <Image
-                src={`/images/${moodConstant.emojiTypeImageName}.svg`}
+                src={`/images/${MOOD_EMOJI_IMAGES[item.emojiType]}.svg`}
                 alt="icon"
                 width={56}
                 height={58}
               />
             </S.Button>
           ))}
-          <S.Button
-            key={mood.emojiType}
-            onClick={() => {
-              if (!isEdit) {
-                setSelectedMood({
-                  emojiType: moodConstants[0].emojiType,
-                  name: selectedMood.name,
-                });
-                setMood({
-                  ...selectedMood,
-                  name: "",
-                });
-                setIsEdit(!isEdit);
-              }
-            }}
-            isActive={isEdit}
-          >
-            <S.MoodPrefixText isActive={isEdit}>#</S.MoodPrefixText>
-            <S.MoodInputText
-              placeholder="직접 입력"
-              value={selectedMood.name}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setSelectedMood({
-                  name: e.target.value,
-                  emojiType: selectedMood.emojiType,
-                });
+          {isCustomButtonActive && (
+            <S.Button
+              key={mood.emojiType}
+              onClick={() => {
+                if (!isEdit) {
+                  setMood({
+                    ...selectedMood,
+                    name: "",
+                  });
+                  setIsEdit(!isEdit);
+                }
               }}
               isActive={isEdit}
-            ></S.MoodInputText>
-            <S.MoodGroupContainer>
-              {moodConstants.map((moodConstant) => (
-                <S.MoodSelectedContainer
-                  key={moodConstant.name}
-                  isSelectedMood={
-                    moodConstant.emojiType === selectedMood.emojiType
-                  }
-                >
-                  <Image
-                    src={`/images/${moodConstant.emojiTypeImageName}.svg`}
-                    alt="icon"
-                    width={56}
-                    height={58}
-                    onClick={() => {
-                      if (isEdit) {
-                        setSelectedMood({
-                          name: selectedMood.name,
-                          emojiType: moodConstant.emojiType,
-                        });
-                      }
-                    }}
-                  />
-                </S.MoodSelectedContainer>
-              ))}
-            </S.MoodGroupContainer>
-          </S.Button>
+            >
+              <S.MoodPrefixText isActive={isEdit}>#</S.MoodPrefixText>
+              <S.MoodInputText
+                type="text"
+                placeholder="직접 입력"
+                value={selectedMood.name}
+                onChange={(e) => {
+                  setSelectedMood({
+                    name: e.target.value,
+                    emojiType: selectedMood.emojiType,
+                  });
+                }}
+                isActive={isEdit}
+              ></S.MoodInputText>
+              <S.MoodGroupContainer>
+                {MOOD_ITEM_LIST.map((item) => (
+                  <S.MoodSelectedContainer
+                    key={item.name}
+                    isSelectedMood={item.emojiType === selectedMood.emojiType}
+                  >
+                    <Image
+                      src={`/images/${MOOD_EMOJI_IMAGES[item.emojiType]}.svg`}
+                      alt="icon"
+                      width={56}
+                      height={58}
+                      onClick={() => {
+                        if (isEdit) {
+                          setSelectedMood({
+                            name: selectedMood.name,
+                            emojiType: item.emojiType,
+                          });
+                        }
+                      }}
+                    />
+                  </S.MoodSelectedContainer>
+                ))}
+              </S.MoodGroupContainer>
+            </S.Button>
+          )}
         </S.ButtonGroup>
+        {!isCustomButtonActive && (
+          <S.BottomButton onClick={() => setIsCustomButtonActive(true)}>
+            직접 입력&nbsp;
+            <Image src={`/images/plus.svg`} alt="icon" width={14} height={14} />
+          </S.BottomButton>
+        )}
       </S.Container>
-      <BottomButton label="방 만들기" onClick={onClickCreateRoom} />
-    </>
+      <BottomButton
+        label="방 만들기"
+        onClick={onClickCreateRoom}
+        disabled={selectedMood.name === "" && mood.name === ""}
+      />
+    </Layout>
   );
 };
 
@@ -175,13 +182,45 @@ const S = {
     justify-content: center;
     align-items: center;
     position: relative;
-    height: calc(100% - 104px);
+    height: calc(100% - 124px);
     padding: 20px 16px;
   `,
   Title: styled.h3`
     display: flex;
     align-items: center;
     font-size: 18px;
+  `,
+  Ticket: styled.div`
+    position: relative;
+    min-width: 78px;
+    margin-right: 6px;
+    padding: 8px 16px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 800;
+    color: #fff;
+    &:before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      left: 0;
+      top: 0;
+      width: 74%;
+      height: 100%;
+      border-radius: 6px;
+      background-color: #007aff;
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      right: 0;
+      top: 0;
+      width: 26%;
+      height: 100%;
+      border-radius: 6px;
+      background-color: #007aff;
+    }
   `,
   SubTitle: styled.p`
     margin-top: 17px;
@@ -206,6 +245,17 @@ const S = {
     font-size: 16px;
     font-weight: 700;
   `,
+  BottomButton: styled.button`
+    cursor: pointer;
+    position: absolute;
+    bottom: 30px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: white;
+    background-color: transparent;
+    border: none;
+  `,
   MoodPrefixText: styled.span<{ isActive: boolean }>`
     color: ${(p) => (p.isActive ? "#007AFF" : "white")};
     font-size: 16px;
@@ -227,6 +277,9 @@ const S = {
       font-weight: 700;
       line-height: 19px;
     }
+    :focus {
+      outline: 0;
+    }
   `,
   MoodGroupContainer: styled.div`
     height: 80%;
@@ -235,19 +288,24 @@ const S = {
     justify-content: center;
     align-items: center;
     position: relative;
-    background-color: #f0f0f0;
+    background-color: rgba(0, 0, 0, 0.05);
     border-radius: 16px;
   `,
   MoodSelectedContainer: styled.div<{ isSelectedMood: boolean }>`
     height: 100%;
     width: 100%;
     border-radius: 16px;
-    background-color: ${(p) => (p.isSelectedMood ? "#e2e2e2" : "transparent")};
+    background-color: ${(p) =>
+      p.isSelectedMood ? "rgba(0, 0, 0, 0.07)" : "transparent"};
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     position: relative;
+
+    & img {
+      transform: translateX(-6px);
+    }
   `,
 };
 
