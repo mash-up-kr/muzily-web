@@ -31,6 +31,7 @@ const Item = ({ item }: Props) => {
 
   return (
     <ItemName
+      {...(isHost ? {} : { layout: true })}
       value={item}
       id={`${item.playlistItemId}`}
       css={css`
@@ -86,7 +87,9 @@ const Item = ({ item }: Props) => {
           gap={6}
           style={{ height: 16 }}
         >
-          <S.Title>{item.title}</S.Title>
+          <S.Title>
+            {item.playlistItemId} / {item.title}
+          </S.Title>
           <div>
             {item.playlistItemId === playerState.playingMusicId && (
               <LottieAnimation.Equalizer

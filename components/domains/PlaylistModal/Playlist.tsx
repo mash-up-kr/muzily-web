@@ -1,19 +1,62 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 import { css } from "@emotion/react";
-import { Reorder } from "framer-motion";
-import { useRecoilState } from "recoil";
+import { AnimateSharedLayout, Reorder } from "framer-motion";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { useChangePlaylistOrder } from "~/hooks/webSocket";
 import { playlistAtomState } from "~/store/playlist";
+import { playlistIdAtomState } from "~/store/room";
+import type { PlaylistItem } from "~/types";
 import Item from "./Item";
 
 const Host = () => {
   const [playlist] = useRecoilState(playlistAtomState);
-
   const [localPlaylist, setLocalPlaylist] = useState(playlist);
+  const playlistId = useRecoilValue(playlistIdAtomState);
+
+  const router = useRouter();
+
+  const { roomId } = router.query;
+
+  const { publish } = useChangePlaylistOrder(Number(roomId), {
+    playlistId,
+    playlistItemId: 1,
+    prevPlaylistItemIdToMove: 0,
+  });
 
   return (
     <Reorder.Group
       axis="y"
-      onReorder={setLocalPlaylist}
+      onReorder={(newLocalPlaylist: PlaylistItem[]) => {
+        console.log(
+          "old",
+          localPlaylist.map(({ playlistItemId }) => playlistItemId)
+        );
+        setLocalPlaylist(() => {
+          const { playlistItemId, prevPlaylistItemIdToMove } =
+            newLocalPlaylist.reduce(
+              (prev, { playlistItemId }, index) => {
+                const isDifferent =
+                  localPlaylist[index].playlistItemId !== playlistItemId;
+
+                return isDifferent
+                  ? {
+                      ...prev,
+                      playlistItemId,
+                      prevPlaylistItemIdToMove: index,
+                    }
+                  : prev;
+              },
+              { playlistItemId: 0, prevPlaylistItemIdToMove: 0 }
+            );
+
+          console.log({ playlistItemId, prevPlaylistItemIdToMove });
+
+          publish({ playlistId, playlistItemId, prevPlaylistItemIdToMove });
+
+          return newLocalPlaylist;
+        });
+      }}
       values={localPlaylist}
       css={css`
         display: flex;
@@ -22,7 +65,7 @@ const Host = () => {
         margin: 0 8px;
       `}
     >
-      {playlist.map((item) => (
+      {localPlaylist.map((item) => (
         <Item key={item.playlistItemId} item={item} />
       ))}
     </Reorder.Group>
@@ -33,18 +76,20 @@ const Guest = () => {
   const [playlist] = useRecoilState(playlistAtomState);
 
   return (
-    <div
-      css={css`
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        margin: 0 8px;
-      `}
-    >
-      {playlist.map((item) => (
-        <Item key={item.playlistItemId} item={item} />
-      ))}
-    </div>
+    <AnimateSharedLayout>
+      <div
+        css={css`
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          margin: 0 8px;
+        `}
+      >
+        {playlist.map((item) => (
+          <Item key={item.playlistItemId} item={item} />
+        ))}
+      </div>
+    </AnimateSharedLayout>
   );
 };
 
