@@ -1,8 +1,8 @@
 import produce from "immer";
 import type { WritableDraft } from "immer/dist/internal";
-import { atom, selector, useRecoilState } from "recoil";
+import { atom, useRecoilState } from "recoil";
 import type { SetterOrUpdater } from "recoil";
-import type { Playlist, PlaylistItem } from "~/types";
+import type { EmojiType, Playlist, PlaylistItem } from "~/types";
 
 export const roomIdAtomState = atom<number>({
   key: "roomId",
@@ -30,7 +30,7 @@ export const playerAtomState = atom<PlayerState>({
 interface RoomState {
   proposedMusicList: Playlist;
   isHost: boolean;
-  mood: string;
+  mood: EmojiType;
 }
 
 const roomAtomState = atom<RoomState>({
@@ -43,7 +43,7 @@ const roomAtomState = atom<RoomState>({
     proposedMusicList: [],
 
     // Mood
-    mood: "",
+    mood: "HEART",
   },
 });
 
@@ -60,7 +60,7 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
   };
 
   return {
-    init(musicData: Playlist, isHost: boolean, mood: string) {
+    init(musicData: Playlist, isHost: boolean, mood: EmojiType) {
       update((draft) => {
         draft.proposedMusicList = [];
         draft.isHost = isHost;
@@ -88,7 +88,7 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
       });
     },
 
-    setMood(mood: string) {
+    setMood(mood: EmojiType) {
       update((draft) => {
         draft.mood = mood;
       });

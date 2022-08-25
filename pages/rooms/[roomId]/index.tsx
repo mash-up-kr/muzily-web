@@ -100,7 +100,7 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   );
 
   useEffect(() => {
-    actions.init(host ? [] : [], host, "");
+    actions.init(host ? [] : [], host, "HEART");
   }, []);
 
   useEffect(() => {

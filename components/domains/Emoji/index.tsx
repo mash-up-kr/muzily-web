@@ -2,11 +2,11 @@ import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import type { Variant } from "framer-motion";
 import { motion } from "framer-motion";
-import Heart from "~/assets/svgs/Heart";
+import { Book, Heart, MirrorBall } from "~/assets/svgs";
 import { IconButton, Modal, Spacer, LongPress, Toast } from "~/components/uis";
 import { MemberInfo } from "~/contexts";
-import { useLocalToken } from "~/hooks/domains";
 import { useEmoji } from "~/hooks/webSocket";
+import { useRoomStore } from "~/store";
 import { STAGE } from "./constants";
 import Watcher from "./Watcher";
 
@@ -18,7 +18,9 @@ const Emoji = () => {
     messageText: "좋아요",
   });
 
-  const [localToken] = useLocalToken();
+  const {
+    state: { mood },
+  } = useRoomStore();
 
   return (
     <MemberInfo.Only fallback={<></>}>
@@ -66,13 +68,11 @@ const Emoji = () => {
                     threshold={4000}
                     onPressOut={({ percentage }) => {
                       publish({
-                        emojiType: "HEART",
+                        emojiType: mood,
                         intensity: percentage,
                         messageText: "좋아요",
                       });
-                      setTimeout(() => {
-                        close();
-                      }, 100);
+                      close();
                     }}
                     onTooLongPress={() => {
                       Toast.show("4초 안에 이모지를 놓아주세요~", {
@@ -101,8 +101,15 @@ const Emoji = () => {
                         percentage > STAGE._2_MAX_PERCENTAGE &&
                         percentage < STAGE._3_MAX_PERCENTAGE;
 
+                      const EmojiSVG =
+                        mood === "HEART"
+                          ? Heart
+                          : mood === "BOOK"
+                          ? Book
+                          : MirrorBall;
+
                       return (
-                        <Heart
+                        <EmojiSVG
                           {...register()}
                           initial={{
                             scale: 4,

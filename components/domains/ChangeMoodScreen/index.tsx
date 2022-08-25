@@ -14,16 +14,19 @@ const MOOD_EXAMPLE = [
   {
     text: "# 조용~ 집중 빡 공부 모드",
     iconName: "book-3d",
+    emojiType: "BOOK",
   },
   {
     text: "# 쉣댓 부레 엉덩이~! 흔들어버려",
     iconName: "mirror-3d",
+    emojiType: "MIRROR_BALL",
   },
   {
     text: "# 잔잔한 내적 댄스 유발",
     iconName: "heart-3d",
+    emojiType: "HEART",
   },
-];
+] as const;
 
 interface ChangeMoodScreenProps {
   onClickBackButton: () => void;
@@ -74,8 +77,8 @@ const ChangeMoodScreen = ({
             {MOOD_EXAMPLE.map((v) => (
               <S.Button
                 key={v.text}
-                onClick={() => setMood(v.text)}
-                isActive={mood === v.text}
+                onClick={() => setMood(v.emojiType)}
+                isActive={mood === v.emojiType}
               >
                 <S.ButtonText>{v.text}</S.ButtonText>
                 <Image
