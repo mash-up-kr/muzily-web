@@ -1,21 +1,30 @@
 import { motion } from "framer-motion";
-import Heart from "~/assets/svgs/Heart";
+import { Book, Heart, MirrorBall } from "~/assets/svgs";
+import { useRoomStore } from "~/store";
 
-export const Hearts = ({ stage }: { stage: 1 | 2 | 3 }) => {
+const Emojis = ({ stage }: { stage: 1 | 2 | 3 }) => {
   return (
     <>
       {Array.from({ length: stage === 1 ? 1 : stage === 2 ? 4 : 15 }).map(
         (_, index) => (
-          <Heart3D key={index} stage={1} />
+          <EmojiScaled key={index} stage={1} />
         )
       )}
     </>
   );
 };
 
-export const Heart3D = ({ stage }: { stage: 1 | 2 | 3 }) => {
+export default Emojis;
+
+export const EmojiScaled = ({ stage }: { stage: 1 | 2 | 3 }) => {
+  const {
+    state: { mood },
+  } = useRoomStore();
   const getRandomHalfToFull = () => Math.random() / 4 + 3 / 4;
   const randomMinus = Math.random() > 0.5 ? 1 : -1;
+
+  const EmojiSVG =
+    mood === "HEART" ? Heart : mood === "BOOK" ? Book : MirrorBall;
 
   return (
     <motion.div
@@ -36,7 +45,7 @@ export const Heart3D = ({ stage }: { stage: 1 | 2 | 3 }) => {
       }}
       transition={{ duration: 3 * getRandomHalfToFull() }}
     >
-      <Heart animate={{ scale: stage === 1 ? 0.6 : stage * stage * 0.4 }} />
+      <EmojiSVG animate={{ scale: stage === 1 ? 0.6 : stage * stage * 0.4 }} />
     </motion.div>
   );
 };

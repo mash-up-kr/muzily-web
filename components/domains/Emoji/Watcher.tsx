@@ -4,7 +4,7 @@ import { useRecoilValue } from "recoil";
 import { useTimeout } from "~/hooks/commons";
 import { emojiAtomState } from "~/store/emoji";
 import type { Emoji } from "~/types";
-import { Hearts } from "./heart";
+import Emojis from "./Emojis";
 import { getStage } from "./helpers";
 
 const Watcher = () => {
@@ -55,7 +55,7 @@ const ExposeDurationEmoji = (props: { emoji: Emoji }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <Hearts stage={getStage(emoji.intensity)} />
+          <Emojis stage={getStage(emoji.intensity)} />
         </motion.div>
       )}
     </AnimatePresence>
