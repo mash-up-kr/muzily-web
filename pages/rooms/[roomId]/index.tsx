@@ -11,7 +11,6 @@ import {
   NowPlayingCard,
   PlaylistCard,
   AddSongScreen,
-  MoodScreen,
   Emoji,
 } from "~/components/domains";
 import QRCodeCard from "~/components/domains/QRCodeCard";
@@ -83,8 +82,7 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   const [playerState, setPlayerState] = useRecoilState(playerAtomState);
   const [playlist] = useRecoilState(playlistAtomState);
   const playlistId = useRecoilValue(playlistIdAtomState);
-  const { data: pendingData, isError: pendingDataError } =
-    useGetPlaylistPendingItems(playlistId, isHost);
+  const { data: pendingData } = useGetPlaylistPendingItems(playlistId, isHost);
   const contentRef = useRef<HTMLDivElement>(null);
 
   const { playNextMusic } = usePlayerActions();
@@ -164,8 +162,6 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
             }
           />
           <Actions.Emoji />
-          {/* XXX: User test를 위한 임시값 */}
-          <Actions.ChangeMood value={isHost ? 2 : 0} />
         </Spacer>
       </Spacer>
 
@@ -234,19 +230,6 @@ const Actions = {
     </Spacer>
   ),
   Emoji,
-  ChangeMood: ({ value }: { value: number }) => {
-    return (
-      <Spacer type="vertical" align="center" gap={8}>
-        <Modal
-          trigger={({ open }) => (
-            <IconButton iconName="union" onClick={open} badgeValue={value} />
-          )}
-          modal={({ close }) => <MoodScreen onClickBackButton={close} />}
-        />
-        <S.IconText>무드변경</S.IconText>
-      </Spacer>
-    );
-  },
 };
 
 export default RoomPage;
