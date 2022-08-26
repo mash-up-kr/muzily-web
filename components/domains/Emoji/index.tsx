@@ -68,7 +68,7 @@ const Emoji = () => {
                     threshold={4000}
                     onPressOut={({ percentage }) => {
                       publish({
-                        emojiType: mood,
+                        emojiType: mood.emojiType,
                         intensity: percentage,
                         messageText: "좋아요",
                       });
@@ -104,9 +104,9 @@ const Emoji = () => {
                         percentage < STAGE._3_MAX_PERCENTAGE;
 
                       const EmojiSVG =
-                        mood === "HEART"
+                        mood.emojiType === "HEART"
                           ? Heart
-                          : mood === "BOOK"
+                          : mood.emojiType === "BOOK"
                           ? Book
                           : MirrorBall;
 
