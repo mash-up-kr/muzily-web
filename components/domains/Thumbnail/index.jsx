@@ -1,11 +1,20 @@
 import React from "react";
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
 function Thumbnail({ src, color }) {
   return (
     <StyledContainer>
       <StyledThumbnail>
-        <StyledImage src={src} />
+        <img
+          css={css`
+            object-fit: cover;
+            object-position: center;
+            height: 100%;
+            border-radius: 20px;
+          `}
+          src={src}
+        />
         <StyledGradient color={color} />
       </StyledThumbnail>
 
@@ -38,14 +47,6 @@ const StyledContainer = styled.div`
 const StyledThumbnail = styled.div`
   width: 100%;
   height: 100%;
-`;
-
-const StyledImage = styled.img`
-  object-fit: none;
-  width: 100%;
-  height: 100%;
-  border-radius: 20px;
-  padding-bottom: 50px;
 `;
 
 const StyledGradient = styled.div`

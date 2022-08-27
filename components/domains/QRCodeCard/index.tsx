@@ -40,7 +40,7 @@ function QRCodeCard({ roomId }: QRCodeCardProps) {
 
 const S = {
   Container: styled.div<{ noPlaylist?: boolean }>`
-    height: 50vh;
+    height: 45vh;
     position: relative;
     background: rgba(0, 0, 0, 1);
     border-radius: 20px;

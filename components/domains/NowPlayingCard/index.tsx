@@ -120,7 +120,7 @@ const S = {
   Container: styled.div<{ noPlaylist?: boolean }>`
     cursor: pointer;
     position: relative;
-    height: 50vh;
+    height: 45vh;
 
     background: ${(p) => (p.noPlaylist ? "#007aff" : "#fff")};
     border-radius: 20px;
