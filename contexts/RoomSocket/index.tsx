@@ -89,6 +89,8 @@ const RoomSocketProvider = ({ roomId, children }: Props) => {
                     ) as PlaylistItem
                 );
 
+                console.log("new:", order);
+
                 return newList;
               });
               break;

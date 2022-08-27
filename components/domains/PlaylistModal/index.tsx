@@ -1,85 +1,85 @@
-import React, { useState } from "react";
+import type { ComponentPropsWithoutRef } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import styled from "@emotion/styled";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { TouchBackend } from "react-dnd-touch-backend";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { Layout, TopBar, TopBarIconButton } from "~/components/uis";
-import { useModal } from "~/components/uis/Modal";
-import {
-  useChangePlaylistOrder,
-  useRemovePlaylistItem,
-} from "~/hooks/webSocket";
+import { Layout, Modal, TopBar, TopBarIconButton } from "~/components/uis";
+import { useIsViewedPlaylistItemIds } from "~/hooks/domains";
+import { useRemovePlaylistItem } from "~/hooks/webSocket";
 import { useRoomStore } from "~/store";
-import { playlistAtomState, removeListAtomState } from "~/store/playlist";
-import {
-  playerAtomState,
-  playlistIdAtomState,
-  roomIdAtomState,
-} from "~/store/room";
-import MusicItemCard from "./MusicItemCard";
+import { playlistAtomState } from "~/store/playlist";
+import { playlistIdAtomState } from "~/store/room";
+import { PlaylistContext, usePlaylistContext } from "./context";
+import Playlist from "./Playlist";
 
-function PlaylistModal() {
-  const {
-    state: { isHost },
-    actions,
-  } = useRoomStore();
-  const { close } = useModal();
-
-  const [playerState, setPlayerState] = useRecoilState(playerAtomState);
-  const [playlist, setPlaylist] = useRecoilState(playlistAtomState);
-
-  const roomId = useRecoilValue(roomIdAtomState);
+const PlaylistModal = ({
+  trigger,
+}: {
+  trigger: ComponentPropsWithoutRef<typeof Modal>["trigger"];
+}) => {
+  const [playlist] = useRecoilState(playlistAtomState);
   const playlistId = useRecoilValue(playlistIdAtomState);
 
-  const [deleteMode, setDeleteMode] = useState(false);
-  const [removeList, setRemoveList] = useRecoilState(removeListAtomState);
+  const [isDeletingMode, setIsDeletingMode] = useState(false);
+  const [deletingIds, setDeletingIds] = useState<number[]>([]);
 
-  const { publish: publishRemovePlaylistItemRequest } = useRemovePlaylistItem(
-    roomId,
-    {
-      playlistId: -1,
-      playlistItemIds: [],
-    }
+  useEffect(() => {
+    // setPlaylist in socket
+  }, [playlist]);
+
+  return (
+    <PlaylistContext.Provider
+      value={{
+        isDeletingMode,
+        setIsDeletingMode,
+        deletingIds,
+        setDeletingIds,
+      }}
+    >
+      <Modal trigger={trigger} modal={<ModalContent />} />
+    </PlaylistContext.Provider>
   );
+};
 
-  const { publish: changePlaylistOrder } = useChangePlaylistOrder(roomId, {
+const ModalContent = () => {
+  const {
+    query: { roomId },
+  } = useRouter();
+
+  const { isDeletingMode, setIsDeletingMode, deletingIds, setDeletingIds } =
+    usePlaylistContext();
+
+  const {
+    state: { isHost },
+  } = useRoomStore();
+
+  const [playlist] = useRecoilState(playlistAtomState);
+
+  const { publish: removeItem } = useRemovePlaylistItem(Number(roomId), {
     playlistId: -1,
-    prevPlaylistItemIdToMove: -1,
-    playlistItemId: -1,
+    playlistItemIds: [],
   });
 
-  const moveCard = (fromIndex: number, toIndex: number) => {
-    changePlaylistOrder({
-      playlistId,
-      prevPlaylistItemIdToMove: playlist[toIndex].playlistItemId,
-      playlistItemId: playlist[fromIndex].playlistItemId,
-    });
-  };
+  const playlistId = useRecoilValue(playlistIdAtomState);
 
-  const handleClickDeleteButton = () => {
-    publishRemovePlaylistItemRequest({
-      playlistId,
-      playlistItemIds: removeList,
-    });
-  };
+  useIsViewedPlaylistItemIds.IfUnmount(playlist);
 
   return (
     <Layout screenColor="rgba(0, 0, 0, 0.85)">
       <TopBar
         leftIconButton={
-          <TopBarIconButton iconName="arrow-left" onClick={close} />
+          <Modal.Close as={TopBarIconButton} iconName="arrow-left" />
         }
         rightIconButton={
           isHost ? (
-            deleteMode ? (
-              <S.CancelText onClick={() => setDeleteMode(false)}>
+            isDeletingMode ? (
+              <S.CancelText onClick={() => setIsDeletingMode(false)}>
                 취소
               </S.CancelText>
             ) : (
               <TopBarIconButton
                 iconName="bin"
-                onClick={() => setDeleteMode(true)}
+                onClick={() => setIsDeletingMode(true)}
               />
             )
           ) : (
@@ -87,56 +87,31 @@ function PlaylistModal() {
           )
         }
       >
-        {deleteMode ? "삭제할 음악을 선택해주세요" : "Playlist"}
+        {isDeletingMode ? "삭제할 음악을 선택해주세요" : "Playlist"}
       </TopBar>
+      {isHost ? <Playlist.Host /> : <Playlist.Guest />}
 
-      <DndProvider
-        backend={HTML5Backend}
-        // options={{
-        //   enableMouseEvents: true,
-        // }}
-      >
-        <S.MusicList>
-          {playlist.map((el, i) => (
-            <MusicItemCard
-              item={el}
-              key={el.videoId}
-              active={el.playlistItemId === playerState.playingMusicId}
-              deleteMode={deleteMode}
-              index={i}
-              onClick={() => {
-                if (isHost) {
-                  setPlayerState((prev) => ({
-                    ...prev,
-                    playingMusicId: el.playlistItemId,
-                  }));
-                }
-              }}
-              moveCard={moveCard}
-            />
-          ))}
-        </S.MusicList>
-      </DndProvider>
-
-      {removeList.length ? (
-        <S.DeleteButton onClick={handleClickDeleteButton}>
-          {`${removeList.length}`.padStart(2, "0")} 삭제하기
-        </S.DeleteButton>
+      {isHost && deletingIds.length ? (
+        <Modal.Close
+          as={S.DeleteButton}
+          onClick={() => {
+            removeItem({ playlistId, playlistItemIds: deletingIds });
+            setDeletingIds([]);
+          }}
+        >
+          {`${deletingIds.length}`.padStart(2, "0")} 삭제하기
+        </Modal.Close>
       ) : (
         <></>
       )}
     </Layout>
   );
-}
+};
+
+export default PlaylistModal;
 
 const S = {
-  MusicList: styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-top: 20px;
-    padding: 0 16px;
-  `,
+  MusicList: styled.ul``,
   DeleteButton: styled.button`
     cursor: pointer;
     display: flex;
@@ -170,5 +145,3 @@ const S = {
     color: #7c7c7c;
   `,
 };
-
-export default PlaylistModal;
