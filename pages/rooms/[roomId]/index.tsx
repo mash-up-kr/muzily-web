@@ -20,6 +20,7 @@ import {
   IconButton,
   TopBar,
   TopBarIconButton,
+  Skeleton,
 } from "~/components/uis";
 import RoomSocketProvider from "~/contexts/RoomSocket";
 import { useGetPlaylistPendingItems } from "~/hooks/api";
@@ -59,7 +60,11 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   const router = useRouter();
   const { roomId } = router.query as { roomId: string };
 
-  const { data: roomData, isError } = useRoomQuery(Number(roomId));
+  const {
+    isLoading: isLoadingRoomQuery,
+    data: roomData,
+    isError,
+  } = useRoomQuery(Number(roomId));
 
   const {
     state: { isHost },
@@ -123,42 +128,66 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
             }
           />
           <Spacer type="vertical" gap={8} style={{ paddingLeft: 16 }}>
-            <S.Title>{roomData?.name}</S.Title>
-            <S.Desc>곡을 추가하거나 좋아요를 해보세요!</S.Desc>
+            {isLoadingRoomQuery ? (
+              <>
+                <Skeleton.Box height={36} width={160} />
+                <Skeleton.Paragraph line={2} />
+              </>
+            ) : (
+              <>
+                <S.Title>{roomData?.name}</S.Title>
+                <S.Desc>곡을 추가하거나 좋아요를 해보세요!</S.Desc>
+              </>
+            )}
           </Spacer>
         </Spacer>
+        {isLoadingRoomQuery ? (
+          <div style={{ height: "40vh", margin: "0 16px" }}>
+            <Skeleton.Box height={"40vh"} width={"100%"} />
+          </div>
+        ) : (
+          <S.Slider
+            infinite
+            speed={500}
+            slidesToShow={1}
+            initialSlide={INITIAL_SLIDE_INDEX}
+            adaptiveHeight
+            centerMode
+            beforeChange={(curr, next) => {
+              setCenterIdx(next);
+            }}
+            centerIdx={centerIdx}
+            centerPadding="32px"
+            draggable
+          >
+            <QRCodeCard roomId={roomId} />
+            <NowPlayingCard
+              noPlaylist={!playlist.length}
+              currentMusic={currentMusic}
+              player={player}
+            />
 
-        <S.Slider
-          infinite
-          speed={500}
-          slidesToShow={1}
-          initialSlide={INITIAL_SLIDE_INDEX}
-          adaptiveHeight
-          centerMode
-          beforeChange={(curr, next) => {
-            setCenterIdx(next);
-          }}
-          centerIdx={centerIdx}
-          centerPadding="32px"
-          draggable
-        >
-          <QRCodeCard roomId={roomId} />
-          <NowPlayingCard
-            noPlaylist={!playlist.length}
-            currentMusic={currentMusic}
-            player={player}
-          />
-
-          <PlaylistCard currentMusic={currentMusic} />
-        </S.Slider>
+            <PlaylistCard currentMusic={currentMusic} />
+          </S.Slider>
+        )}
 
         <Spacer justify="center" gap={36} style={{ margin: "0 0 32px 0" }}>
-          <Actions.NewMusic
-            value={
-              isHost && pendingData !== undefined ? pendingData?.length : 0
-            }
-          />
-          <Actions.Emoji />
+          {isLoadingRoomQuery ? (
+            <>
+              <Skeleton.Circle size={72} />
+              <Skeleton.Circle size={72} />
+            </>
+          ) : (
+            <>
+              {" "}
+              <Actions.NewMusic
+                value={
+                  isHost && pendingData !== undefined ? pendingData?.length : 0
+                }
+              />
+              <Actions.Emoji />
+            </>
+          )}
         </Spacer>
       </Spacer>
 

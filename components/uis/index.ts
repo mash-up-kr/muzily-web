@@ -12,3 +12,4 @@ export { default as Spinner } from "./Spinner";
 export { default as Toast } from "./Toast";
 export { default as LongPress } from "./LongPress";
 export { default as Image } from "./Image";
+export { default as Skeleton } from "./Skeleton";
