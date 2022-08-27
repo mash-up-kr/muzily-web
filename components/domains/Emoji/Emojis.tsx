@@ -24,7 +24,11 @@ export const EmojiScaled = ({ stage }: { stage: 1 | 2 | 3 }) => {
   const randomMinus = Math.random() > 0.5 ? 1 : -1;
 
   const EmojiSVG =
-    mood === "HEART" ? Heart : mood === "BOOK" ? Book : MirrorBall;
+    mood.emojiType === "HEART"
+      ? Heart
+      : mood.emojiType === "BOOK"
+      ? Book
+      : MirrorBall;
 
   return (
     <motion.div

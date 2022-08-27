@@ -22,15 +22,15 @@ const MOOD_EMOJI_IMAGES = {
 
 const MOOD_ITEM_LIST: Mood[] = [
   {
-    name: "# 조용~ 집중 빡 공부 모드",
+    moodDescription: "# 조용~ 집중 빡 공부 모드",
     emojiType: "BOOK",
   },
   {
-    name: "# 쉣댓 부레 엉덩이~! 흔들어버려",
+    moodDescription: "# 쉣댓 부레 엉덩이~! 흔들어버려",
     emojiType: "MIRROR_BALL",
   },
   {
-    name: "# 잔잔한 내적 댄스 유발",
+    moodDescription: "# 잔잔한 내적 댄스 유발",
     emojiType: "HEART",
   },
 ];
@@ -42,7 +42,7 @@ const RoomCreateMoodPage: NextPage = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [isCustomButtonActive, setIsCustomButtonActive] = useState(false);
   const [selectedMood, setSelectedMood] = useState({
-    name: "", // TODO: API 구현 완료되면 무드 이름도 추가해야 함
+    moodDescription: "", // TODO: API 구현 완료되면 무드 이름도 추가해야 함
     emojiType: MOOD_ITEM_LIST[0].emojiType,
   } as Mood);
 
@@ -58,6 +58,7 @@ const RoomCreateMoodPage: NextPage = () => {
       {
         name: roomName,
         emojiType: postMoodData.emojiType,
+        moodDescription: postMoodData.moodDescription,
       },
       {
         onSuccess: (data) => {
@@ -90,14 +91,14 @@ const RoomCreateMoodPage: NextPage = () => {
         <S.ButtonGroup type="vertical" gap={15}>
           {MOOD_ITEM_LIST.map((item) => (
             <S.Button
-              key={item.name}
+              key={item.moodDescription}
               onClick={() => {
                 setIsEdit(false);
                 setMood(item);
               }}
-              isActive={mood.name === item.name}
+              isActive={mood.moodDescription === item.moodDescription}
             >
-              <S.ButtonText>{item.name}</S.ButtonText>
+              <S.ButtonText>{item.moodDescription}</S.ButtonText>
               <Image
                 src={`/images/${MOOD_EMOJI_IMAGES[item.emojiType]}.svg`}
                 alt="icon"
@@ -113,7 +114,7 @@ const RoomCreateMoodPage: NextPage = () => {
                 if (!isEdit) {
                   setMood({
                     ...selectedMood,
-                    name: "",
+                    moodDescription: "",
                   });
                   setIsEdit(!isEdit);
                 }
@@ -124,10 +125,10 @@ const RoomCreateMoodPage: NextPage = () => {
               <S.MoodInputText
                 type="text"
                 placeholder="직접 입력"
-                value={selectedMood.name}
+                value={selectedMood.moodDescription}
                 onChange={(e) => {
                   setSelectedMood({
-                    name: e.target.value,
+                    moodDescription: e.target.value,
                     emojiType: selectedMood.emojiType,
                   });
                 }}
@@ -136,7 +137,7 @@ const RoomCreateMoodPage: NextPage = () => {
               <S.MoodGroupContainer>
                 {MOOD_ITEM_LIST.map((item) => (
                   <S.MoodSelectedContainer
-                    key={item.name}
+                    key={item.moodDescription}
                     isSelectedMood={item.emojiType === selectedMood.emojiType}
                   >
                     <Image
@@ -147,7 +148,7 @@ const RoomCreateMoodPage: NextPage = () => {
                       onClick={() => {
                         if (isEdit) {
                           setSelectedMood({
-                            name: selectedMood.name,
+                            moodDescription: selectedMood.moodDescription,
                             emojiType: item.emojiType,
                           });
                         }
@@ -169,7 +170,9 @@ const RoomCreateMoodPage: NextPage = () => {
       <BottomButton
         label="방 만들기"
         onClick={onClickCreateRoom}
-        disabled={selectedMood.name === "" && mood.name === ""}
+        disabled={
+          selectedMood.moodDescription === "" && mood.moodDescription === ""
+        }
       />
     </Layout>
   );

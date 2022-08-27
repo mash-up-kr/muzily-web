@@ -98,7 +98,10 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   );
 
   useEffect(() => {
-    actions.init(host ? [] : [], host, "HEART");
+    actions.init(host ? [] : [], host, {
+      emojiType: "HEART",
+      moodDescription: "",
+    });
   }, []);
 
   useEffect(() => {

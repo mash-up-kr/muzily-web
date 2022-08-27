@@ -1,11 +1,10 @@
 import type { TimeStamp } from "~/types/core";
-import type { EmojiType } from "~/types/emojis";
-import type { Room } from "..";
+import type { Mood, Room } from "..";
 
 /*
     CREATOR : 방장
     GUEST : 손님 (빙 입장된 상태)
-    PendingGuest (null) : 방 입장하지 않은 손님 
+    PendingGuest (null) : 방 입장하지 않은 손님
 */
 export type PendingGuest = null;
 export type Role = "CREATOR" | "GUEST" | PendingGuest;
@@ -13,7 +12,7 @@ export type Role = "CREATOR" | "GUEST" | PendingGuest;
 export interface RoomInvitation extends TimeStamp {
   roomId: Room["roomId"];
   name: string;
-  emojiType: EmojiType;
+  mood: Mood;
   participantsCount: number; // 접속자수
   playListItemsCount: number;
   currentUser: {

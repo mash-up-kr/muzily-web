@@ -1,7 +1,9 @@
 import type { TimeStamp } from "../core";
+import type { Role } from "./invitations";
+import type { Mood } from "./moods";
 
 export interface CurrentUser {
-  role: string;
+  role: Role;
 }
 
 export interface Invitation {
@@ -14,15 +16,11 @@ export interface PlayList {
 
 export interface Room extends TimeStamp {
   roomId: number;
-
   name: string;
-  emojiType: string;
-
+  mood: Mood;
   currentUser: CurrentUser;
   participantsCount: number;
-
   invitation: Invitation;
-
   playlist: PlayList;
 }
 
