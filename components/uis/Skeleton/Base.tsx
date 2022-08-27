@@ -5,9 +5,9 @@ const Base = styled.div`
   ${({ theme }) => css`
     background-image: linear-gradient(
       90deg,
-      ${theme.colors.gray0900} 0px,
-      ${theme.colors.gray0800} 40px,
-      ${theme.colors.gray0900} 80px
+      ${theme.colors.gray1000} 0px,
+      ${theme.colors.gray0900} 40px,
+      ${theme.colors.gray1000} 80px
     );
   `}
 
