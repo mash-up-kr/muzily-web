@@ -1,4 +1,5 @@
 import React from "react";
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { useRecoilState } from "recoil";
 import { playlistAtomState } from "~/store/playlist";
@@ -31,7 +32,13 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
             <S.NoDataText>{NO_DATA_TEXT[0]}</S.NoDataText>
           ) : (
             <>
-              <div>{currentMusic.title}</div>
+              <div
+                css={css`
+                  font-size: 18px;
+                `}
+              >
+                {currentMusic.title}
+              </div>
               <S.Duration>
                 {getDurationText(currentMusic.duration || 0)}
               </S.Duration>
@@ -45,7 +52,13 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
             <S.NoDataText>{NO_DATA_TEXT[1]}</S.NoDataText>
           ) : (
             <>
-              <div>{nextMusic?.title || "-"}</div>
+              <div
+                css={css`
+                  font-size: 18px;
+                `}
+              >
+                {nextMusic?.title || "-"}
+              </div>
               <S.Duration>
                 {getDurationText(nextMusic?.duration || 0)}
               </S.Duration>
@@ -64,8 +77,7 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
 
 const S = {
   Container: styled.div`
-    width: 220px;
-    height: 314px;
+    height: 50vh;
     display: flex;
     flex-direction: column;
     /* flex-shrink: 0; */

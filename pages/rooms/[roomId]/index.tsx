@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import type { NextPage, NextPageContext } from "next";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -55,18 +55,6 @@ RoomPage.getInitialProps = async (ctx: NextPageContext) => {
 
 const INITIAL_SLIDE_INDEX = 1;
 
-const sliderSettings = {
-  infinite: false,
-  speed: 500,
-  slidesToShow: 1,
-  initialSlide: INITIAL_SLIDE_INDEX,
-  adaptiveHeight: true,
-
-  centerPadding: "20%",
-  centerMode: true,
-  arrows: false,
-};
-
 const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   const router = useRouter();
   const { roomId } = router.query as { roomId: string };
@@ -83,7 +71,6 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
   const [playlist] = useRecoilState(playlistAtomState);
   const playlistId = useRecoilValue(playlistIdAtomState);
   const { data: pendingData } = useGetPlaylistPendingItems(playlistId, isHost);
-  const contentRef = useRef<HTMLDivElement>(null);
 
   const { playNextMusic } = usePlayerActions();
 
@@ -139,24 +126,29 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
           <S.Desc>곡을 추가하거나 좋아요를 해보세요!</S.Desc>
         </S.Header>
 
-        <S.ContentWrapper ref={contentRef}>
-          <S.Slider
-            {...sliderSettings}
-            beforeChange={(curr, next) => {
-              setCenterIdx(next);
-            }}
-            centerIdx={centerIdx}
-          >
-            <QRCodeCard roomId={roomId} />
-            <NowPlayingCard
-              noPlaylist={!playlist.length}
-              currentMusic={currentMusic}
-              player={player}
-            />
+        <S.Slider
+          infinite
+          speed={500}
+          slidesToShow={1}
+          initialSlide={INITIAL_SLIDE_INDEX}
+          adaptiveHeight
+          centerMode
+          beforeChange={(curr, next) => {
+            setCenterIdx(next);
+          }}
+          centerIdx={centerIdx}
+          centerPadding="32px"
+          draggable
+        >
+          <QRCodeCard roomId={roomId} />
+          <NowPlayingCard
+            noPlaylist={!playlist.length}
+            currentMusic={currentMusic}
+            player={player}
+          />
 
-            <PlaylistCard currentMusic={currentMusic} />
-          </S.Slider>
-        </S.ContentWrapper>
+          <PlaylistCard currentMusic={currentMusic} />
+        </S.Slider>
 
         <Spacer justify="center" gap={36} style={{ margin: "0 0 32px 0" }}>
           <Actions.NewMusic
@@ -258,7 +250,6 @@ const S = {
     display: flex;
     align-items: center;
     gap: 20px;
-    overflow-x: auto;
     width: 100%;
     ::-webkit-scrollbar {
       display: none; /* Chrome, Safari, Opera*/
@@ -278,8 +269,15 @@ const S = {
   `,
   Slider: styled(Slider)<{ centerIdx: number }>`
     width: 100%;
-
+    height: 80%;
+    margin-top: 10%;
     .slick-list {
+      height: 100% !important;
+      overflow: visible;
+    }
+
+    .slick-track {
+      height: 100%;
     }
 
     .slick-slide {
@@ -287,16 +285,17 @@ const S = {
       z-index: 0;
     }
     .slick-slide[data-index="${(p) => p.centerIdx - 1}"] {
-      transform: rotate(10deg);
-      z-index: 999;
+      transform: rotate(5deg);
     }
 
     .slick-slide[data-index="${(p) => p.centerIdx}"] {
       transform: rotate(0);
+      filter: drop-shadow(0 0 48px rgba(0, 0, 0, 0.5));
     }
 
     .slick-slide[data-index="${(p) => p.centerIdx + 1}"] {
-      transform: rotate(-20deg);
+      transform: rotate(-5deg);
+      filter: drop-shadow(0 0 48px rgba(0, 0, 0, 0.5));
     }
   `,
 };

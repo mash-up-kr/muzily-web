@@ -70,7 +70,7 @@ const WebShareButton = ({
 
 const StyledButton = styled.button`
   width: 100%;
-  height: 66.96px;
+  height: 76px;
   border: 2px solid rgba(255, 255, 255, 0.11);
   border-radius: 20px;
 

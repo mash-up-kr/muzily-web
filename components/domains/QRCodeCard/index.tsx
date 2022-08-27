@@ -40,35 +40,36 @@ function QRCodeCard({ roomId }: QRCodeCardProps) {
 
 const S = {
   Container: styled.div<{ noPlaylist?: boolean }>`
+    height: 50vh;
     position: relative;
-    width: 220px;
-    height: 314px;
-
     background: rgba(0, 0, 0, 1);
     border-radius: 20px;
+    display: flex;
+    flex-direction: column;
 
     /* flex-shrink: 0; */
   `,
 
   UpContainer: styled.div<{ noPlaylist?: boolean }>`
+    flex: 1;
     position: relative;
-    width: 220px;
-    height: 240px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
 
     background: ${(p) => (p.noPlaylist ? "#007aff" : "#fff")};
     border-radius: 20px;
     padding: 20px;
-
-    flex-shrink: 0;
-    margin-bottom: 5px;
   `,
 
   Title: styled.span`
     font-weight: 800;
-    font-size: 14px;
+    font-size: 24px;
     line-height: 17px;
     letter-spacing: -0.452636px;
-    color: #7c7c7c;
+    color: #cccccc;
   `,
 };
 
