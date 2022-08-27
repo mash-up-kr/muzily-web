@@ -89,7 +89,13 @@ const Item = ({ item }: Props) => {
           gap={6}
           style={{ height: 16 }}
         >
-          <S.Title>
+          <S.Title
+            css={css`
+              color: ${item.playlistItemId === playerState.playingMusicId
+                ? "#007aff"
+                : "inherit"};
+            `}
+          >
             {item.playlistItemId} / {item.title}
           </S.Title>
           <div>
