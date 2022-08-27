@@ -81,6 +81,7 @@ const Item = ({ item, onClick }: Props) => {
         height={74}
         lazy
         mode="cover"
+        placeholder="/images/play.svg"
       />
       <Spacer
         type="vertical"
