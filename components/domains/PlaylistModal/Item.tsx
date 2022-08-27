@@ -1,7 +1,12 @@
 import type { ComponentPropsWithRef } from "react";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
-import { motion, Reorder, useMotionValue } from "framer-motion";
+import {
+  motion,
+  Reorder,
+  useDragControls,
+  useMotionValue,
+} from "framer-motion";
 import { useRecoilState } from "recoil";
 import { Image, Spacer } from "~/components/uis";
 import LottieAnimation from "~/components/uis/LottieAnimation";
@@ -19,6 +24,7 @@ type Props = {
 };
 
 const Item = ({ item, onClick }: Props) => {
+  const controls = useDragControls();
   const { isViewedPlaylistItemIds } = useIsViewedPlaylistItemIds();
 
   const isNew = !isViewedPlaylistItemIds[item.playlistItemId.toString()];
@@ -40,6 +46,8 @@ const Item = ({ item, onClick }: Props) => {
   return (
     <Component
       {...(isHost ? {} : { layout: true })}
+      dragListener={false}
+      dragControls={controls}
       whileDrag={{ cursor: "grabbing" }}
       value={item}
       id={`${item.playlistItemId}`}
@@ -149,7 +157,42 @@ const Item = ({ item, onClick }: Props) => {
           {getDurationText(item.duration || 0)}
         </div>
       </Spacer>
-      {isHost && <Grabber />}
+      {isHost && (
+        <motion.div
+          className="reorder-handle"
+          onTapStart={(e) => controls.start(e)}
+          css={css`
+            touch-action: none;
+            height: 36px;
+            width: 46px;
+            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+          `}
+          style={{ cursor: "grab" }}
+        >
+          <div
+            css={css`
+              height: 3px;
+              background-color: rgba(255, 255, 255, 0.14);
+              width: 24px;
+              border-radius: 999px;
+            `}
+          />
+          <div
+            css={css`
+              height: 3px;
+              background-color: rgba(255, 255, 255, 0.1);
+              width: 24px;
+              border-radius: 999px;
+            `}
+          />
+        </motion.div>
+      )}
     </Component>
   );
 };
@@ -163,37 +206,3 @@ const S = {
 };
 
 export default Item;
-
-const Grabber = () => (
-  <div
-    css={css`
-      height: 36px;
-      width: 46px;
-      border-radius: 12px;
-      background-color: rgba(255, 255, 255, 0.08);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 4px;
-    `}
-    style={{ cursor: "grab" }}
-  >
-    <div
-      css={css`
-        height: 3px;
-        background-color: rgba(255, 255, 255, 0.14);
-        width: 24px;
-        border-radius: 999px;
-      `}
-    />
-    <div
-      css={css`
-        height: 3px;
-        background-color: rgba(255, 255, 255, 0.1);
-        width: 24px;
-        border-radius: 999px;
-      `}
-    />
-  </div>
-);
