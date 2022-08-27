@@ -1,9 +1,9 @@
 import React from "react";
 import type { NextPage } from "next";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import axios from "axios";
 import { useQuery } from "react-query";
+import Emojis from "~/components/domains/Emoji/Emojis";
 import { Spinner } from "~/components/uis";
 import { MemberInfo } from "~/contexts";
 import { useLocalToken } from "~/hooks/domains";
@@ -66,13 +66,11 @@ const LoginRedirectedPage: NextPage = () => {
       <MemberInfo.Only fallback={<Spinner.FullPage />}>
         {({ memberInfo }) => (
           <>
+            <Emojis stage={3} />
             {memberInfo.accountConnectType === "UNCONNECTED" ? (
               <GetServiceToken />
             ) : (
-              <div>
-                {memberInfo.nickname}님이 연결 되었습니다.
-                {memberInfo.profileUrl && <Image src={memberInfo.profileUrl} />}
-              </div>
+              <></>
             )}
           </>
         )}
