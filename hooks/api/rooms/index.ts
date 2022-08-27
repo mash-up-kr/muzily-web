@@ -2,6 +2,7 @@ import { useQueryClient } from "react-query";
 import { useSetRecoilState } from "recoil";
 import { getPlaylist } from "~/api/playlist";
 import { deleteRoom, getRoom, getRooms, postRooms, putRoom } from "~/api/room";
+import { Toast } from "~/components/uis";
 import { queryKeys } from "~/consts/react-query";
 import { playlistAtomState } from "~/store/playlist";
 import { playlistIdAtomState, roomIdAtomState } from "~/store/room";
@@ -37,6 +38,22 @@ export const useRoomQuery = (roomId: Room["roomId"]) => {
         setRoomId(data.roomId);
         setPlaylistId(data.playlist.playlistId);
       },
+      onError: (error) => {
+        Toast.show("방에 입장할 수 없어요", {
+          status: "error",
+          duration: 10000,
+        });
+        setTimeout(() => {
+          Toast.show(
+            "방에 입장하려면 친구에게 QR코드나 초대링크를 받아 입장하세요",
+            {
+              status: "info",
+              duration: 10000,
+            }
+          );
+        }, 1400);
+      },
+      retry: 1,
     }
   );
 };

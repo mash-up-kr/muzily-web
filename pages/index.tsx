@@ -8,12 +8,11 @@ import { withRouteGuard } from "~/hocs";
 import { useRoomsQuery } from "~/hooks/api";
 
 const HomePage: NextPage = withRouteGuard(
-  { UNCONNECTED: false, CONNECTED: true },
+  { UNCONNECTED: true, CONNECTED: true },
   "/login",
   () => {
     const [isOpenLine2, setIsOpenLine2] = useState(false);
     const [isOpenCTA, setIsOpenCTA] = useState(false);
-    const [roomTitle, setRoomTitle] = useState("");
     const router = useRouter();
 
     const { data, isLoading, isFetching, isError } = useRoomsQuery();
