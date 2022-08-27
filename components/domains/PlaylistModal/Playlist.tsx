@@ -3,7 +3,10 @@ import { useRouter } from "next/router";
 import { css } from "@emotion/react";
 import { AnimateSharedLayout, Reorder } from "framer-motion";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { useChangePlaylistOrder } from "~/hooks/webSocket";
+import {
+  useChangePlaylistOrder,
+  useUpdatePlayerState,
+} from "~/hooks/webSocket";
 import { playlistAtomState } from "~/store/playlist";
 import { playlistIdAtomState } from "~/store/room";
 import type { PlaylistItem } from "~/types";
@@ -23,6 +26,10 @@ const Host = () => {
     playlistItemId: 1,
     prevPlaylistItemIdToMove: 0,
   });
+
+  const { publish: publishUpdatePlayerState } = useUpdatePlayerState(
+    Number(roomId)
+  );
 
   return (
     <Reorder.Group
@@ -65,9 +72,23 @@ const Host = () => {
         margin: 0 8px;
       `}
     >
-      {localPlaylist.map((item) => (
-        <Item key={item.playlistItemId} item={item} />
-      ))}
+      {localPlaylist.map((item) => {
+        const { playlistId, playlistItemId } = item;
+
+        return (
+          <Item
+            key={item.playlistItemId}
+            item={item}
+            onClick={() => {
+              publishUpdatePlayerState({
+                playlistId,
+                playlistItemId,
+                playStatus: "PLAY",
+              });
+            }}
+          />
+        );
+      })}
     </Reorder.Group>
   );
 };

@@ -1,9 +1,11 @@
+import type { ComponentPropsWithRef } from "react";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { motion, Reorder, useMotionValue } from "framer-motion";
 import { useRecoilState } from "recoil";
 import { Image, Spacer } from "~/components/uis";
 import LottieAnimation from "~/components/uis/LottieAnimation";
+import { useIsViewedPlaylistItemIds } from "~/hooks/domains";
 import { useRoomStore } from "~/store";
 import { playerAtomState } from "~/store/room";
 import { getDurationText } from "~/store/room/utils";
@@ -13,24 +15,30 @@ import { useRaisedShadow } from "./hooks";
 
 type Props = {
   item: PlaylistItem;
+  onClick?: ComponentPropsWithRef<typeof Reorder.Item>["onClick"];
 };
 
-const Item = ({ item }: Props) => {
+const Item = ({ item, onClick }: Props) => {
+  const { isViewedPlaylistItemIds } = useIsViewedPlaylistItemIds();
+
+  const isNew = !isViewedPlaylistItemIds[item.playlistItemId.toString()];
+
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
 
   const {
     state: { isHost },
   } = useRoomStore();
-  const { isDeletingMode, deletingIds, setDeletingIds, setIsDeletingMode } =
-    usePlaylistContext();
+  const { isDeletingMode, deletingIds, setDeletingIds } = usePlaylistContext();
 
   const [playerState] = useRecoilState(playerAtomState);
 
-  const ItemName = isHost ? Reorder.Item : motion.div;
+  const isPlayingMusic = item.playlistItemId === playerState.playingMusicId;
+
+  const Component = isHost ? Reorder.Item : motion.div;
 
   return (
-    <ItemName
+    <Component
       {...(isHost ? {} : { layout: true })}
       whileDrag={{ cursor: "grabbing" }}
       value={item}
@@ -39,28 +47,30 @@ const Item = ({ item }: Props) => {
         display: flex;
         padding: 16px;
         border-radius: 16px;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: ${isPlayingMusic
+          ? "rgba(255, 255, 255, 0.1)"
+          : "rgba(0, 0, 0, 0.5)"};
         border: 1px solid rgba(255, 255, 255, 0.1);
         height: 90px;
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        cursor: ${isHost ? "grab" : "none"};
+        filter: ${isPlayingMusic ? "drop-shadow(0 0 16px #007bff8d)" : ""};
+        transition: background-color 300ms;
       `}
-      style={{ boxShadow, y }}
+      style={{ boxShadow, y, cursor: "pointer" }}
+      onClick={onClick}
     >
       {isDeletingMode && (
         <input
           defaultChecked={deletingIds.includes(item.playlistItemId)}
           type="checkbox"
           onChange={(e) =>
-            e.target.checked
-              ? setDeletingIds((prev) => [...prev, item.playlistItemId])
-              : setDeletingIds((prev) =>
-                  prev.filter(
-                    (existingId) => existingId !== item.playlistItemId
-                  )
-                )
+            setDeletingIds((ids) =>
+              e.target.checked
+                ? [...ids, item.playlistItemId]
+                : ids.filter((id) => id !== item.playlistItemId)
+            )
           }
         />
       )}
@@ -70,10 +80,7 @@ const Item = ({ item }: Props) => {
         width={74}
         height={74}
         lazy
-        mode="contain"
-        css={css`
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        `}
+        mode="cover"
       />
       <Spacer
         type="vertical"
@@ -82,120 +89,110 @@ const Item = ({ item }: Props) => {
           flex: 1;
         `}
       >
-        <Spacer
-          type="horizontal"
-          align="center"
-          justify="flex-start"
-          gap={6}
-          style={{ height: 16 }}
+        <S.Title
+          css={css`
+            width: 100%;
+            color: ${isPlayingMusic ? "#ffffff" : "#ffffff8a"};
+            font-size: 14px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            word-break: break-word;
+            -webkit-line-clamp: 2; // 원하는 라인수
+            -webkit-box-orient: vertical;
+            filter: ${isPlayingMusic
+              ? "drop-shadow(0 0 4px #007aff) drop-shadow(0 0 1px #007aff)"
+              : "#ffffff8a"};
+            transition: color 500ms;
+          `}
+          style={{ position: "relative" }}
         >
-          <S.Title
-            css={css`
-              color: ${item.playlistItemId === playerState.playingMusicId
-                ? "#007aff"
-                : "inherit"};
-            `}
-          >
-            {item.playlistItemId} / {item.title}
-          </S.Title>
-          <div>
-            {item.playlistItemId === playerState.playingMusicId && (
+          {isNew && (
+            <>
+              <span
+                css={css`
+                  font-size: 9px;
+                  background-color: #007aff;
+                  border-radius: 4px;
+                  padding: 2px 4px;
+                  color: white;
+                `}
+              >
+                New
+              </span>
+              {"  "}
+            </>
+          )}
+          {item.playlistItemId} / {item.title}{" "}
+          {isPlayingMusic && (
+            <span
+              style={{ width: 30, height: 20, position: "absolute", bottom: 3 }}
+            >
               <LottieAnimation.Equalizer
                 height={20}
                 width={30}
                 color="blue"
                 isPaused={!playerState.isPlaying}
               />
-            )}
-          </div>
-        </Spacer>
-        <S.Duration>{getDurationText(item.duration || 0)}</S.Duration>
-      </Spacer>
-      {isHost && (
+            </span>
+          )}
+        </S.Title>
         <div
           css={css`
-            height: 36px;
-            width: 46px;
-            border-radius: 12px;
-            background-color: rgba(255, 255, 255, 0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 4px;
+            font-weight: 400;
+            font-size: 12px;
+            color: ${isPlayingMusic
+              ? "rgba(255, 255, 255, 0.74)"
+              : "rgba(74, 74, 74, 0.74)"};
           `}
         >
-          <div
-            css={css`
-              height: 3px;
-              background-color: white;
-              width: 24px;
-              border-radius: 999px;
-            `}
-          />
-          <div
-            css={css`
-              height: 3px;
-              background-color: white;
-              width: 24px;
-              border-radius: 999px;
-            `}
-          />
+          {getDurationText(item.duration || 0)}
         </div>
-      )}
-    </ItemName>
+      </Spacer>
+      {isHost && <Grabber />}
+    </Component>
   );
 };
 
 const S = {
-  MusicItem: styled.div`
-    background-color: #007aff;
-
-    cursor: pointer;
-    flex: 1;
-    padding: 16px 18px;
-    gap: 16px;
-    border-radius: 7px;
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-
-    display: flex;
-    align-items: center;
-  `,
-
   Title: styled.div`
     font-weight: 600;
     font-size: 14px;
     text-align: left;
   `,
-
-  Duration: styled.div`
-    font-weight: 400;
-    font-size: 12px;
-    color: rgba(74, 74, 74, 0.74);
-  `,
-
-  Kebab: styled.div`
-    cursor: pointer;
-    background-color: #fff;
-    border-radius: 7px;
-    width: 64px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* width: 100%;
-    height: 100%; */
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  `,
-
-  Checkbox: styled.div`
-    width: 24px;
-    height: 24px;
-    display: grid;
-    place-items: center;
-    background-color: blue;
-    border-radius: 50%;
-  `,
 };
 
 export default Item;
+
+const Grabber = () => (
+  <div
+    css={css`
+      height: 36px;
+      width: 46px;
+      border-radius: 12px;
+      background-color: rgba(255, 255, 255, 0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+    `}
+    style={{ cursor: "grab" }}
+  >
+    <div
+      css={css`
+        height: 3px;
+        background-color: rgba(255, 255, 255, 0.14);
+        width: 24px;
+        border-radius: 999px;
+      `}
+    />
+    <div
+      css={css`
+        height: 3px;
+        background-color: rgba(255, 255, 255, 0.1);
+        width: 24px;
+        border-radius: 999px;
+      `}
+    />
+  </div>
+);
