@@ -50,7 +50,9 @@ const Host = () => {
                   ? {
                       ...prev,
                       playlistItemId,
-                      prevPlaylistItemIdToMove: index,
+                      prevPlaylistItemIdToMove:
+                        newLocalPlaylist[index - 1 < 0 ? index : index - 1]
+                          .playlistItemId,
                     }
                   : prev;
               },
