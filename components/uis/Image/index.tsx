@@ -24,6 +24,7 @@ interface Props {
   height?: number;
   alt?: string;
   mode?: "cover" | "fill" | "contain";
+  placeholder?: string;
   [x: string]: any;
 }
 
