@@ -305,7 +305,7 @@ function parseYoutubeIdFromLink(link: string) {
     }
 
     if (pathname === "/watch") {
-      return search.split("?v=")[1];
+      return search.split("&")[0].split("?v=")[1];
     }
 
     return pathname.slice(1);
