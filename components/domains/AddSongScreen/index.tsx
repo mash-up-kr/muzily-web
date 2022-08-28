@@ -8,6 +8,8 @@ import {
   BottomButton,
   Layout,
   Spacer,
+  Spinner,
+  Toast,
   TopBar,
   TopBarIconButton,
 } from "~/components/uis";
@@ -55,6 +57,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
   const [youtubeId, setYoutubeId] = useState("");
   const [isValid, setIsValid] = useState(false);
   const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const queryClient = useQueryClient();
   const [proposedPlaylist, setProposedPlaylist] = useRecoilState(
     proposedPlaylistAtomState
@@ -110,6 +113,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
 
   const handleSubmit = async () => {
     try {
+      setIsLoading(true);
       const res = await axios.get(
         `${defaultEndPoint}/search/v1/youtube/video?videoId=${youtubeId}`
       );
@@ -131,18 +135,31 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
 
       if (isHost) {
         await publishAddPlaylist(playlistItem);
+        Toast.show(<Spacer>곡이 성공적으로 추가되었습니다</Spacer>, {
+          duration: 3000,
+        });
       } else {
         await publishSendPlaylistRequest(playlistItem);
+        Toast.show(<Spacer>곡이 성공적으로 신청되었습니다</Spacer>, {
+          duration: 3000,
+        });
       }
 
+      setIsLoading(false);
       close();
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
+      alert(error.response.data.message);
+      // MEMO(@Young-mason): 모달 위에서 Toast가 안뜨는 문제 있어서, 우선 alert 으로 대체하였음
+      // Toast.show(<Spacer>{error.response.data.message}</Spacer>, {
+      //   duration: 3000,
+      // });
+      setIsLoading(false);
     }
   };
 
   const handleAcceptPlaylist = async (item: PlaylistItem) => {
-    // TODO: 통신 진행중일 때 loading UI 추가
+    setIsLoading(true);
     await publishAcceptPlaylistItemRequest({
       playlistId: item.playlistId,
       playlistItemId: item.playlistItemId,
@@ -153,15 +170,17 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
       )
     );
     await queryClient.invalidateQueries(queryKeys.pendingPlaylist(playlistId));
+    setIsLoading(false);
   };
 
   const handleDeclinePlaylist = async (item: PlaylistItem) => {
-    // TODO: 통신 진행중일 때 loading UI 추가
+    setIsLoading(true);
     await publishDecinePlaylistItemRequest({
       playlistId: item.playlistId,
       playlistItemId: item.playlistItemId,
     });
     await queryClient.invalidateQueries(queryKeys.pendingPlaylist(playlistId));
+    setIsLoading(false);
   };
 
   return (
@@ -208,11 +227,6 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
                   setIsError(true);
                 }}
                 onReady={(e) => {
-                  const data = e.target.getVideoData();
-                  console.log(
-                    "🚀 ~ file: index.tsx ~ line 124 ~ AddSongScreen ~ data",
-                    data
-                  );
                   const videoId = e.target.getVideoData().video_id;
                   if (videoId) {
                     setIsValid(true);
@@ -266,6 +280,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
           disabled={!isValid}
         />
       </Spacer>
+      {isLoading && <Spinner.FullPage />}
     </Layout>
   );
 }
