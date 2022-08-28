@@ -21,11 +21,7 @@ const Host = () => {
 
   const { roomId } = router.query;
 
-  const { publish } = useChangePlaylistOrder(Number(roomId), {
-    playlistId,
-    playlistItemId: 1,
-    prevPlaylistItemIdToMove: 0,
-  });
+  const { publish } = useChangePlaylistOrder(Number(roomId));
 
   const { publish: publishUpdatePlayerState } = useUpdatePlayerState(
     Number(roomId)

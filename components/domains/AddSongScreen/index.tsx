@@ -65,35 +65,13 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
   const roomId = useRecoilValue(roomIdAtomState);
   const playlistId = useRecoilValue(playlistIdAtomState);
   const { data } = useGetPlaylistPendingItems(playlistId, isHost);
-  const { publish: publishAddPlaylist } = useAddPlaylistItemRequest(roomId, {
-    playlistId,
-    videoId: "",
-    title: "",
-    duration: -1,
-    thumbnail: "",
-    dominantColor: "",
-  });
-  const { publish: publishSendPlaylistRequest } = useSendPlaylistItemRequest(
-    roomId,
-    {
-      playlistId,
-      videoId: "",
-      title: "",
-      duration: -1,
-      thumbnail: "",
-      dominantColor: "",
-    }
-  );
+  const { publish: publishAddPlaylist } = useAddPlaylistItemRequest(roomId);
+  const { publish: publishSendPlaylistRequest } =
+    useSendPlaylistItemRequest(roomId);
   const { publish: publishAcceptPlaylistItemRequest } =
-    useAcceptPlaylistItemRequest(roomId, {
-      playlistId: -1,
-      playlistItemId: -1,
-    });
+    useAcceptPlaylistItemRequest(roomId);
   const { publish: publishDecinePlaylistItemRequest } =
-    useDeclinePlaylistItemRequest(roomId, {
-      playlistId: -1,
-      playlistItemId: -1,
-    });
+    useDeclinePlaylistItemRequest(roomId);
 
   useEffect(() => {
     if (data !== undefined) {

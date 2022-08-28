@@ -12,19 +12,8 @@ const SocketTestContentPage: NextPage = () => {
   const emoji = useRecoilValue(emojiAtomState);
   const playlist = useRecoilValue(playlistAtomState);
   const proposedPlaylist = useRecoilValue(proposedPlaylistAtomState);
-  const { publish: publishEmoji } = useEmoji(ROOM_ID, {
-    emojiType: "HEART",
-    intensity: 100,
-    messageText: "test",
-  });
-  const { publish: publishPlaylist } = useAddPlaylistItemRequest(ROOM_ID, {
-    playlistId: ROOM_ID,
-    videoId: "LqfimuFAFJ8",
-    title: "라일락",
-    duration: 229,
-    thumbnail: "https://i.ytimg.com/vi/LqfimuFAFJ8/maxresdefault.jpg",
-    dominantColor: "#FFFFFF",
-  });
+  const { publish: publishEmoji } = useEmoji(ROOM_ID);
+  const { publish: publishPlaylist } = useAddPlaylistItemRequest(ROOM_ID);
   useEffect(() => {
     console.log("emoji", emoji);
     console.log("playlist", playlist);
@@ -34,9 +23,32 @@ const SocketTestContentPage: NextPage = () => {
   return (
     <div>
       <h2>확인 방법: 버튼을 눌렀을 때 console.log 값 나오는거 확인</h2>
-      <button onClick={() => publishEmoji()}>이모지 날리기</button>
+      <button
+        onClick={() =>
+          publishEmoji({
+            emojiType: "HEART",
+            intensity: 100,
+            messageText: "test",
+          })
+        }
+      >
+        이모지 날리기
+      </button>
       <br />
-      <button onClick={() => publishPlaylist()}>플레이리스트 추가하기</button>
+      <button
+        onClick={() =>
+          publishPlaylist({
+            playlistId: ROOM_ID,
+            videoId: "LqfimuFAFJ8",
+            title: "라일락",
+            duration: 229,
+            thumbnail: "https://i.ytimg.com/vi/LqfimuFAFJ8/maxresdefault.jpg",
+            dominantColor: "#FFFFFF",
+          })
+        }
+      >
+        플레이리스트 추가하기
+      </button>
     </div>
   );
 };

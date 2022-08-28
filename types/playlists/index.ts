@@ -25,3 +25,8 @@ export type PlaylistItemRequest = {
   playlistId: number;
   playlistItemId: number;
 };
+
+export type RemovePlaylistItemRequest = {
+  playlistId: number;
+  playlistItemIds: number[];
+};

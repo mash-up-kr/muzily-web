@@ -55,10 +55,7 @@ const ModalContent = () => {
 
   const [playlist] = useRecoilState(playlistAtomState);
 
-  const { publish: removeItem } = useRemovePlaylistItem(Number(roomId), {
-    playlistId: -1,
-    playlistItemIds: [],
-  });
+  const { publish: removeItem } = useRemovePlaylistItem(Number(roomId));
 
   const playlistId = useRecoilValue(playlistIdAtomState);
 

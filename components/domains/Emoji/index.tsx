@@ -12,11 +12,7 @@ import Watcher from "./Watcher";
 
 const Emoji = () => {
   const { query } = useRouter();
-  const { publish } = useEmoji(Number(query.roomId), {
-    emojiType: "HEART",
-    intensity: 100,
-    messageText: "좋아요",
-  });
+  const { publish } = useEmoji(Number(query.roomId));
 
   const {
     state: { mood },
