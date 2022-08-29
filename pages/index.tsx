@@ -44,7 +44,8 @@ const HomePage: NextPage = withRouteGuard(
                     "# 여행에서 친구와",
                     "# 팀플에서 팀원과",
                   ]}
-                  typingTime={100}
+                  typingTime={50}
+                  typingEndDelay={1300}
                   style={{
                     fontSize: 27,
                     background: "#333333",
