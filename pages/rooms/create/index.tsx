@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -11,6 +11,7 @@ import {
   TopBarIconButton,
 } from "~/components/uis";
 import { withRouteGuard } from "~/hocs";
+import { useRoomsQuery } from "~/hooks/api";
 
 const RoomCreatePage: NextPage = withRouteGuard(
   { CONNECTED: true },
@@ -24,41 +25,56 @@ const RoomCreatePage: NextPage = withRouteGuard(
         query: { roomName: value },
       });
     };
+    const roomsQuery = useRoomsQuery();
 
-    return (
-      <Layout screenColor="linear-gradient(#000, 90%, #01356E)">
-        <TopBar leftIconButton={<TopBarIconButton iconName="arrow-left" />}>
-          방 만들기
-        </TopBar>
-        <S.Container>
-          <S.Title>나만의 방 이름을 만들어보세요!</S.Title>
-          <S.Input
-            value={value}
-            maxLength={12}
-            onChange={(e) => setValue(e.target.value)}
-            placeholder="방 이름"
-          />
-          <S.NoticeTextWrapper gap={4}>
-            <Image
-              src={`/images/info-circle-mono.svg`}
-              alt="icon"
-              width={14}
-              height={14}
+    useEffect(() => {
+      if (roomsQuery.isSuccess) {
+        router.replace(`/rooms/${roomsQuery.data.roomId}`);
+      }
+    }, [roomsQuery.isSuccess, router]);
+
+    if (roomsQuery.isLoading) {
+      return null;
+    }
+
+    if (roomsQuery.isError) {
+      return (
+        <Layout screenColor="linear-gradient(#000, 90%, #01356E)">
+          <TopBar leftIconButton={<TopBarIconButton iconName="arrow-left" />}>
+            방 만들기
+          </TopBar>
+          <S.Container>
+            <S.Title>나만의 방 이름을 만들어보세요!</S.Title>
+            <S.Input
+              value={value}
+              maxLength={12}
+              onChange={(e) => setValue(e.target.value)}
+              placeholder="방 이름"
             />
-            <S.NoticeText>
-              최대 빈칸 포함 12자까지 입력 가능해요.
-              <br />
-              이후에 언제든지 변경할 수 있습니다:)
-            </S.NoticeText>
-          </S.NoticeTextWrapper>
-        </S.Container>
-        <BottomButton
-          label="다음"
-          disabled={value.length === 0}
-          onClick={handleClick}
-        />
-      </Layout>
-    );
+            <S.NoticeTextWrapper gap={4}>
+              <Image
+                src={`/images/info-circle-mono.svg`}
+                alt="icon"
+                width={14}
+                height={14}
+              />
+              <S.NoticeText>
+                최대 빈칸 포함 12자까지 입력 가능해요.
+                <br />
+                이후에 언제든지 변경할 수 있습니다:)
+              </S.NoticeText>
+            </S.NoticeTextWrapper>
+          </S.Container>
+          <BottomButton
+            label="다음"
+            disabled={value.length === 0}
+            onClick={handleClick}
+          />
+        </Layout>
+      );
+    }
+
+    return null;
   }
 );
 
