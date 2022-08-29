@@ -12,7 +12,7 @@ import {
   TypingText,
 } from "~/components/uis";
 import { withRouteGuard } from "~/hocs";
-import { useRoomsQuery } from "~/hooks/api";
+import { useRoomQuery, useRoomsQuery } from "~/hooks/api";
 
 const HomePage: NextPage = withRouteGuard(
   { UNCONNECTED: true, CONNECTED: true },
@@ -20,15 +20,14 @@ const HomePage: NextPage = withRouteGuard(
   () => {
     const router = useRouter();
 
-    const { data, isLoading, isError } = useRoomsQuery();
-
-    useEffect(() => {
-      if (data) {
-        const { roomId } = data;
-
-        router.replace(`/rooms/${roomId}?isHost=true`);
+    const roomsQuery = useRoomsQuery();
+    const roomQuery = useRoomQuery(
+      roomsQuery.isSuccess ? roomsQuery.data.roomId : 0,
+      {
+        enabled: roomsQuery.isSuccess,
+        retry: 0,
       }
-    }, [data]);
+    );
 
     return (
       <>
@@ -55,11 +54,10 @@ const HomePage: NextPage = withRouteGuard(
             </div>
             <S.Spacer></S.Spacer>
             <S.Header>
-              {isLoading ? (
+              {roomsQuery.isLoading || roomQuery.isLoading ? (
                 <>
                   <Skeleton.Box height={27} width={200} />
                   <Skeleton.Box height={27} width={260} />
-                  <br />
                   <br />
                   <br />
                   <Skeleton.Box height={40} width={200} />
@@ -74,9 +72,24 @@ const HomePage: NextPage = withRouteGuard(
                     `}
                   >
                     <div>
-                      함께 만드는
-                      <br />
-                      모두의 플레이리스트
+                      {roomQuery.isSuccess ? (
+                        <>
+                          <div>{roomQuery.data.name}</div>
+                          <div
+                            css={css`
+                              font-size: 16px;
+                              color: rgba(255, 255, 255, 0.6);
+                            `}
+                          >
+                            {roomQuery.data.mood.moodDescription}
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div>함께 만드는</div>
+                          <div>모두의 플레이리스트</div>
+                        </>
+                      )}
                     </div>
                   </div>
 
@@ -88,10 +101,16 @@ const HomePage: NextPage = withRouteGuard(
                     <Spacer type="vertical" align={"center"}>
                       <S.CreateRoomButton
                         onClick={() =>
-                          router.push({ pathname: "/rooms/create" })
+                          roomQuery.isSuccess && roomsQuery.isSuccess
+                            ? router.replace(
+                                `/rooms/${roomsQuery.data.roomId}?isHost=true`
+                              )
+                            : router.push({ pathname: "/rooms/create" })
                         }
                       >
-                        방 만들기
+                        {roomQuery.isSuccess && roomsQuery.isSuccess
+                          ? "내가 만든 방 입장하기"
+                          : "방 만들기"}
                       </S.CreateRoomButton>
                       <S.Description>
                         지금 바로 3초만에 만들어보세요!
@@ -167,7 +186,7 @@ const S = {
   `,
   CreateRoomButton: styled.button`
     margin-top: 58px;
-    width: 149px;
+    padding: 0 24px;
     height: 51px;
     background-color: #007aff;
     border-radius: 15px;

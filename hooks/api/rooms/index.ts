@@ -22,7 +22,10 @@ export const usePostRoomMutation = () => {
   });
 };
 
-export const useRoomQuery = (roomId: Room["roomId"]) => {
+export const useRoomQuery = (
+  roomId: Room["roomId"],
+  options?: Omit<Parameters<typeof useCoreQuery>[2], "onSuccess" | "onError">
+) => {
   const setPlaylist = useSetRecoilState(playlistAtomState);
   const setRoomId = useSetRecoilState(roomIdAtomState);
   const setPlaylistId = useSetRecoilState(playlistIdAtomState);
@@ -57,6 +60,7 @@ export const useRoomQuery = (roomId: Room["roomId"]) => {
         }, 1400);
       },
       retry: 1,
+      ...options,
     }
   );
 };
