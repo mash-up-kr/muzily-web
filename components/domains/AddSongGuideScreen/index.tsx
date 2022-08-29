@@ -1,8 +1,9 @@
 import React from "react";
 import Image from "next/image";
 import styled from "@emotion/styled";
+import { useRecoilValue } from "recoil";
 import { Layout, TopBar, Spacer, TopBarIconButton } from "~/components/uis";
-import { useRoomStore } from "~/store";
+import { isHostAtomState } from "~/store/room";
 
 const STEPS_FOR_HOST = [
   {
@@ -45,9 +46,7 @@ interface AddSongGuideScreenProps {
 }
 
 function AddSongGuideScreen({ onClickBackButton }: AddSongGuideScreenProps) {
-  const {
-    state: { isHost },
-  } = useRoomStore();
+  const isHost = useRecoilValue(isHostAtomState);
 
   const steps = isHost ? STEPS_FOR_HOST : STEPS_FOR_USER;
 

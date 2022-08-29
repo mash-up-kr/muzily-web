@@ -1,12 +1,11 @@
 import React from "react";
 import Image from "next/image";
 import styled from "@emotion/styled";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { Modal } from "~/components/uis";
 import LottieAnimation from "~/components/uis/LottieAnimation";
 import usePlayerActions from "~/hooks/domains/usePlayerActions";
-import { useRoomStore } from "~/store";
-import { playerAtomState } from "~/store/room";
+import { isHostAtomState, playerAtomState } from "~/store/room";
 import type { PlaylistItem } from "~/types";
 import AddSongScreen from "../AddSongScreen";
 import Thumbnail from "../Thumbnail";
@@ -22,9 +21,7 @@ function NowPlayingCard({
   currentMusic,
   player,
 }: NowPlayingCardProps) {
-  const {
-    state: { isHost },
-  } = useRoomStore();
+  const isHost = useRecoilValue(isHostAtomState);
 
   const [playerState] = useRecoilState(playerAtomState);
 

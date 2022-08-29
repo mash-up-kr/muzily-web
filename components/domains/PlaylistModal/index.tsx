@@ -8,7 +8,7 @@ import { useIsViewedPlaylistItemIds } from "~/hooks/domains";
 import { useRemovePlaylistItem } from "~/hooks/webSocket";
 import { useRoomStore } from "~/store";
 import { playlistAtomState } from "~/store/playlist";
-import { playlistIdAtomState } from "~/store/room";
+import { isHostAtomState, playlistIdAtomState } from "~/store/room";
 import { PlaylistContext, usePlaylistContext } from "./context";
 import Playlist from "./Playlist";
 
@@ -49,14 +49,11 @@ const ModalContent = () => {
   const { isDeletingMode, setIsDeletingMode, deletingIds, setDeletingIds } =
     usePlaylistContext();
 
-  const {
-    state: { isHost },
-  } = useRoomStore();
-
   const [playlist] = useRecoilState(playlistAtomState);
 
   const { publish: removeItem } = useRemovePlaylistItem(Number(roomId));
 
+  const isHost = useRecoilValue(isHostAtomState);
   const playlistId = useRecoilValue(playlistIdAtomState);
 
   useIsViewedPlaylistItemIds.IfUnmount(playlist);

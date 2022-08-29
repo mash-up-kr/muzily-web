@@ -7,12 +7,11 @@ import {
   useDragControls,
   useMotionValue,
 } from "framer-motion";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { Image, Spacer } from "~/components/uis";
 import LottieAnimation from "~/components/uis/LottieAnimation";
 import { useIsViewedPlaylistItemIds } from "~/hooks/domains";
-import { useRoomStore } from "~/store";
-import { playerAtomState } from "~/store/room";
+import { isHostAtomState, playerAtomState } from "~/store/room";
 import { getDurationText } from "~/store/room/utils";
 import type { PlaylistItem } from "~/types";
 import { usePlaylistContext } from "./context";
@@ -32,9 +31,8 @@ const Item = ({ item, onClick }: Props) => {
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
 
-  const {
-    state: { isHost },
-  } = useRoomStore();
+  const isHost = useRecoilValue(isHostAtomState);
+
   const { isDeletingMode, deletingIds, setDeletingIds } = usePlaylistContext();
 
   const [playerState] = useRecoilState(playerAtomState);

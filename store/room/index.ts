@@ -27,9 +27,13 @@ export const playerAtomState = atom<PlayerState>({
   },
 });
 
+export const isHostAtomState = atom<boolean>({
+  key: "isHost",
+  default: false,
+});
+
 interface RoomState {
   proposedMusicList: Playlist;
-  isHost: boolean;
   mood: Mood;
 }
 
@@ -37,7 +41,6 @@ const roomAtomState = atom<RoomState>({
   key: "room",
   default: {
     // Youtube Player
-    isHost: false,
 
     // Playlist
     proposedMusicList: [],
@@ -66,7 +69,6 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
     init(musicData: Playlist, isHost: boolean, mood: Mood) {
       update((draft) => {
         draft.proposedMusicList = [];
-        draft.isHost = isHost;
         draft.mood = mood;
       });
     },
@@ -82,12 +84,6 @@ function createActions(state: RoomState, setState: SetterOrUpdater<RoomState>) {
     addMusicToProposedList(music: PlaylistItem) {
       update((draft) => {
         draft.proposedMusicList.push(music);
-      });
-    },
-
-    setIsHost(isHost: boolean) {
-      update((draft) => {
-        draft.isHost = isHost;
       });
     },
 

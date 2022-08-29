@@ -5,7 +5,11 @@ import { deleteRoom, getRoom, getRooms, postRooms, putRoom } from "~/api/room";
 import { Toast } from "~/components/uis";
 import { queryKeys } from "~/consts/react-query";
 import { playlistAtomState } from "~/store/playlist";
-import { playlistIdAtomState, roomIdAtomState } from "~/store/room";
+import {
+  isHostAtomState,
+  playlistIdAtomState,
+  roomIdAtomState,
+} from "~/store/room";
 import type { Room } from "~/types/rooms";
 import { useCoreMutation, useCoreQuery } from "../core";
 
@@ -29,6 +33,7 @@ export const useRoomQuery = (
   const setPlaylist = useSetRecoilState(playlistAtomState);
   const setRoomId = useSetRecoilState(roomIdAtomState);
   const setPlaylistId = useSetRecoilState(playlistIdAtomState);
+  const setIsHost = useSetRecoilState(isHostAtomState);
 
   return useCoreQuery(
     queryKeys.roomsById(roomId),
@@ -43,6 +48,7 @@ export const useRoomQuery = (
         setPlaylist(data.playlist.playlistItems);
         setRoomId(data.roomId);
         setPlaylistId(data.playlist.playlistId);
+        setIsHost(data.currentUser.role === "CREATOR");
       },
       onError: (error: any) => {
         if (error?.response?.data?.code === "R004") {

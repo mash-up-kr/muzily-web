@@ -24,7 +24,11 @@ import {
 } from "~/hooks/webSocket";
 import { useRoomStore } from "~/store";
 import { proposedPlaylistAtomState } from "~/store/playlist";
-import { playlistIdAtomState, roomIdAtomState } from "~/store/room";
+import {
+  isHostAtomState,
+  playlistIdAtomState,
+  roomIdAtomState,
+} from "~/store/room";
 import { convertDurationToSecond, getDurationText } from "~/store/room/utils";
 import type { PlaylistItem } from "~/types";
 import AddSongGuideScreen from "../AddSongGuideScreen";
@@ -47,11 +51,6 @@ interface AddSongScreenProps {
   */
 
 function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
-  const {
-    state: { isHost },
-    actions,
-  } = useRoomStore();
-
   const { close } = useModal();
   const [youtubeLink, setYoutubeLink] = useState("");
   const [youtubeId, setYoutubeId] = useState("");
@@ -64,6 +63,8 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
   );
   const roomId = useRecoilValue(roomIdAtomState);
   const playlistId = useRecoilValue(playlistIdAtomState);
+  const isHost = useRecoilValue(isHostAtomState);
+
   const { data } = useGetPlaylistPendingItems(playlistId, isHost);
   const { publish: publishAddPlaylist } = useAddPlaylistItemRequest(roomId);
   const { publish: publishSendPlaylistRequest } =

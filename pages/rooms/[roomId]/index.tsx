@@ -29,7 +29,11 @@ import usePlayerActions from "~/hooks/domains/usePlayerActions";
 import { useUpdatePlayerState } from "~/hooks/webSocket";
 import { useRoomStore } from "~/store";
 import { playlistAtomState } from "~/store/playlist";
-import { playerAtomState, playlistIdAtomState } from "~/store/room";
+import {
+  isHostAtomState,
+  playerAtomState,
+  playlistIdAtomState,
+} from "~/store/room";
 
 interface Props {
   isHost: boolean;
@@ -56,7 +60,7 @@ RoomPage.getInitialProps = async (ctx: NextPageContext) => {
 
 const INITIAL_SLIDE_INDEX = 1;
 
-const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
+const RoomContentPage: NextPage<Props> = () => {
   const router = useRouter();
   const { roomId } = router.query as { roomId: string };
 
@@ -66,10 +70,7 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
     isError,
   } = useRoomQuery(Number(roomId));
 
-  const {
-    state: { isHost },
-    actions,
-  } = useRoomStore();
+  const isHost = useRecoilValue(isHostAtomState);
 
   const [player, setPlayer] = useState(null);
   const [playerState, setPlayerState] = useRecoilState(playerAtomState);
@@ -88,13 +89,6 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
       ) || playlist[0],
     [playerState.playingMusicId, playlist]
   );
-
-  useEffect(() => {
-    actions.init(host ? [] : [], host, {
-      emojiType: "HEART",
-      moodDescription: "",
-    });
-  }, []);
 
   useEffect(() => {
     if (isError) {
