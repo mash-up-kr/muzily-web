@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { motion } from "framer-motion";
 import {
@@ -17,11 +18,9 @@ const HomePage: NextPage = withRouteGuard(
   { UNCONNECTED: true, CONNECTED: true },
   "/login",
   () => {
-    const [isOpenLine2, setIsOpenLine2] = useState(false);
-    const [isOpenCTA, setIsOpenCTA] = useState(false);
     const router = useRouter();
 
-    const { data, isLoading, isFetching, isError } = useRoomsQuery();
+    const { data, isLoading, isError } = useRoomsQuery();
 
     useEffect(() => {
       if (data) {
@@ -36,25 +35,23 @@ const HomePage: NextPage = withRouteGuard(
         <TopBar leftIconButton={<TopBarIconButton iconName="star" />} />
         <S.Wrapper>
           <S.InviteContainer>
-            <div style={{ height: 64 }}>
-              {isOpenCTA && (
-                <TypingText
-                  textList={[
-                    "# 가게에서 손님과",
-                    "# 여행에서 친구와",
-                    "# 팀플에서 팀원과",
-                  ]}
-                  typingTime={50}
-                  typingEndDelay={1300}
-                  style={{
-                    fontSize: 27,
-                    background: "#333333",
-                    padding: "8px 12px",
-                    borderRadius: 12,
-                    height: 50,
-                  }}
-                />
-              )}
+            <div style={{ height: 46 }}>
+              <TypingText
+                textList={[
+                  "# 가게에서 손님과",
+                  "# 여행에서 친구와",
+                  "# 팀플에서 팀원과",
+                ]}
+                typingTime={50}
+                typingEndDelay={1300}
+                style={{
+                  fontSize: 22,
+                  background: "#1F1D1F",
+                  padding: "8px 12px",
+                  borderRadius: 8,
+                  height: 43,
+                }}
+              />
             </div>
             <S.Spacer></S.Spacer>
             <S.Header>
@@ -66,43 +63,41 @@ const HomePage: NextPage = withRouteGuard(
                   <br />
                   <br />
                   <Skeleton.Box height={40} width={200} />
+                  <Skeleton.Box height={10} width={240} />
                 </>
               ) : (
                 <>
-                  <TypingText
-                    textList={[`함께 만드는`]}
-                    typingTime={30}
-                    onTypingEnd={() => setIsOpenLine2(true)}
-                    style={{ fontSize: 27 }}
-                  />
-                  {isOpenLine2 && (
-                    <TypingText
-                      textList={[`모두의 플레이리스트`]}
-                      typingTime={30}
-                      onTypingEnd={() => setIsOpenCTA(true)}
-                      style={{ fontSize: 27 }}
-                    />
-                  )}
-                  {isOpenCTA && (
-                    <motion.div
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1, y: [0, 0, 0, 10, 0, 10, 0] }}
-                      style={{ display: "inline" }}
-                    >
-                      <Spacer type="vertical" align={"center"}>
-                        <S.CreateRoomButton
-                          onClick={() =>
-                            router.push({ pathname: "/rooms/create" })
-                          }
-                        >
-                          방 만들기
-                        </S.CreateRoomButton>
-                        <S.Description>
-                          지금 바로 3초만에 만들어보세요!
-                        </S.Description>
-                      </Spacer>
-                    </motion.div>
-                  )}
+                  <div
+                    css={css`
+                      font-size: 27;
+                      text-align: center;
+                    `}
+                  >
+                    <div>
+                      함께 만드는
+                      <br />
+                      모두의 플레이리스트
+                    </div>
+                  </div>
+
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1, y: [0, 0, 0, 10, 0, 10, 0] }}
+                    style={{ display: "inline" }}
+                  >
+                    <Spacer type="vertical" align={"center"}>
+                      <S.CreateRoomButton
+                        onClick={() =>
+                          router.push({ pathname: "/rooms/create" })
+                        }
+                      >
+                        방 만들기
+                      </S.CreateRoomButton>
+                      <S.Description>
+                        지금 바로 3초만에 만들어보세요!
+                      </S.Description>
+                    </Spacer>
+                  </motion.div>
                 </>
               )}
             </S.Header>
