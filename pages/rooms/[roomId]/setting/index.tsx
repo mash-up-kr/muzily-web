@@ -56,6 +56,7 @@ const RoomSettingPage: NextPage = () => {
       onSuccess: () => {
         window.alert("로그아웃에 성공하였습니다.");
 
+        localStorage.clear();
         router.replace("/");
       },
       onError: (error: AxiosError) => {
