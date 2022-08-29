@@ -9,7 +9,10 @@ import { playlistIdAtomState, roomIdAtomState } from "~/store/room";
 import type { Room } from "~/types/rooms";
 import { useCoreMutation, useCoreQuery } from "../core";
 
-export const useRoomsQuery = () => useCoreQuery(queryKeys.rooms, getRooms);
+export const useRoomsQuery = () =>
+  useCoreQuery(queryKeys.rooms, getRooms, {
+    retry: 0,
+  });
 
 export const usePostRoomMutation = () => {
   const queryClient = useQueryClient();

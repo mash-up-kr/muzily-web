@@ -3,7 +3,13 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import { motion } from "framer-motion";
-import { Spacer, TopBar, TopBarIconButton, TypingText } from "~/components/uis";
+import {
+  Skeleton,
+  Spacer,
+  TopBar,
+  TopBarIconButton,
+  TypingText,
+} from "~/components/uis";
 import { withRouteGuard } from "~/hocs";
 import { useRoomsQuery } from "~/hooks/api";
 
@@ -17,11 +23,6 @@ const HomePage: NextPage = withRouteGuard(
 
     const { data, isLoading, isFetching, isError } = useRoomsQuery();
 
-    const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      router.push({ pathname: "/rooms/create" });
-    };
-
     useEffect(() => {
       if (data) {
         const { roomId } = data;
@@ -30,67 +31,82 @@ const HomePage: NextPage = withRouteGuard(
       }
     }, [data]);
 
-    if ((isFetching || isLoading) && isError) {
-      return <div>Loading, Fetching</div>;
-    }
-
     return (
       <>
         <TopBar leftIconButton={<TopBarIconButton iconName="star" />} />
-        <S.Form onSubmit={onSubmit}>
+        <S.Wrapper>
           <S.InviteContainer>
-            <div style={{ height: 44 }}>
+            <div style={{ height: 64 }}>
               {isOpenCTA && (
                 <TypingText
                   textList={[
-                    "# 가족들과 함께",
-                    "# 자동차에서 친구들과",
-                    "# 방송에서 라이브로",
-                    "# 친구들과 함께",
+                    "# 가게에서 손님과",
+                    "# 여행에서 친구와",
+                    "# 팀플에서 팀원과",
                   ]}
                   typingTime={100}
                   style={{
-                    fontSize: 16,
+                    fontSize: 27,
                     background: "#333333",
                     padding: "8px 12px",
                     borderRadius: 12,
-                    height: 34,
+                    height: 50,
                   }}
                 />
               )}
             </div>
             <S.Spacer></S.Spacer>
             <S.Header>
-              <TypingText
-                textList={[`함께 만드는`]}
-                typingTime={30}
-                onTypingEnd={() => setIsOpenLine2(true)}
-              />
-              {isOpenLine2 && (
-                <TypingText
-                  textList={[`모두의 플레이리스트`]}
-                  typingTime={30}
-                  onTypingEnd={() => setIsOpenCTA(true)}
-                />
+              {isLoading ? (
+                <>
+                  <Skeleton.Box height={27} width={200} />
+                  <Skeleton.Box height={27} width={260} />
+                  <br />
+                  <br />
+                  <br />
+                  <Skeleton.Box height={40} width={200} />
+                </>
+              ) : (
+                <>
+                  <TypingText
+                    textList={[`함께 만드는`]}
+                    typingTime={30}
+                    onTypingEnd={() => setIsOpenLine2(true)}
+                    style={{ fontSize: 27 }}
+                  />
+                  {isOpenLine2 && (
+                    <TypingText
+                      textList={[`모두의 플레이리스트`]}
+                      typingTime={30}
+                      onTypingEnd={() => setIsOpenCTA(true)}
+                      style={{ fontSize: 27 }}
+                    />
+                  )}
+                  {isOpenCTA && (
+                    <motion.div
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1, y: [0, 0, 0, 10, 0, 10, 0] }}
+                      style={{ display: "inline" }}
+                    >
+                      <Spacer type="vertical" align={"center"}>
+                        <S.CreateRoomButton
+                          onClick={() =>
+                            router.push({ pathname: "/rooms/create" })
+                          }
+                        >
+                          방 만들기
+                        </S.CreateRoomButton>
+                        <S.Description>
+                          지금 바로 3초만에 만들어보세요!
+                        </S.Description>
+                      </Spacer>
+                    </motion.div>
+                  )}
+                </>
               )}
             </S.Header>
-
-            {isOpenCTA && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1, y: [0, 0, 0, 10, 0, 10, 0] }}
-                style={{ display: "inline" }}
-              >
-                <Spacer type="vertical" align={"center"}>
-                  <S.CreateRoomButton type="submit">
-                    방 만들기
-                  </S.CreateRoomButton>
-                  <S.Description>지금 바로 3초만에 만들어보세요!</S.Description>
-                </Spacer>
-              </motion.div>
-            )}
           </S.InviteContainer>
-        </S.Form>
+        </S.Wrapper>
       </>
     );
   }
@@ -119,7 +135,7 @@ const S = {
     padding: 0 60px;
     gap: 6px;
   `,
-  Form: styled.form`
+  Wrapper: styled.div`
     width: 100%;
     max-width: 100vw;
     min-height: 100vh;
