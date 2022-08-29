@@ -126,7 +126,7 @@ const S = {
     letter-spacing: -0.450631px;
     color: #007aff;
 
-    position: fixed;
+    position: sticky;
     bottom: 18px;
     left: 50%;
     transform: translateX(-50%);
