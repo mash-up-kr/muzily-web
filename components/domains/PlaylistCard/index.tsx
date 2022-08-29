@@ -55,6 +55,14 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
               <div
                 css={css`
                   font-size: 18px;
+                  width: 100%;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                  word-break: break-word;
+
+                  display: -webkit-box;
+                  -webkit-line-clamp: 2; // 원하는 라인수
+                  -webkit-box-orient: vertical;
                 `}
               >
                 {nextMusic?.title || "-"}
