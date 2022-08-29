@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import { Spinner, Toast, TopBar, TopBarIconButton } from "~/components/uis";
+import { MemberInfo } from "~/contexts";
 import {
   usePutRoomInvitationMutation,
   useRoomInvitationQuery,
@@ -45,7 +46,23 @@ const RoomInvitePage: NextPage = () => {
     <>
       <TopBar
         leftIconButton={<TopBarIconButton iconName="star" />}
-        rightIconButton={<S.TopBarRightItem>로그인</S.TopBarRightItem>}
+        rightIconButton={
+          <MemberInfo.Only>
+            {({ memberInfo }) =>
+              memberInfo.accountConnectType === "UNCONNECTED" ? (
+                <S.TopBarRightItem
+                  onClick={() => {
+                    router.push("/login");
+                  }}
+                >
+                  로그인
+                </S.TopBarRightItem>
+              ) : (
+                <></>
+              )
+            }
+          </MemberInfo.Only>
+        }
       />
       <S.InviteContainer>
         <S.MuzilyTitle>

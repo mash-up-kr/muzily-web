@@ -86,7 +86,7 @@ const MemberInfoProvider = ({ children }: Props) => {
 };
 
 interface MemberInfoOnlyProps {
-  fallback: React.ReactNode;
+  fallback?: React.ReactNode;
   children: (props: {
     memberInfo: Member;
     refetchMemberInfo: ReturnType<
