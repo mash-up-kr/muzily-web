@@ -181,6 +181,7 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
             <>
               {" "}
               <Actions.NewMusic
+                isHost={isHost}
                 value={
                   isHost && pendingData !== undefined ? pendingData?.length : 0
                 }
@@ -244,7 +245,13 @@ const RoomContentPage: NextPage<Props> = ({ isHost: host }) => {
 };
 
 const Actions = {
-  NewMusic: ({ value }: { value: number }) => (
+  NewMusic: ({
+    isHost = false,
+    value,
+  }: {
+    isHost?: boolean;
+    value: number;
+  }) => (
     <Spacer type="vertical" align="center" gap={8}>
       <Modal
         trigger={({ open }) => (
@@ -252,7 +259,7 @@ const Actions = {
         )}
         modal={({ close }) => <AddSongScreen onClickBackButton={close} />}
       />
-      <S.IconText>곡추가</S.IconText>
+      <S.IconText>{isHost ? "곡추가" : "곡신청"}</S.IconText>
     </Spacer>
   ),
   Emoji,
