@@ -30,10 +30,10 @@ const RoomSettingPage: NextPage = () => {
       return;
     }
 
-    deleteRoomMutation.mutate(0, {
+    deleteRoomMutation.mutate(Number(roomId), {
       onSuccess: () => {
         window.alert("방이 삭제되었습니다.");
-        localStorage.removeItem(tokenKey);
+        // localStorage.removeItem(tokenKey);
         router.replace("/");
       },
       onError: (error: AxiosError) => {
