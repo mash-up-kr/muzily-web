@@ -178,12 +178,12 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
         <Spacer type="vertical" style={{ flex: 1, padding: "0 16px" }}>
           {/* <button onClick={props.onClickBackButton}>뒤로가기</button> */}
           <S.HeadingText>
-            {`추가하고 싶은 곡의\n링크를 입력해주세요!`}
+            {`추가하고 싶은 곡의\n유튜브 링크를 입력해주세요!`}
           </S.HeadingText>
 
           <S.Input
             type="url"
-            placeholder="링크 입력해주세요"
+            placeholder="유튜브 링크 입력해주세요"
             value={youtubeLink}
             onChange={(e) => setYoutubeLink(e.target.value)}
           />
