@@ -44,31 +44,37 @@ const HomePage: NextPage = withRouteGuard(
           rightIconButton={
             <MemberInfo.Only>
               {({ memberInfo }) => {
-                return memberInfo.accountConnectType === "CONNECTED" ? (
+                return (
                   <div
-                    onClick={() => {
-                      const isConfirmed =
-                        window.confirm("정말 로그아웃하시곘습니까?");
+                    onClick={
+                      memberInfo.accountConnectType === "CONNECTED"
+                        ? () => {
+                            const isConfirmed =
+                              window.confirm("정말 로그아웃하시곘습니까?");
 
-                      if (!isConfirmed) {
-                        return;
-                      }
+                            if (!isConfirmed) {
+                              return;
+                            }
 
-                      postLogout.mutate(null, {
-                        onSuccess: () => {
-                          window.alert("로그아웃에 성공하였습니다.");
+                            postLogout.mutate(null, {
+                              onSuccess: () => {
+                                window.alert("로그아웃에 성공하였습니다.");
 
-                          localStorage.clear();
-                          router.replace("/");
-                        },
-                        onError: (error: AxiosError) => {
-                          if (error instanceof AxiosError) {
-                            window.alert(error.response?.data.message);
+                                localStorage.clear();
+                                router.replace("/");
+                              },
+                              onError: (error: AxiosError) => {
+                                if (error instanceof AxiosError) {
+                                  window.alert(error.response?.data.message);
+                                }
+                                console.error(error);
+                              },
+                            });
                           }
-                          console.error(error);
-                        },
-                      });
-                    }}
+                        : () => {
+                            router.push({ pathname: "/login" });
+                          }
+                    }
                     css={css`
                       cursor: pointer;
                       color: #007aff;
@@ -80,10 +86,10 @@ const HomePage: NextPage = withRouteGuard(
                       align-items: center;
                     `}
                   >
-                    로그아웃
+                    {memberInfo.accountConnectType === "CONNECTED"
+                      ? "로그아웃"
+                      : "로그인"}
                   </div>
-                ) : (
-                  <></>
                 );
               }}
             </MemberInfo.Only>
