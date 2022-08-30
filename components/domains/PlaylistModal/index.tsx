@@ -1,13 +1,23 @@
 import type { ComponentPropsWithoutRef } from "react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/router";
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { Layout, Modal, TopBar, TopBarIconButton } from "~/components/uis";
+import {
+  Layout,
+  Modal,
+  Spacer,
+  TopBar,
+  TopBarIconButton,
+} from "~/components/uis";
+import { MemberInfo } from "~/contexts";
 import { useIsViewedPlaylistItemIds } from "~/hooks/domains";
 import { useRemovePlaylistItem } from "~/hooks/webSocket";
 import { playlistAtomState } from "~/store/playlist";
 import { isHostAtomState, playlistIdAtomState } from "~/store/room";
+import AddSongScreen from "../AddSongScreen";
 import { PlaylistContext, usePlaylistContext } from "./context";
 import Playlist from "./Playlist";
 
@@ -81,12 +91,66 @@ const ModalContent = () => {
           onClick={() => {
             removeItem({ playlistId, playlistItemIds: deletingIds });
             setDeletingIds([]);
+            setIsDeletingMode(false);
           }}
         >
           {`${deletingIds.length}`.padStart(2, "0")} 삭제하기
         </S.DeleteButton>
       ) : (
         <></>
+      )}
+
+      {!isDeletingMode && (
+        <MemberInfo.Only>
+          {({ memberInfo }) => (
+            <Modal
+              trigger={({ open }) => (
+                <div
+                  css={css`
+                    display: flex;
+                    justify-content: center;
+                    cursor: pointer;
+                    position: sticky;
+                    bottom: 16px;
+                    left: 0;
+                    right: 0;
+                  `}
+                  onClick={open}
+                >
+                  <button
+                    css={css`
+                      background-color: #007aff;
+                      padding: 12px 24px;
+                      color: white;
+                      border-radius: 12px;
+                      border: none;
+                      font-size: 16px;
+                      font-weight: 700;
+                    `}
+                  >
+                    <Spacer
+                      type="horizontal"
+                      align="center"
+                      justify="center"
+                      gap={12}
+                    >
+                      <Image
+                        src="/images/plus-circle.svg"
+                        width={30}
+                        height={30}
+                        alt="add new music"
+                      />
+                      {memberInfo.accountConnectType === "CONNECTED"
+                        ? "곡 추가"
+                        : "곡 신청"}
+                    </Spacer>
+                  </button>
+                </div>
+              )}
+              modal={({ close }) => <AddSongScreen onClickBackButton={close} />}
+            />
+          )}
+        </MemberInfo.Only>
       )}
     </Layout>
   );
