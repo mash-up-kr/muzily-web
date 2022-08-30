@@ -19,7 +19,7 @@ const TopBarIconButton = ({
   const backButton = () => {
     if (iconName === "arrow-left") {
       router.back();
-    } else if (iconName === "star") {
+    } else if (iconName === "logo") {
       router.push("/");
     }
   };

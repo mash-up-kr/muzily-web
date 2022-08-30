@@ -118,7 +118,7 @@ const RoomContentPage: NextPage<Props> = () => {
       >
         <Spacer type="vertical" gap={16}>
           <TopBar
-            leftIconButton={<TopBarIconButton iconName="star" boxSize={29} />}
+            leftIconButton={<TopBarIconButton iconName="logo" boxSize={29} />}
             rightIconButton={
               roomData?.currentUser.role === "CREATOR" ? (
                 <Modal
