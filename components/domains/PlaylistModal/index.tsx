@@ -71,7 +71,7 @@ const ModalContent = () => {
           )
         }
       >
-        {isDeletingMode ? "삭제할 음악을 선택해주세요" : "Playlist"}
+        {isDeletingMode ? "삭제할 음악을 선택해주세요" : "플레이리스트"}
       </TopBar>
       {isHost ? <Playlist.Host /> : <Playlist.Guest />}
 

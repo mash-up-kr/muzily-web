@@ -134,44 +134,49 @@ const Item = ({ item, onClick }: Props) => {
           flex: 1;
         `}
       >
-        <S.Title
-          css={css`
-            width: 100%;
-            color: ${isPlayingMusic ? "#ffffff" : "#ffffff8a"};
-            font-size: 14px;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            word-break: break-word;
-            display: -webkit-box;
-            -webkit-line-clamp: 2; // 원하는 라인수
-            -webkit-box-orient: vertical;
-            filter: ${isPlayingMusic
-              ? "drop-shadow(0 0 4px #007aff) drop-shadow(0 0 1px #007aff)"
-              : "#ffffff8a"};
-            transition: color 500ms;
-          `}
-          style={{ position: "relative" }}
-        >
-          {isNew && (
-            <>
-              <span
-                css={css`
-                  font-size: 9px;
-                  background-color: #007aff;
-                  border-radius: 4px;
-                  padding: 2px 4px;
-                  color: white;
-                `}
-              >
-                New
-              </span>
-              {"  "}
-            </>
-          )}
-          {item.title}{" "}
+        <Spacer type="horizontal" align="end">
+          <S.Title
+            css={css`
+              width: 100%;
+              color: ${isPlayingMusic ? "#ffffff" : "#ffffff8a"};
+              font-size: 14px;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              word-break: break-word;
+              display: -webkit-box;
+              -webkit-line-clamp: 2; // 원하는 라인수
+              -webkit-box-orient: vertical;
+              filter: ${isPlayingMusic
+                ? "drop-shadow(0 0 4px #007aff) drop-shadow(0 0 1px #007aff)"
+                : "#ffffff8a"};
+              transition: color 500ms;
+            `}
+            style={{ position: "relative" }}
+          >
+            {isNew && (
+              <>
+                <span
+                  css={css`
+                    font-size: 9px;
+                    background-color: #007aff;
+                    border-radius: 4px;
+                    padding: 2px 4px;
+                    color: white;
+                  `}
+                >
+                  New
+                </span>
+                {"  "}
+              </>
+            )}
+            {item.title}{" "}
+          </S.Title>
           {isPlayingMusic && (
             <span
-              style={{ width: 30, height: 20, position: "absolute", bottom: 3 }}
+              style={{
+                width: 30,
+                height: 20,
+              }}
             >
               <LottieAnimation.Equalizer
                 height={20}
@@ -181,7 +186,7 @@ const Item = ({ item, onClick }: Props) => {
               />
             </span>
           )}
-        </S.Title>
+        </Spacer>
         <div
           css={css`
             font-weight: 400;
