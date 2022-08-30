@@ -7,8 +7,6 @@ import { AxiosError } from "axios";
 import { BottomButton, TopBar, TopBarIconButton } from "~/components/uis";
 import { useDeleteRoomMutation, usePostLogoutMutation } from "~/hooks/api";
 
-const tokenKey = process.env.NEXT_PUBLIC_LOCAL_TOKEN_KEY as string;
-
 const RoomSettingPage: NextPage = () => {
   const router = useRouter();
   const [roomId, setRoomId] = useState(0);

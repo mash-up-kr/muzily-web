@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
+import { AxiosError } from "axios";
 import { motion } from "framer-motion";
 import {
   Skeleton,
@@ -11,8 +12,13 @@ import {
   TopBarIconButton,
   TypingText,
 } from "~/components/uis";
+import { MemberInfo } from "~/contexts";
 import { withRouteGuard } from "~/hocs";
-import { useRoomQuery, useRoomsQuery } from "~/hooks/api";
+import {
+  usePostLogoutMutation,
+  useRoomQuery,
+  useRoomsQuery,
+} from "~/hooks/api";
 
 const HomePage: NextPage = withRouteGuard(
   { UNCONNECTED: true, CONNECTED: true },
@@ -29,9 +35,60 @@ const HomePage: NextPage = withRouteGuard(
       }
     );
 
+    const postLogout = usePostLogoutMutation();
+
     return (
       <>
-        <TopBar leftIconButton={<TopBarIconButton iconName="star" />} />
+        <TopBar
+          leftIconButton={<TopBarIconButton iconName="star" />}
+          rightIconButton={
+            <MemberInfo.Only>
+              {({ memberInfo }) => {
+                return memberInfo.accountConnectType === "CONNECTED" ? (
+                  <div
+                    onClick={() => {
+                      const isConfirmed =
+                        window.confirm("정말 로그아웃하시곘습니까?");
+
+                      if (!isConfirmed) {
+                        return;
+                      }
+
+                      postLogout.mutate(null, {
+                        onSuccess: () => {
+                          window.alert("로그아웃에 성공하였습니다.");
+
+                          localStorage.clear();
+                          router.replace("/");
+                        },
+                        onError: (error: AxiosError) => {
+                          if (error instanceof AxiosError) {
+                            window.alert(error.response?.data.message);
+                          }
+                          console.error(error);
+                        },
+                      });
+                    }}
+                    css={css`
+                      cursor: pointer;
+                      color: #007aff;
+                      font-weight: 700;
+                      font-size: 17px;
+                      line-height: 155%;
+                      letter-spacing: -0.478073px;
+                      display: flex;
+                      align-items: center;
+                    `}
+                  >
+                    로그아웃
+                  </div>
+                ) : (
+                  <></>
+                );
+              }}
+            </MemberInfo.Only>
+          }
+        />
         <S.Wrapper>
           <S.InviteContainer>
             <div style={{ height: 46 }}>
@@ -109,7 +166,7 @@ const HomePage: NextPage = withRouteGuard(
                         }
                       >
                         {roomQuery.isSuccess && roomsQuery.isSuccess
-                          ? "내가 만든 방 입장하기"
+                          ? "내 방 입장하기"
                           : "방 만들기"}
                       </S.CreateRoomButton>
                       <S.Description>
