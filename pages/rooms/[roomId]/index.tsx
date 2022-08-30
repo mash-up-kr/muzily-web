@@ -14,6 +14,7 @@ import {
   Emoji,
 } from "~/components/domains";
 import QRCodeCard from "~/components/domains/QRCodeCard";
+import RoomSettingScreen from "~/components/domains/RoomSettingScreen";
 import {
   Modal,
   Spacer,
@@ -110,11 +111,16 @@ const RoomContentPage: NextPage<Props> = () => {
             leftIconButton={<TopBarIconButton iconName="star" boxSize={29} />}
             rightIconButton={
               roomData?.currentUser.role === "CREATOR" ? (
-                <TopBarIconButton
-                  iconName="setting"
-                  onClick={() => {
-                    router.push(`/rooms/${roomId}/setting`);
-                  }}
+                <Modal
+                  trigger={({ open }) => (
+                    <TopBarIconButton iconName="setting" onClick={open} />
+                  )}
+                  modal={({ close }) => (
+                    <RoomSettingScreen
+                      onClickBackButton={close}
+                      room={roomData}
+                    />
+                  )}
                 />
               ) : (
                 <></>
