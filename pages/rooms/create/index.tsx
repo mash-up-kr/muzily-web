@@ -7,6 +7,7 @@ import {
   BottomButton,
   Layout,
   Spacer,
+  Toast,
   TopBar,
   TopBarIconButton,
 } from "~/components/uis";
@@ -29,7 +30,10 @@ const RoomCreatePage: NextPage = withRouteGuard(
 
     useEffect(() => {
       if (roomsQuery.isSuccess) {
-        router.replace(`/rooms/${roomsQuery.data.roomId}`);
+        Toast.show(
+          "이미 해당 계정에서 생성한 방이 존재합니다.\n계정 당 1개의 방만 생성할 수 있습니다"
+        );
+        router.replace("/");
       }
     }, [roomsQuery.isSuccess, router]);
 

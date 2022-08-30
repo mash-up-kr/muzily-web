@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -8,10 +8,12 @@ import {
   BottomButton,
   Layout,
   Spacer,
+  Toast,
   TopBar,
   TopBarIconButton,
 } from "~/components/uis";
-import { usePostRoomMutation } from "~/hooks/api";
+import { withRouteGuard } from "~/hocs";
+import { usePostRoomMutation, useRoomsQuery } from "~/hooks/api";
 import type { Mood } from "~/types/rooms";
 
 const MOOD_EMOJI_IMAGES = {
@@ -35,151 +37,182 @@ const MOOD_ITEM_LIST: Mood[] = [
   },
 ];
 
-const RoomCreateMoodPage: NextPage = () => {
-  const router = useRouter();
-  const { roomName } = router.query as { roomName: string };
-  const [mood, setMood] = useState(MOOD_ITEM_LIST[0]);
-  const [isEdit, setIsEdit] = useState(false);
-  const [isCustomButtonActive, setIsCustomButtonActive] = useState(false);
-  const [selectedMood, setSelectedMood] = useState({
-    moodDescription: "", // TODO: API 구현 완료되면 무드 이름도 추가해야 함
-    emojiType: MOOD_ITEM_LIST[0].emojiType,
-  } as Mood);
+const RoomCreateMoodPage: NextPage = withRouteGuard(
+  { CONNECTED: true },
+  "/login",
+  () => {
+    const router = useRouter();
+    const { roomName } = router.query as { roomName: string };
+    const [mood, setMood] = useState(MOOD_ITEM_LIST[0]);
+    const [isEdit, setIsEdit] = useState(false);
+    const [isCustomButtonActive, setIsCustomButtonActive] = useState(false);
+    const [selectedMood, setSelectedMood] = useState({
+      moodDescription: "", // TODO: API 구현 완료되면 무드 이름도 추가해야 함
+      emojiType: MOOD_ITEM_LIST[0].emojiType,
+    } as Mood);
 
-  const postRoomMutation = usePostRoomMutation();
+    const postRoomMutation = usePostRoomMutation();
+    const roomsQuery = useRoomsQuery();
 
-  const onClickCreateRoom = () => {
-    let postMoodData: Mood = mood;
-    if (isEdit && selectedMood) {
-      postMoodData = selectedMood;
+    const onClickCreateRoom = () => {
+      let postMoodData: Mood = mood;
+      if (isEdit && selectedMood) {
+        postMoodData = selectedMood;
+      }
+
+      postRoomMutation.mutate(
+        {
+          name: roomName,
+          emojiType: postMoodData.emojiType,
+          moodDescription: postMoodData.moodDescription,
+        },
+        {
+          onSuccess: (data) => {
+            const { roomId } = data;
+            router.push(`/rooms/${roomId}/?isHost=true`);
+          },
+          onError: (error: AxiosError) => {
+            if (error instanceof AxiosError) {
+              window.alert(error.response?.data.message);
+            }
+            console.error(error);
+          },
+        }
+      );
+    };
+
+    useEffect(() => {
+      if (roomsQuery.isSuccess) {
+        Toast.show(
+          "이미 해당 계정에서 생성한 방이 존재합니다.\n계정 당 1개의 방만 생성할 수 있습니다"
+        );
+        router.replace("/");
+      }
+    }, [roomsQuery.isSuccess, router]);
+
+    if (roomsQuery.isLoading) {
+      return null;
     }
 
-    postRoomMutation.mutate(
-      {
-        name: roomName,
-        emojiType: postMoodData.emojiType,
-        moodDescription: postMoodData.moodDescription,
-      },
-      {
-        onSuccess: (data) => {
-          const { roomId } = data;
-          router.push(`/rooms/${roomId}/?isHost=true`);
-        },
-        onError: (error: AxiosError) => {
-          if (error instanceof AxiosError) {
-            window.alert(error.response?.data.message);
-          }
-          console.error(error);
-        },
-      }
-    );
-  };
-
-  return (
-    <Layout screenColor="linear-gradient(#000, 90%, #01356E)">
-      <TopBar
-        sticky
-        leftIconButton={<TopBarIconButton iconName="arrow-left" />}
-      >
-        방 만들기
-      </TopBar>
-      <S.Container>
-        <S.Title>
-          <S.Ticket>{roomName}</S.Ticket>의 무드는?
-        </S.Title>
-        <S.SubTitle>무드에 맞춘 이모지를 제공해드려요!</S.SubTitle>
-        <S.ButtonGroup type="vertical" gap={15}>
-          {MOOD_ITEM_LIST.map((item) => (
-            <S.Button
-              key={item.moodDescription}
-              onClick={() => {
-                setIsEdit(false);
-                setMood(item);
-              }}
-              isActive={mood.moodDescription === item.moodDescription}
-            >
-              <S.ButtonText>{item.moodDescription}</S.ButtonText>
-              <Image
-                src={`/images/${MOOD_EMOJI_IMAGES[item.emojiType]}.svg`}
-                alt="icon"
-                width={56}
-                height={58}
-              />
-            </S.Button>
-          ))}
-          {isCustomButtonActive && (
-            <S.Button
-              key={mood.emojiType}
-              onClick={() => {
-                if (!isEdit) {
-                  setMood({
-                    ...selectedMood,
-                    moodDescription: "",
-                  });
-                  setIsEdit(!isEdit);
-                }
-              }}
-              isActive={isEdit}
-              style={{ paddingRight: "16px" }}
-            >
-              <S.MoodPrefixText isActive={isEdit}>#</S.MoodPrefixText>
-              <S.MoodInputText
-                type="text"
-                placeholder="직접 입력"
-                value={selectedMood.moodDescription}
-                onChange={(e) => {
-                  setSelectedMood({
-                    moodDescription: e.target.value,
-                    emojiType: selectedMood.emojiType,
-                  });
-                }}
-                maxLength={20}
-                isActive={isEdit}
-              ></S.MoodInputText>
-              <div style={{ flex: 1 }} />
-              <S.MoodGroupContainer>
-                {MOOD_ITEM_LIST.map((item) => (
-                  <S.MoodSelectedContainer
-                    key={item.moodDescription}
-                    isSelectedMood={item.emojiType === selectedMood.emojiType}
-                  >
-                    <Image
-                      src={`/images/${MOOD_EMOJI_IMAGES[item.emojiType]}.svg`}
-                      alt="icon"
-                      width={56}
-                      height={58}
-                      onClick={() => {
-                        if (isEdit) {
-                          setSelectedMood({
-                            moodDescription: selectedMood.moodDescription,
-                            emojiType: item.emojiType,
-                          });
+    if (roomsQuery.isError) {
+      return (
+        <Layout screenColor="linear-gradient(#000, 90%, #01356E)">
+          <TopBar
+            sticky
+            leftIconButton={<TopBarIconButton iconName="arrow-left" />}
+          >
+            방 만들기
+          </TopBar>
+          <S.Container>
+            <S.Title>
+              <S.Ticket>{roomName}</S.Ticket>의 무드는?
+            </S.Title>
+            <S.SubTitle>무드에 맞춘 이모지를 제공해드려요!</S.SubTitle>
+            <S.ButtonGroup type="vertical" gap={15}>
+              {MOOD_ITEM_LIST.map((item) => (
+                <S.Button
+                  key={item.moodDescription}
+                  onClick={() => {
+                    setIsEdit(false);
+                    setMood(item);
+                  }}
+                  isActive={mood.moodDescription === item.moodDescription}
+                >
+                  <S.ButtonText>{item.moodDescription}</S.ButtonText>
+                  <Image
+                    src={`/images/${MOOD_EMOJI_IMAGES[item.emojiType]}.svg`}
+                    alt="icon"
+                    width={56}
+                    height={58}
+                  />
+                </S.Button>
+              ))}
+              {isCustomButtonActive && (
+                <S.Button
+                  key={mood.emojiType}
+                  onClick={() => {
+                    if (!isEdit) {
+                      setMood({
+                        ...selectedMood,
+                        moodDescription: "",
+                      });
+                      setIsEdit(!isEdit);
+                    }
+                  }}
+                  isActive={isEdit}
+                  style={{ paddingRight: "16px" }}
+                >
+                  <S.MoodPrefixText isActive={isEdit}>#</S.MoodPrefixText>
+                  <S.MoodInputText
+                    type="text"
+                    placeholder="직접 입력"
+                    value={selectedMood.moodDescription}
+                    onChange={(e) => {
+                      setSelectedMood({
+                        moodDescription: e.target.value,
+                        emojiType: selectedMood.emojiType,
+                      });
+                    }}
+                    maxLength={20}
+                    isActive={isEdit}
+                  ></S.MoodInputText>
+                  <div style={{ flex: 1 }} />
+                  <S.MoodGroupContainer>
+                    {MOOD_ITEM_LIST.map((item) => (
+                      <S.MoodSelectedContainer
+                        key={item.moodDescription}
+                        isSelectedMood={
+                          item.emojiType === selectedMood.emojiType
                         }
-                      }}
-                    />
-                  </S.MoodSelectedContainer>
-                ))}
-              </S.MoodGroupContainer>
-            </S.Button>
-          )}
-        </S.ButtonGroup>
-        {!isCustomButtonActive && (
-          <S.BottomButton onClick={() => setIsCustomButtonActive(true)}>
-            직접 입력&nbsp;
-            <Image src={`/images/plus.svg`} alt="icon" width={14} height={14} />
-          </S.BottomButton>
-        )}
-      </S.Container>
-      <BottomButton
-        label="방 만들기"
-        onClick={onClickCreateRoom}
-        disabled={
-          selectedMood.moodDescription === "" && mood.moodDescription === ""
-        }
-      />
-    </Layout>
-  );
-};
+                      >
+                        <Image
+                          src={`/images/${
+                            MOOD_EMOJI_IMAGES[item.emojiType]
+                          }.svg`}
+                          alt="icon"
+                          width={56}
+                          height={58}
+                          onClick={() => {
+                            if (isEdit) {
+                              setSelectedMood({
+                                moodDescription: selectedMood.moodDescription,
+                                emojiType: item.emojiType,
+                              });
+                            }
+                          }}
+                        />
+                      </S.MoodSelectedContainer>
+                    ))}
+                  </S.MoodGroupContainer>
+                </S.Button>
+              )}
+            </S.ButtonGroup>
+            {!isCustomButtonActive && (
+              <S.BottomButton onClick={() => setIsCustomButtonActive(true)}>
+                직접 입력&nbsp;
+                <Image
+                  src={`/images/plus.svg`}
+                  alt="icon"
+                  width={14}
+                  height={14}
+                />
+              </S.BottomButton>
+            )}
+          </S.Container>
+          <BottomButton
+            label="방 만들기"
+            onClick={onClickCreateRoom}
+            disabled={
+              selectedMood.moodDescription === "" && mood.moodDescription === ""
+            }
+          />
+        </Layout>
+      );
+    }
+
+    return null;
+  }
+);
 
 const S = {
   Container: styled.div`
