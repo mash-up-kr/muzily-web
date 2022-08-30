@@ -3,7 +3,13 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
-import { Spinner, Toast, TopBar, TopBarIconButton } from "~/components/uis";
+import {
+  Skeleton,
+  Spacer,
+  Toast,
+  TopBar,
+  TopBarIconButton,
+} from "~/components/uis";
 import { MemberInfo } from "~/contexts";
 import {
   usePutRoomInvitationMutation,
@@ -39,7 +45,32 @@ const RoomInvitePage: NextPage = () => {
   };
 
   if (isFetching || isLoading || data === undefined) {
-    return <Spinner.FullPage />;
+    return (
+      <Spacer
+        type="vertical"
+        align="center"
+        justify="end"
+        style={{ height: "100%", paddingBottom: 16 }}
+      >
+        <div>
+          <Skeleton.Paragraph fontSize={12} line={1} lineBreak={3} />
+          <Skeleton.Box width={180} height={30} />
+          <br />
+          <br />
+          <br />
+          <Spacer type="vertical" align="center" gap={16}>
+            <Skeleton.Box width={100} height={20} />
+            <Skeleton.Box width={200} height={40} />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <Skeleton.Box width={280} height={160} />
+          </Spacer>
+        </div>
+      </Spacer>
+    );
   }
 
   return (

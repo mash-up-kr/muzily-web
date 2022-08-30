@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { Spinner } from "~/components/uis";
+import { Skeleton, Spacer } from "~/components/uis";
 import { MemberInfo } from "~/contexts";
 import type { Member } from "~/types/members";
 
@@ -21,7 +21,14 @@ const withRouteGuard = <P extends object>(
     }, [memberInfo, refetchMemberInfo, isError]);
 
     if (memberInfo === null) {
-      return <Spinner.FullPage />;
+      return (
+        <Spacer type="vertical" justify="center" style={{ height: "100%" }}>
+          <div style={{ margin: 16 }}>
+            <Skeleton.Circle size={60} />
+            <Skeleton.Paragraph fontSize={12} line={5} lineBreak={3} />
+          </div>
+        </Spacer>
+      );
     }
 
     const { accountConnectType } = memberInfo;
@@ -29,7 +36,14 @@ const withRouteGuard = <P extends object>(
     if (!access[accountConnectType]) {
       router.replace(replaceUrl);
 
-      return <Spinner.FullPage />;
+      return (
+        <Spacer type="vertical" justify="center" style={{ height: "100%" }}>
+          <div style={{ margin: 16 }}>
+            <Skeleton.Circle size={60} />
+            <Skeleton.Paragraph fontSize={12} line={5} lineBreak={3} />
+          </div>
+        </Spacer>
+      );
     }
 
     return <Page {...props} />;

@@ -22,7 +22,6 @@ import {
   useDeclinePlaylistItemRequest,
   useSendPlaylistItemRequest,
 } from "~/hooks/webSocket";
-import { useRoomStore } from "~/store";
 import { proposedPlaylistAtomState } from "~/store/playlist";
 import {
   isHostAtomState,

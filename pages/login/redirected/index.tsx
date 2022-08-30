@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { useQuery } from "react-query";
 import Emojis from "~/components/domains/Emoji/Emojis";
-import { Spinner } from "~/components/uis";
+import { Skeleton, Spacer } from "~/components/uis";
 import { MemberInfo } from "~/contexts";
 import { useLocalToken } from "~/hooks/domains";
 
@@ -63,14 +63,32 @@ const LoginRedirectedPage: NextPage = () => {
 
   if (router.query.code) {
     return (
-      <MemberInfo.Only fallback={<Spinner.FullPage />}>
+      <MemberInfo.Only
+        fallback={
+          <Spacer type="vertical" justify="center" style={{ height: "100%" }}>
+            <div style={{ margin: 16 }}>
+              <Skeleton.Circle size={60} />
+              <Skeleton.Paragraph fontSize={12} line={5} lineBreak={3} />
+            </div>
+          </Spacer>
+        }
+      >
         {({ memberInfo }) => (
           <>
             <Emojis stage={3} />
             {memberInfo.accountConnectType === "UNCONNECTED" ? (
               <GetServiceToken />
             ) : (
-              <></>
+              <Spacer
+                type="vertical"
+                justify="center"
+                style={{ height: "100%" }}
+              >
+                <div style={{ margin: 16 }}>
+                  <Skeleton.Circle size={60} />
+                  <Skeleton.Paragraph fontSize={12} line={5} lineBreak={3} />
+                </div>
+              </Spacer>
             )}
           </>
         )}
@@ -78,7 +96,14 @@ const LoginRedirectedPage: NextPage = () => {
     );
   }
 
-  return <Spinner.FullPage />;
+  return (
+    <Spacer type="vertical" justify="center" style={{ height: "100%" }}>
+      <div style={{ margin: 16 }}>
+        <Skeleton.Circle size={60} />
+        <Skeleton.Paragraph fontSize={12} line={5} lineBreak={3} />
+      </div>
+    </Spacer>
+  );
 };
 
 export default LoginRedirectedPage;
@@ -87,7 +112,14 @@ const GetServiceToken = () => {
   const { isLoading, isError } = useAuthRedirected();
 
   if (isLoading) {
-    return <Spinner.FullPage />;
+    return (
+      <Spacer type="vertical" justify="center" style={{ height: "100%" }}>
+        <div style={{ margin: 16 }}>
+          <Skeleton.Circle size={60} />
+          <Skeleton.Paragraph fontSize={12} line={5} lineBreak={3} />
+        </div>
+      </Spacer>
+    );
   }
 
   if (isError) {
