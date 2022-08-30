@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
+import { useQueryClient } from "react-query";
 import Slider from "react-slick";
 import YouTube from "react-youtube";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -22,13 +23,14 @@ import {
   TopBarIconButton,
   Skeleton,
 } from "~/components/uis";
+import { queryKeys } from "~/consts/react-query";
 import RoomSocketProvider from "~/contexts/RoomSocket";
 import { useGetPlaylistPendingItems } from "~/hooks/api";
 import { useRoomQuery } from "~/hooks/api/rooms";
 import usePlayerActions from "~/hooks/domains/usePlayerActions";
 import { useUpdatePlayerState } from "~/hooks/webSocket";
 import { useRoomStore } from "~/store";
-import { playlistAtomState } from "~/store/playlist";
+import { playlistAtomState, proposedPlaylistAtomState } from "~/store/playlist";
 import {
   isHostAtomState,
   playerAtomState,
@@ -76,7 +78,9 @@ const RoomContentPage: NextPage<Props> = () => {
   const [playerState, setPlayerState] = useRecoilState(playerAtomState);
   const [playlist] = useRecoilState(playlistAtomState);
   const playlistId = useRecoilValue(playlistIdAtomState);
+  const proposedPlaylist = useRecoilValue(proposedPlaylistAtomState);
   const { data: pendingData } = useGetPlaylistPendingItems(playlistId, isHost);
+  const queryClient = useQueryClient();
 
   const { playNextMusic } = usePlayerActions();
 
@@ -95,6 +99,12 @@ const RoomContentPage: NextPage<Props> = () => {
       router.replace("/");
     }
   }, [isError]);
+
+  useEffect(() => {
+    if (proposedPlaylist) {
+      queryClient.invalidateQueries(queryKeys.pendingPlaylist(playlistId));
+    }
+  }, [proposedPlaylist]);
 
   const [centerIdx, setCenterIdx] = useState(INITIAL_SLIDE_INDEX);
 
