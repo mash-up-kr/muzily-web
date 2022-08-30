@@ -10,7 +10,9 @@ const LoginPage: NextPage = withRouteGuard({ UNCONNECTED: true }, "/", () => {
   return (
     <>
       <Spacer type="vertical" style={{ height: "100%" }}>
-        <TopBar leftIconButton={<TopBarIconButton iconName="star" />} />
+        <TopBar
+          leftIconButton={<TopBarIconButton iconName="star" boxSize={29} />}
+        />
         <Spacer type="vertical" style={{ padding: 16 }}>
           <S.Header>
             방을 만드려면

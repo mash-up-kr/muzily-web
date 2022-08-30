@@ -7,11 +7,13 @@ interface TopBarIconButtonProps {
   iconName: string; // 파일명에서 .svg
   alt?: string;
   onClick?: () => void;
+  boxSize?: number;
 }
 const TopBarIconButton = ({
   iconName,
   alt,
   onClick,
+  boxSize,
 }: TopBarIconButtonProps) => {
   const router = useRouter();
   const backButton = () => {
@@ -27,8 +29,8 @@ const TopBarIconButton = ({
       <Image
         src={`/images/${iconName}.svg`}
         alt={alt ?? "icon"}
-        width={24}
-        height={24}
+        width={boxSize ?? 24}
+        height={boxSize ?? 24}
       />
     </StyledIconWrapper>
   );
@@ -36,8 +38,6 @@ const TopBarIconButton = ({
 
 const StyledIconWrapper = styled.button`
   cursor: pointer;
-  width: 24px;
-  height: 24px;
   background-color: transparent;
   border: none;
 `;
