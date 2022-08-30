@@ -9,15 +9,6 @@ import { withRouteGuard } from "~/hocs";
 const LoginPage: NextPage = withRouteGuard({ UNCONNECTED: true }, "/", () => {
   return (
     <>
-      <Head>
-        <title>Musily</title>
-        <meta
-          name="description"
-          content="좋아하는 음악을 카페에서 틀고 싶다고?"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       <Spacer type="vertical" style={{ height: "100%" }}>
         <TopBar leftIconButton={<TopBarIconButton iconName="star" />} />
         <Spacer type="vertical" style={{ padding: 16 }}>
