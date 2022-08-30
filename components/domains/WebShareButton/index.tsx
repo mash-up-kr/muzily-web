@@ -1,6 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import React, { useState } from "react";
 import styled from "@emotion/styled";
+import { Spacer, Toast } from "~/components/uis";
 
 interface Props {
   shareURL: string;
@@ -25,7 +26,11 @@ const WebShareButton = ({
     }
 
     if (!navigator.share) {
-      alert("공유하기가 지원되지 않는 환경입니다.");
+      const toBeCopiedText = `${shareURL}`;
+      navigator.clipboard.writeText(toBeCopiedText);
+      Toast.show(<Spacer>클립보드에 저장되었습니다.</Spacer>, {
+        duration: 3000,
+      });
       e.stopPropagation();
 
       return false;
