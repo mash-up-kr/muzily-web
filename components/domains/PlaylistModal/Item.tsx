@@ -43,6 +43,8 @@ const Item = ({ item, onClick }: Props) => {
 
   const Component = isHost ? Reorder.Item : motion.div;
 
+  const isDeletingItem = deletingIds.includes(item.playlistItemId);
+
   return (
     <Component
       {...(isHost ? {} : { layout: true })}
@@ -72,17 +74,48 @@ const Item = ({ item, onClick }: Props) => {
       onClick={onClick}
     >
       {isDeletingMode && (
-        <input
-          defaultChecked={deletingIds.includes(item.playlistItemId)}
-          type="checkbox"
-          onChange={(e) =>
-            setDeletingIds((ids) =>
-              e.target.checked
-                ? [...ids, item.playlistItemId]
-                : ids.filter((id) => id !== item.playlistItemId)
-            )
-          }
-        />
+        <>
+          <label
+            onClick={(e) => e.stopPropagation()}
+            css={css`
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 30px;
+              height: 30px;
+              border-radius: 15px;
+              border: 2px solid ${isDeletingItem ? "transparent" : "#3A3A3A"};
+              cursor: pointer;
+              background-color: ${isDeletingItem ? "#007aff" : "transparent"};
+            `}
+            htmlFor={`playlsit-item-checkbox_${item.playlistItemId}`}
+          >
+            {isDeletingItem && (
+              <Image
+                src="/images/check-white.svg"
+                width={10}
+                height={10}
+                alt="check"
+              />
+            )}
+          </label>
+          <input
+            onClick={(e) => e.stopPropagation()}
+            id={`playlsit-item-checkbox_${item.playlistItemId}`}
+            css={css`
+              display: none;
+            `}
+            defaultChecked={isDeletingItem}
+            type="checkbox"
+            onChange={(e) =>
+              setDeletingIds((ids) =>
+                e.target.checked
+                  ? [...ids, item.playlistItemId]
+                  : ids.filter((id) => id !== item.playlistItemId)
+              )
+            }
+          />
+        </>
       )}
       <Image
         src={item.thumbnail}

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useRouter } from "next/router";
 import { css } from "@emotion/react";
 import { AnimateSharedLayout, Reorder } from "framer-motion";
@@ -13,8 +12,7 @@ import type { PlaylistItem } from "~/types";
 import Item from "./Item";
 
 const Host = () => {
-  const [playlist] = useRecoilState(playlistAtomState);
-  const [localPlaylist, setLocalPlaylist] = useState(playlist);
+  const [playlist, setPlaylist] = useRecoilState(playlistAtomState);
   const playlistId = useRecoilValue(playlistIdAtomState);
 
   const router = useRouter();
@@ -30,24 +28,20 @@ const Host = () => {
   return (
     <Reorder.Group
       axis="y"
-      onReorder={(newLocalPlaylist: PlaylistItem[]) => {
-        console.log(
-          "old",
-          localPlaylist.map(({ playlistItemId }) => playlistItemId)
-        );
-        setLocalPlaylist(() => {
+      onReorder={(newPlaylist: PlaylistItem[]) => {
+        setPlaylist(() => {
           const { playlistItemId, prevPlaylistItemIdToMove } =
-            newLocalPlaylist.reduce(
+            newPlaylist.reduce(
               (prev, { playlistItemId }, index) => {
                 const isDifferent =
-                  localPlaylist[index].playlistItemId !== playlistItemId;
+                  playlist[index].playlistItemId !== playlistItemId;
 
                 return isDifferent
                   ? {
                       ...prev,
                       playlistItemId,
                       prevPlaylistItemIdToMove:
-                        newLocalPlaylist[index - 1 < 0 ? index : index - 1]
+                        newPlaylist[index - 1 < 0 ? index : index - 1]
                           .playlistItemId,
                     }
                   : prev;
@@ -55,22 +49,21 @@ const Host = () => {
               { playlistItemId: 0, prevPlaylistItemIdToMove: 0 }
             );
 
-          console.log({ playlistItemId, prevPlaylistItemIdToMove });
-
           publish({ playlistId, playlistItemId, prevPlaylistItemIdToMove });
 
-          return newLocalPlaylist;
+          return newPlaylist;
         });
       }}
-      values={localPlaylist}
+      values={playlist}
       css={css`
         display: flex;
         flex-direction: column;
         gap: 16px;
         margin: 0 8px;
+        padding-bottom: 60px;
       `}
     >
-      {localPlaylist.map((item) => {
+      {playlist.map((item) => {
         const { playlistId, playlistItemId } = item;
 
         return (
@@ -102,6 +95,7 @@ const Guest = () => {
           flex-direction: column;
           gap: 16px;
           margin: 0 8px;
+          padding-bottom: 60px;
         `}
       >
         {playlist.map((item) => (

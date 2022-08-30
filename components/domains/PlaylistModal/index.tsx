@@ -75,16 +75,16 @@ const ModalContent = () => {
       </TopBar>
       {isHost ? <Playlist.Host /> : <Playlist.Guest />}
 
-      {isHost && deletingIds.length ? (
-        <Modal.Close
-          as={S.DeleteButton}
+      {isHost && isDeletingMode ? (
+        <S.DeleteButton
+          disabled={deletingIds.length === 0}
           onClick={() => {
             removeItem({ playlistId, playlistItemIds: deletingIds });
             setDeletingIds([]);
           }}
         >
           {`${deletingIds.length}`.padStart(2, "0")} 삭제하기
-        </Modal.Close>
+        </S.DeleteButton>
       ) : (
         <></>
       )}
@@ -117,6 +117,11 @@ const S = {
     bottom: 18px;
     left: 50%;
     transform: translateX(-50%);
+
+    :disabled {
+      filter: contrast(0.5);
+      cursor: not-allowed;
+    }
   `,
   CancelText: styled.span`
     cursor: pointer;
