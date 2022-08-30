@@ -135,7 +135,7 @@ const Item = ({ item, onClick }: Props) => {
               {"  "}
             </>
           )}
-          {item.playlistItemId} / {item.title}{" "}
+          {item.title}{" "}
           {isPlayingMusic && (
             <span
               style={{ width: 30, height: 20, position: "absolute", bottom: 3 }}
