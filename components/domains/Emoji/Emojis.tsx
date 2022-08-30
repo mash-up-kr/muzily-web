@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
+import { useRecoilValue } from "recoil";
 import { Book, Heart, MirrorBall } from "~/assets/svgs";
-import { useRoomStore } from "~/store";
+import { emojiAtomState } from "~/store/emoji";
 
 const Emojis = ({ stage }: { stage: 1 | 2 | 3 }) => {
   return (
@@ -17,18 +18,17 @@ const Emojis = ({ stage }: { stage: 1 | 2 | 3 }) => {
 export default Emojis;
 
 export const EmojiScaled = ({ stage }: { stage: 1 | 2 | 3 }) => {
-  const {
-    state: { mood },
-  } = useRoomStore();
+  const emoji = useRecoilValue(emojiAtomState);
   const getRandomHalfToFull = () => Math.random() / 4 + 3 / 4;
   const randomMinus = Math.random() > 0.5 ? 1 : -1;
 
-  const EmojiSVG =
-    mood.emojiType === "HEART"
+  const EmojiSVG = emoji
+    ? emoji.emojiType === "HEART"
       ? Heart
-      : mood.emojiType === "BOOK"
+      : emoji.emojiType === "BOOK"
       ? Book
-      : MirrorBall;
+      : MirrorBall
+    : Heart;
 
   return (
     <motion.div

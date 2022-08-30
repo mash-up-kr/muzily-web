@@ -5,18 +5,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Book, Heart, MirrorBall } from "~/assets/svgs";
 import { IconButton, Modal, Spacer, LongPress, Toast } from "~/components/uis";
 import { MemberInfo } from "~/contexts";
+import { useRoomQuery } from "~/hooks/api";
 import { useEmoji } from "~/hooks/webSocket";
-import { useRoomStore } from "~/store";
 import { STAGE } from "./constants";
 import Watcher from "./Watcher";
 
 const Emoji = () => {
   const { query } = useRouter();
   const { publish } = useEmoji(Number(query.roomId));
-
-  const {
-    state: { mood },
-  } = useRoomStore();
+  const { data: roomData } = useRoomQuery(Number(query.roomId));
+  const emoijiType = roomData?.mood.emojiType ?? "HEART";
 
   return (
     <MemberInfo.Only fallback={<></>}>
@@ -59,12 +57,11 @@ const Emoji = () => {
                       꾸욱~ 길게 눌러주세요!
                     </p>
                   </motion.div>
-
                   <LongPress
                     threshold={4000}
                     onPressOut={({ percentage }) => {
                       publish({
-                        emojiType: mood.emojiType,
+                        emojiType: emoijiType,
                         intensity: percentage,
                         messageText: "좋아요",
                       });
@@ -100,9 +97,9 @@ const Emoji = () => {
                         percentage < STAGE._3_MAX_PERCENTAGE;
 
                       const EmojiSVG =
-                        mood.emojiType === "HEART"
+                        emoijiType === "HEART"
                           ? Heart
-                          : mood.emojiType === "BOOK"
+                          : emoijiType === "BOOK"
                           ? Book
                           : MirrorBall;
 

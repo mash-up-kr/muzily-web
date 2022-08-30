@@ -13,7 +13,9 @@ const Watcher = () => {
   const emojiState = useRecoilValue(emojiAtomState);
 
   useEffect(() => {
-    setEmojis((current) => [...current, emojiState]);
+    if (emojiState) {
+      setEmojis((current) => [...current, emojiState]);
+    }
   }, [emojiState]);
 
   if (!emojiState) {
