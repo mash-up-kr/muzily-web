@@ -120,6 +120,7 @@ const RoomCreateMoodPage: NextPage = () => {
                 }
               }}
               isActive={isEdit}
+              style={{ paddingRight: "16px" }}
             >
               <S.MoodPrefixText isActive={isEdit}>#</S.MoodPrefixText>
               <S.MoodInputText
@@ -132,8 +133,10 @@ const RoomCreateMoodPage: NextPage = () => {
                     emojiType: selectedMood.emojiType,
                   });
                 }}
+                maxLength={20}
                 isActive={isEdit}
               ></S.MoodInputText>
+              <div style={{ flex: 1 }} />
               <S.MoodGroupContainer>
                 {MOOD_ITEM_LIST.map((item) => (
                   <S.MoodSelectedContainer
@@ -238,6 +241,7 @@ const S = {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 58px;
     padding: 0px 22px;
     border: none;
     background: ${(p) => (p.isActive ? "white" : "rgba(64, 73, 83, 0.85)")};
@@ -267,6 +271,8 @@ const S = {
     background-color: transparent;
   `,
   MoodInputText: styled.input<{ isActive: boolean }>`
+    max-width: 40%;
+    margin: 0 3px;
     color: ${(p) => (p.isActive ? "#007AFF" : "white")};
     font-size: 16px;
     font-weight: 700;
@@ -297,6 +303,7 @@ const S = {
   MoodSelectedContainer: styled.div<{ isSelectedMood: boolean }>`
     height: 100%;
     width: 100%;
+    min-width: 56px;
     border-radius: 16px;
     background-color: ${(p) =>
       p.isSelectedMood ? "rgba(0, 0, 0, 0.07)" : "transparent"};
