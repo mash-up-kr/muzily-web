@@ -1,4 +1,5 @@
 import type { ComponentPropsWithRef } from "react";
+import { useState } from "react";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import {
@@ -23,6 +24,7 @@ type Props = {
 };
 
 const Item = ({ item, onClick }: Props) => {
+  const [isHandleActive, setIsHandleActive] = useState(false);
   const controls = useDragControls();
   const { isViewedPlaylistItemIds } = useIsViewedPlaylistItemIds();
 
@@ -47,6 +49,9 @@ const Item = ({ item, onClick }: Props) => {
       dragListener={false}
       dragControls={controls}
       whileDrag={{ cursor: "grabbing" }}
+      onDragEnd={() => {
+        setIsHandleActive(false);
+      }}
       value={item}
       id={`${item.playlistItemId}`}
       css={css`
@@ -56,7 +61,6 @@ const Item = ({ item, onClick }: Props) => {
         background-color: ${isPlayingMusic
           ? "rgba(255, 255, 255, 0.1)"
           : "rgba(0, 0, 0, 0.5)"};
-        border: 1px solid rgba(255, 255, 255, 0.1);
         height: 90px;
         align-items: center;
         justify-content: space-between;
@@ -88,6 +92,7 @@ const Item = ({ item, onClick }: Props) => {
         lazy
         mode="cover"
         placeholder="/images/play.svg"
+        style={{ borderRadius: 8 }}
       />
       <Spacer
         type="vertical"
@@ -159,35 +164,47 @@ const Item = ({ item, onClick }: Props) => {
       {isHost && (
         <motion.div
           className="reorder-handle"
-          onTapStart={(e) => controls.start(e)}
+          onTapStart={(e) => {
+            controls.start(e);
+            setIsHandleActive(true);
+          }}
           css={css`
             touch-action: none;
             height: 36px;
             width: 46px;
             border-radius: 12px;
-            background-color: rgba(255, 255, 255, 0.08);
+            background-color: ${isHandleActive
+              ? "#007AFF"
+              : "rgba(255, 255, 255, 0.08)"};
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             gap: 4px;
+            transition: background-color 200ms;
           `}
           style={{ cursor: "grab" }}
         >
           <div
             css={css`
               height: 3px;
-              background-color: rgba(255, 255, 255, 0.14);
+              background-color: ${isHandleActive
+                ? "white"
+                : "rgba(255, 255, 255, 0.14)"};
               width: 24px;
               border-radius: 999px;
+              transition: background-color 200ms;
             `}
           />
           <div
             css={css`
               height: 3px;
-              background-color: rgba(255, 255, 255, 0.1);
+              background-color: ${isHandleActive
+                ? "white"
+                : "rgba(255, 255, 255, 0.14)"};
               width: 24px;
               border-radius: 999px;
+              transition: background-color 200ms;
             `}
           />
         </motion.div>

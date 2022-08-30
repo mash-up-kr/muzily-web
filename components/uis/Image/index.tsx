@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { useEffect, useRef, useState } from "react";
 
 let observer: IntersectionObserver | null = null;
@@ -25,7 +26,7 @@ interface Props {
   alt?: string;
   mode?: "cover" | "fill" | "contain";
   placeholder?: string;
-  [x: string]: any;
+  style?: CSSProperties;
 }
 
 const Image = ({
@@ -38,7 +39,7 @@ const Image = ({
   height,
   alt,
   mode = "cover",
-  ...props
+  style,
 }: Props) => {
   const [loaded, setLoaded] = useState(false);
 
@@ -90,7 +91,7 @@ const Image = ({
       src={loaded ? src : placeholder}
       alt={alt}
       style={{
-        ...props.style,
+        ...style,
         ...imageStyle,
       }}
     />

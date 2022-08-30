@@ -6,7 +6,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { Layout, Modal, TopBar, TopBarIconButton } from "~/components/uis";
 import { useIsViewedPlaylistItemIds } from "~/hooks/domains";
 import { useRemovePlaylistItem } from "~/hooks/webSocket";
-import { useRoomStore } from "~/store";
 import { playlistAtomState } from "~/store/playlist";
 import { isHostAtomState, playlistIdAtomState } from "~/store/room";
 import { PlaylistContext, usePlaylistContext } from "./context";
@@ -17,15 +16,8 @@ const PlaylistModal = ({
 }: {
   trigger: ComponentPropsWithoutRef<typeof Modal>["trigger"];
 }) => {
-  const [playlist] = useRecoilState(playlistAtomState);
-  const playlistId = useRecoilValue(playlistIdAtomState);
-
   const [isDeletingMode, setIsDeletingMode] = useState(false);
   const [deletingIds, setDeletingIds] = useState<number[]>([]);
-
-  useEffect(() => {
-    // setPlaylist in socket
-  }, [playlist]);
 
   return (
     <PlaylistContext.Provider
@@ -42,16 +34,14 @@ const PlaylistModal = ({
 };
 
 const ModalContent = () => {
-  const {
-    query: { roomId },
-  } = useRouter();
+  const { query } = useRouter();
 
   const { isDeletingMode, setIsDeletingMode, deletingIds, setDeletingIds } =
     usePlaylistContext();
 
   const [playlist] = useRecoilState(playlistAtomState);
 
-  const { publish: removeItem } = useRemovePlaylistItem(Number(roomId));
+  const { publish: removeItem } = useRemovePlaylistItem(Number(query.roomId));
 
   const isHost = useRecoilValue(isHostAtomState);
   const playlistId = useRecoilValue(playlistIdAtomState);
