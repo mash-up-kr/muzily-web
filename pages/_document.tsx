@@ -26,7 +26,6 @@ class MyDocument extends Document {
             property="og:title"
             content="Muzily | 함께 만드는 모두의 플레이리스트"
           />
-          <meta property="og:description" content="(방 이름)에 초대되었어요!" />
           <meta property="og:image" content="/images/og-image.png" />
         </Head>
 
