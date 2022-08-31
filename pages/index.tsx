@@ -315,7 +315,7 @@ const S = {
   BottomGifImage: styled(motion.img)`
     position: absolute;
     object-fit: cover;
-    height: 65vh;
+    height: 52vh;
     bottom: 0;
     z-index: -1;
     float: left;
