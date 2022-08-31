@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
-import type { NextPage } from "next";
+import { useEffect } from "react";
+import type { GetServerSideProps, NextPage } from "next";
+import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
+import axios from "axios";
 import {
   Skeleton,
   Spacer,
@@ -15,8 +17,46 @@ import {
   usePutRoomInvitationMutation,
   useRoomInvitationQuery,
 } from "~/hooks/api";
+import type { RoomInvitation } from "~/types";
 
-const RoomInvitePage: NextPage = () => {
+const defaultEndPoint = process.env
+  .NEXT_PUBLIC_SERVER_DEFAULT_END_POINT as string;
+
+// NOTE: head og tag를 위한 room name을 받는 함수
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  try {
+    const { inviteKey } = query;
+    const res = await axios.get(
+      `${defaultEndPoint}/api/v1/rooms/invitation/${inviteKey as string}`
+    );
+    const room = (await res.data) as RoomInvitation;
+
+    return { props: { roomName: room.name } };
+  } catch (err: any) {
+    return { props: { roomName: undefined } };
+  }
+};
+
+interface HeadProps {
+  roomName?: string;
+}
+const InviteHead = ({ roomName }: HeadProps) => {
+  return (
+    <Head>
+      <meta property="og:title" content="나랑 같이 음악 듣지 않을래?" />
+      <meta
+        property="og:description"
+        content={`${roomName || "Muzily 플레이리스트"}에 초대되었어요!`}
+      />
+      <meta property="og:image" content="/images/og-image.png" />
+    </Head>
+  );
+};
+
+interface Props {
+  roomName?: string;
+}
+const RoomInvitePage: NextPage<Props> = ({ roomName }) => {
   const router = useRouter();
   const { roomId, inviteKey } = router.query;
 
@@ -46,35 +86,39 @@ const RoomInvitePage: NextPage = () => {
 
   if (isFetching || isLoading || data === undefined) {
     return (
-      <Spacer
-        type="vertical"
-        align="center"
-        justify="end"
-        style={{ height: "100%", paddingBottom: 16 }}
-      >
-        <div>
-          <Skeleton.Paragraph fontSize={12} line={1} lineBreak={3} />
-          <Skeleton.Box width={180} height={30} />
-          <br />
-          <br />
-          <br />
-          <Spacer type="vertical" align="center" gap={16}>
-            <Skeleton.Box width={100} height={20} />
-            <Skeleton.Box width={200} height={40} />
+      <>
+        <InviteHead roomName={roomName} />
+        <Spacer
+          type="vertical"
+          align="center"
+          justify="end"
+          style={{ height: "100%", paddingBottom: 16 }}
+        >
+          <div>
+            <Skeleton.Paragraph fontSize={12} line={1} lineBreak={3} />
+            <Skeleton.Box width={180} height={30} />
             <br />
             <br />
             <br />
-            <br />
-            <br />
-            <Skeleton.Box width={280} height={160} />
-          </Spacer>
-        </div>
-      </Spacer>
+            <Spacer type="vertical" align="center" gap={16}>
+              <Skeleton.Box width={100} height={20} />
+              <Skeleton.Box width={200} height={40} />
+              <br />
+              <br />
+              <br />
+              <br />
+              <br />
+              <Skeleton.Box width={280} height={160} />
+            </Spacer>
+          </div>
+        </Spacer>
+      </>
     );
   }
 
   return (
     <>
+      <InviteHead roomName={roomName} />
       <TopBar
         leftIconButton={<TopBarIconButton iconName="logo" boxSize={29} />}
         rightIconButton={
