@@ -13,3 +13,4 @@ export { default as Toast } from "./Toast";
 export { default as LongPress } from "./LongPress";
 export { default as Image } from "./Image";
 export { default as Skeleton } from "./Skeleton";
+export { default as LoadingButton } from "./LoadingButton";

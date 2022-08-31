@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { css } from "@emotion/react";
@@ -6,6 +6,7 @@ import styled from "@emotion/styled";
 import { AxiosError } from "axios";
 import { motion } from "framer-motion";
 import {
+  LoadingButton,
   Skeleton,
   Spacer,
   TopBar,
@@ -24,6 +25,8 @@ const HomePage: NextPage = withRouteGuard(
   { UNCONNECTED: true, CONNECTED: true },
   "/login",
   () => {
+    const [isRouting, setIsRouting] = useState(false);
+
     const router = useRouter();
 
     const roomsQuery = useRoomsQuery();
@@ -162,19 +165,29 @@ const HomePage: NextPage = withRouteGuard(
                     style={{ display: "inline" }}
                   >
                     <Spacer type="vertical" align={"center"}>
-                      <S.CreateRoomButton
-                        onClick={() =>
-                          roomQuery.isSuccess && roomsQuery.isSuccess
-                            ? router.replace(
-                                `/rooms/${roomsQuery.data.roomId}?isHost=true`
-                              )
-                            : router.push({ pathname: "/rooms/create" })
-                        }
+                      <div
+                        css={css`
+                          height: 58px;
+                        `}
+                      />
+                      <LoadingButton
+                        loading={isRouting}
+                        disabled={isRouting}
+                        onClick={() => {
+                          setIsRouting(true);
+                          if (roomQuery.isSuccess && roomsQuery.isSuccess) {
+                            router.replace(
+                              `/rooms/${roomsQuery.data.roomId}?isHost=true`
+                            );
+                          } else {
+                            router.push({ pathname: "/rooms/create" });
+                          }
+                        }}
                       >
                         {roomQuery.isSuccess && roomsQuery.isSuccess
                           ? "내 방 입장하기"
                           : "방 만들기"}
-                      </S.CreateRoomButton>
+                      </LoadingButton>
                       <S.Description>
                         지금 바로 3초만에 만들어보세요!
                       </S.Description>
@@ -246,21 +259,6 @@ const S = {
     color: white;
     text-align: center;
     line-height: 43.2px;
-  `,
-  CreateRoomButton: styled.button`
-    margin-top: 58px;
-    padding: 0 24px;
-    height: 51px;
-    background-color: #007aff;
-    border-radius: 15px;
-    color: white;
-    font-weight: 700;
-    font-size: 20px;
-    line-height: 23.87px;
-    letter-spacing: -0.45px;
-    text-align: center;
-    border: none;
-    cursor: pointer;
   `,
   Description: styled.div`
     margin-top: 18px;
