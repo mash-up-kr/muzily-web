@@ -85,7 +85,7 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
 
 const S = {
   Container: styled.div`
-    height: 45vh;
+    height: 313px;
     display: flex;
     flex-direction: column;
     /* flex-shrink: 0; */
