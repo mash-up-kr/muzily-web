@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import type { NextPage, NextPageContext } from "next";
+import Image from "next/image";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useRouter } from "next/router";
@@ -23,6 +24,7 @@ import {
   TopBar,
   TopBarIconButton,
   Skeleton,
+  Toast,
 } from "~/components/uis";
 import { queryKeys } from "~/consts/react-query";
 import RoomSocketProvider from "~/contexts/RoomSocket";
@@ -148,8 +150,26 @@ const RoomContentPage: NextPage<Props> = () => {
               </>
             ) : (
               <>
-                <S.Title>{roomData?.name}</S.Title>
-                <S.Desc>곡을 추가하거나 좋아요를 해보세요!</S.Desc>
+                <S.Title>
+                  {roomData?.name}{" "}
+                  {isHost && (
+                    <S.Tag>
+                      방장{" "}
+                      <Image
+                        src="/images/icon-crown.svg"
+                        width={13}
+                        height={13}
+                        alt="icon-crown"
+                      />
+                    </S.Tag>
+                  )}
+                </S.Title>
+                <S.Desc>
+                  {roomData?.participantsCount !== undefined &&
+                  roomData?.participantsCount > 1
+                    ? `${roomData?.participantsCount}명이 함께 듣고 있어요`
+                    : "함께 듣고 싶은 사람을 초대해보세요."}
+                </S.Desc>
               </>
             )}
           </Spacer>
@@ -203,6 +223,7 @@ const RoomContentPage: NextPage<Props> = () => {
                 }
               />
               <Actions.Emoji />
+              <Actions.Chat />
             </>
           )}
         </Spacer>
@@ -279,6 +300,15 @@ const Actions = {
     </Spacer>
   ),
   Emoji,
+  Chat: () => (
+    <Spacer type="vertical" align="center" gap={8}>
+      <IconButton
+        iconName="icon-chat"
+        onClick={() => Toast.show(<Spacer>준비중입니다</Spacer>)}
+      />
+      <S.IconText>채팅</S.IconText>
+    </Spacer>
+  ),
 };
 
 export default RoomPage;
@@ -287,6 +317,10 @@ const S = {
   Title: styled.h1`
     font-weight: 700;
     font-size: 28px;
+
+    display: flex;
+    align-items: center;
+    gap: 8.5px;
   `,
   Desc: styled.h4`
     font-weight: 500;
@@ -315,6 +349,25 @@ const S = {
     text-align: center;
     letter-spacing: -0.498081px;
   `,
+
+  Tag: styled.div`
+    width: 67.56px;
+    height: 30px;
+    background: #252525;
+    border-radius: 5px;
+
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    letter-spacing: -0.544648px;
+
+    color: #ffffff;
+  `,
+
   Slider: styled(Slider)<{ centerIdx: number; isMobile: boolean }>`
     width: 100%;
 
