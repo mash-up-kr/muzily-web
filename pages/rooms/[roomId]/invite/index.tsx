@@ -76,7 +76,7 @@ const RoomInvitePage: NextPage = () => {
   return (
     <>
       <TopBar
-        leftIconButton={<TopBarIconButton iconName="star" boxSize={29} />}
+        leftIconButton={<TopBarIconButton iconName="logo" boxSize={29} />}
         rightIconButton={
           <MemberInfo.Only>
             {({ memberInfo }) =>

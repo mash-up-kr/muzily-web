@@ -11,7 +11,7 @@ const LoginPage: NextPage = withRouteGuard({ UNCONNECTED: true }, "/", () => {
     <>
       <Spacer type="vertical" style={{ height: "100%" }}>
         <TopBar
-          leftIconButton={<TopBarIconButton iconName="star" boxSize={29} />}
+          leftIconButton={<TopBarIconButton iconName="logo" boxSize={29} />}
         />
         <Spacer type="vertical" style={{ padding: 16 }}>
           <S.Header>
