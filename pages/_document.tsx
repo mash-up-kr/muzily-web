@@ -22,6 +22,11 @@ class MyDocument extends Document {
           {/* Memo(@young-mason) 일단 모든 페이지에 같은 타이틀이 노출되는 정책이라 lint 무시하였음 */}
           <title>Muzily | 함께 만드는 모두의 플레이리스트</title>
           <link rel="icon" href="/favicon.ico" />
+          <meta
+            property="og:title"
+            content="Muzily | 함께 만드는 모두의 플레이리스트"
+          />
+          <meta property="og:image" content="/images/og-image.png" />
         </Head>
 
         <body>
