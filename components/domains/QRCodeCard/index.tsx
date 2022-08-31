@@ -31,7 +31,9 @@ function QRCodeCard({ roomId }: QRCodeCardProps) {
     <S.Container>
       <S.UpContainer>
         <S.Title>QR Code</S.Title>
-        <QRCodeWithLogo url={inviteURL}></QRCodeWithLogo>
+        <S.QRCodeWrapper>
+          <QRCodeWithLogo url={inviteURL}></QRCodeWithLogo>
+        </S.QRCodeWrapper>
       </S.UpContainer>
       <WebShareButton shareURL={inviteURL} disabled={disabled} />
     </S.Container>
@@ -40,36 +42,33 @@ function QRCodeCard({ roomId }: QRCodeCardProps) {
 
 const S = {
   Container: styled.div<{ noPlaylist?: boolean }>`
-    height: 45vh;
-    position: relative;
-    background: rgba(0, 0, 0, 1);
-    border-radius: 20px;
+    height: 313px;
     display: flex;
     flex-direction: column;
-
-    /* flex-shrink: 0; */
   `,
 
   UpContainer: styled.div<{ noPlaylist?: boolean }>`
     flex: 1;
-    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    justify-content: center;
-    align-items: center;
-
-    background: ${(p) => (p.noPlaylist ? "#007aff" : "#fff")};
-    border-radius: 20px;
+    justify-content: space-between;
     padding: 20px;
+    margin-bottom: 2px;
+    background: ${(p) => (p.noPlaylist ? "#007aff" : "#fff")};
+    border-bottom: 2px dashed #000;
+    border-radius: 20px;
   `,
 
-  Title: styled.span`
+  QRCodeWrapper: styled.div`
+    text-align: center;
+  `,
+
+  Title: styled.h3`
+    text-align: left;
     font-weight: 800;
-    font-size: 24px;
-    line-height: 17px;
+    font-size: 14px;
     letter-spacing: -0.452636px;
-    color: #cccccc;
+    color: #7c7c7c;
   `,
 };
 

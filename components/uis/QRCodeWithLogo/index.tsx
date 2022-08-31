@@ -13,9 +13,9 @@ const logoSize = {
   height: 20,
 };
 const eyeRadius = 9;
-const qrSize = 180;
+const qrSize = 170;
 const qrStyle: QRStyleType = "dots";
-const qrCodeMarginAreaSize = 10;
+const qrCodeMarginAreaSize = 0;
 
 const QRCodeWithLogo = (props: QRCodeWithLogoProps) => {
   return (
@@ -30,6 +30,7 @@ const QRCodeWithLogo = (props: QRCodeWithLogoProps) => {
       removeQrCodeBehindLogo={true}
       quietZone={qrCodeMarginAreaSize}
       bgColor="white"
+      fgColor="#404953"
     />
   );
 };
