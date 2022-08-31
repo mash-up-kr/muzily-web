@@ -12,6 +12,7 @@ const badge = {
 } as const;
 
 interface ExtraOptions {
+  isShowProgressBar?: boolean;
   isShowClose?: boolean;
 }
 
@@ -25,34 +26,41 @@ export default new Toast<ExtraOptions>({
   Template: ({
     content,
     isShow,
-    options: { delay, duration, status, isShowClose = true },
+    options: {
+      delay,
+      duration,
+      status,
+      isShowClose = true,
+      isShowProgressBar = false,
+    },
     close,
   }) => {
     return (
-      <AnimatePresence>
+      <AnimatePresence exitBeforeEnter>
         {isShow && (
-          <div
+          <motion.div
+            layout
             style={{
               maxWidth: 450,
               margin: "0 auto",
               padding: "0 16px 16px 16px",
             }}
+            initial={{ y: 40, opacity: 0 }}
+            animate={{
+              y: 0,
+              opacity: 1,
+              transition: { delay: delay / 1000 },
+            }}
+            exit={{
+              y: -20,
+              opacity: 0,
+              transition: { duration: delay / 1000 },
+            }}
           >
-            <Container
-              layout
-              initial={{ y: 40, opacity: 0 }}
-              animate={{
-                y: 0,
-                opacity: 1,
-                transition: { delay: delay / 1000 },
-              }}
-              exit={{
-                y: -20,
-                opacity: 0,
-                transition: { duration: delay / 1000 },
-              }}
-            >
-              <ProgressBar style={{ animationDuration: `${duration}ms` }} />
+            <Container>
+              {isShowProgressBar && (
+                <ProgressBar style={{ animationDuration: `${duration}ms` }} />
+              )}
               <div
                 style={{
                   display: "flex",
@@ -74,7 +82,7 @@ export default new Toast<ExtraOptions>({
                 )}
               </div>
             </Container>
-          </div>
+          </motion.div>
         )}
       </AnimatePresence>
     );
