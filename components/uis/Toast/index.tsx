@@ -31,40 +31,50 @@ export default new Toast<ExtraOptions>({
     return (
       <AnimatePresence>
         {isShow && (
-          <Container
-            layout
-            initial={{ y: 40, opacity: 0 }}
-            animate={{ y: 0, opacity: 1, transition: { delay: delay / 1000 } }}
-            exit={{
-              y: -20,
-              opacity: 0,
-              transition: { duration: delay / 1000 },
+          <div
+            style={{
+              maxWidth: 450,
+              margin: "0 auto",
+              padding: "0 16px 16px 16px",
             }}
           >
-            <ProgressBar style={{ animationDuration: `${duration}ms` }} />
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                paddingLeft: 16,
+            <Container
+              layout
+              initial={{ y: 40, opacity: 0 }}
+              animate={{
+                y: 0,
+                opacity: 1,
+                transition: { delay: delay / 1000 },
+              }}
+              exit={{
+                y: -20,
+                opacity: 0,
+                transition: { duration: delay / 1000 },
               }}
             >
-              {status && badge[status]}
-              <Wrapper>{content}</Wrapper>
-            </div>
-            {isShowClose && (
-              <span
-                css={css`
-                  position: absolute;
-                  top: 4px;
-                  right: 4px;
-                `}
-                onClick={close}
+              <ProgressBar style={{ animationDuration: `${duration}ms` }} />
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "0 16px",
+                }}
               >
-                ×
-              </span>
-            )}
-          </Container>
+                {status && badge[status]}
+                <Wrapper>{content}</Wrapper>
+                {isShowClose && (
+                  <div
+                    css={css`
+                      width: 10px;
+                    `}
+                    onClick={close}
+                  >
+                    ×
+                  </div>
+                )}
+              </div>
+            </Container>
+          </div>
         )}
       </AnimatePresence>
     );
@@ -74,7 +84,6 @@ export default new Toast<ExtraOptions>({
 const Container = styled(motion.div)`
   color: white;
   background-color: rgba(0, 0, 0, 0.5);
-  margin: 0 16px 16px 16px;
   backdrop-filter: blur(10px);
   box-shadow: 0 16px 32px -16px rgba(0, 0, 0, 0.4);
   border-radius: 16px;
