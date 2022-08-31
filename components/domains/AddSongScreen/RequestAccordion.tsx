@@ -27,6 +27,7 @@ function RequestAccordion() {
   const [proposedPlaylist, setProposedPlaylist] = useRecoilState(
     proposedPlaylistAtomState
   );
+  console.log("proposedPlaylist", proposedPlaylist);
   const roomId = useRecoilValue(roomIdAtomState);
   const playlistId = useRecoilValue(playlistIdAtomState);
   const isHost = useRecoilValue(isHostAtomState);
@@ -91,15 +92,15 @@ function RequestAccordion() {
       </S.AccordionButton>
       <motion.div
         animate={{
-          overflowY: "hidden",
+          overflowY: "scroll",
           opacity: isAccordionOpen ? 1 : 0,
-          height: isAccordionOpen ? undefined : 0,
+          height: isAccordionOpen ? "250px" : 0,
         }}
       >
         <S.AccordionPanel>
           {proposedPlaylist.map((item, idx) => (
             <S.AccordionItem key={idx}>
-              <Spacer gap={14}>
+              <Spacer gap={14} align="center">
                 <ComponentImage
                   src={item.thumbnail}
                   alt={item.title}
@@ -110,14 +111,14 @@ function RequestAccordion() {
                   placeholder="/images/play.svg"
                   style={{ borderRadius: 4 }}
                 />
-                <Spacer type="vertical">
+                <Spacer type="vertical" style={{ textAlign: "left" }}>
                   <S.RequestTitle>{item.title}</S.RequestTitle>
                   <S.RequestDate>
                     {getDurationText(item.duration || 0)}
                   </S.RequestDate>
                 </Spacer>
               </Spacer>
-              <Spacer gap={8} align="center">
+              <Spacer gap={8} align="center" style={{ flexShrink: 0 }}>
                 <S.Button
                   color="#007aff"
                   onClick={() => handleAcceptPlaylist(item)}
@@ -151,70 +152,9 @@ function RequestAccordion() {
 }
 
 const S = {
-  ProposedMusicListCard: styled.div<{ hidden: boolean }>`
-    display: ${(p) => (p.hidden ? "none" : "")};
-    position: fixed;
-    bottom: 64px;
-    left: 0;
-    width: 100%;
-    margin: 20px 0%;
-    background: rgba(26, 26, 26, 0.9);
-    border-top-right-radius: 20px;
-    border-top-left-radius: 20px;
-    padding: 20px;
-  `,
-
-  CardHeader: styled.div`
-    color: white;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 20px;
-
-    font-size: 14px;
-    line-height: 17px;
-    /* identical to box height */
-
-    letter-spacing: -0.452636px;
-
-    & > strong {
-      font-weight: 800;
-    }
-  `,
-
-  CardContent: styled.ul`
-    margin-top: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  `,
-  CardItem: styled.li`
-    display: flex;
-    justify-content: space-between;
-  `,
-
-  MusicTitle: styled.div`
-    color: white;
-    font-weight: 600;
-    font-size: 12px;
-    line-height: 155%;
-    line-clamp: 2;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-  `,
-  MusicArtist: styled.div`
-    font-weight: 300;
-    font-size: 12px;
-    line-height: 155%;
-    letter-spacing: -0.405328px;
-
-    color: #959595;
-  `,
-
   Accordion: styled.div<{ hidden: boolean }>`
-    position: fixed;
-    bottom: 64px;
+    position: absolute;
+    bottom: 0;
     left: 0;
     width: 100%;
     display: ${(p) => (p.hidden ? "none" : "")};
@@ -223,14 +163,6 @@ const S = {
     border-top-left-radius: 20px;
     background: #000;
   `,
-
-  // Accordion: styled.div`
-  //   bottom: 20px;
-  //   display: block;
-  //   padding: 0 20px;
-  //   border-radius: 20px;
-  //   background-color: #1a1a1a;
-  // `,
   AccordionButton: styled.button`
     display: flex;
     align-items: center;
@@ -254,7 +186,6 @@ const S = {
     height: 18px;
   `,
   AccordionPanel: styled(motion.div)`
-    padding-bottom: 20px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
   `,
   AccordionItem: styled.div`
@@ -264,6 +195,13 @@ const S = {
     margin-top: 16px;
   `,
   RequestTitle: styled.h5`
+    line-clamp: 2;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    word-break: break-all;
     font-weight: 500;
     font-size: 14px;
     line-height: 155%;
@@ -275,17 +213,6 @@ const S = {
     line-height: 155%;
     color: #8c8c8c;
   `,
-  RequestButton: styled.button<{ isConfirmed: boolean }>`
-    padding: 9px 16px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #fff;
-    background-color: ${(props) => (props.isConfirmed ? "#007aff" : "#F54031")};
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  `,
-
   Button: styled.button<{ color: string }>`
     cursor: pointer;
     border: none;

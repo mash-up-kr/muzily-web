@@ -135,7 +135,10 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
           }
           rightIconButton={<QuestionButton />}
         />
-        <Spacer type="vertical" style={{ flex: 1, padding: "0 16px" }}>
+        <Spacer
+          type="vertical"
+          style={{ position: "relative", flex: 1, padding: "0 16px" }}
+        >
           {/* <button onClick={props.onClickBackButton}>뒤로가기</button> */}
           <S.HeadingText>
             {`추가하고 싶은 곡의\n유튜브 링크를 입력해주세요!`}
