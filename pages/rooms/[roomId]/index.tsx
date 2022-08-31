@@ -28,6 +28,7 @@ import { queryKeys } from "~/consts/react-query";
 import RoomSocketProvider from "~/contexts/RoomSocket";
 import { useGetPlaylistPendingItems } from "~/hooks/api";
 import { useRoomQuery } from "~/hooks/api/rooms";
+import { useIsMobile } from "~/hooks/commons";
 import usePlayerActions from "~/hooks/domains/usePlayerActions";
 import { useUpdatePlayerState } from "~/hooks/webSocket";
 import { useRoomStore } from "~/store";
@@ -109,6 +110,8 @@ const RoomContentPage: NextPage<Props> = () => {
 
   const [centerIdx, setCenterIdx] = useState(INITIAL_SLIDE_INDEX);
 
+  const isMobile = useIsMobile();
+
   return (
     <>
       <Spacer
@@ -157,7 +160,9 @@ const RoomContentPage: NextPage<Props> = () => {
           </div>
         ) : (
           <S.Slider
-            infinite
+            className="center"
+            infinite={false}
+            arrows={false}
             speed={500}
             slidesToShow={1}
             initialSlide={INITIAL_SLIDE_INDEX}
@@ -167,8 +172,9 @@ const RoomContentPage: NextPage<Props> = () => {
               setCenterIdx(next);
             }}
             centerIdx={centerIdx}
-            centerPadding="32px"
-            draggable
+            centerPadding="25%"
+            isMobile={isMobile}
+            // draggable
           >
             <QRCodeCard roomId={roomId} />
             <NowPlayingCard
@@ -309,9 +315,9 @@ const S = {
     text-align: center;
     letter-spacing: -0.498081px;
   `,
-  Slider: styled(Slider)<{ centerIdx: number }>`
+  Slider: styled(Slider)<{ centerIdx: number; isMobile: boolean }>`
     width: 100%;
-    margin-top: 10%;
+
     .slick-list {
       overflow: visible;
     }
@@ -321,11 +327,17 @@ const S = {
     }
 
     .slick-slide {
+      position: relative;
       transition: all 300ms;
-      z-index: 0;
     }
+
+    .slick-center {
+      z-index: 999;
+    }
+
     .slick-slide[data-index="${(p) => p.centerIdx - 1}"] {
-      transform: rotate(5deg);
+      transform: rotate(10deg)
+        translate(${(p) => (p.isMobile ? "-40%" : "-20%")}, -20px);
     }
 
     .slick-slide[data-index="${(p) => p.centerIdx}"] {
@@ -334,7 +346,8 @@ const S = {
     }
 
     .slick-slide[data-index="${(p) => p.centerIdx + 1}"] {
-      transform: rotate(-5deg);
+      transform: rotate(-20deg)
+        translate(${(p) => (p.isMobile ? "20%" : "5%")}, -20px);
       filter: drop-shadow(0 0 48px rgba(0, 0, 0, 0.5));
     }
   `,

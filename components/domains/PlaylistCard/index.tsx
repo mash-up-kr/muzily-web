@@ -34,7 +34,14 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
             <>
               <div
                 css={css`
-                  font-size: 18px;
+                  width: 100%;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                  word-break: break-word;
+
+                  display: -webkit-box;
+                  -webkit-line-clamp: 2; // 원하는 라인수
+                  -webkit-box-orient: vertical;
                 `}
               >
                 {currentMusic.title}
@@ -54,7 +61,6 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
             <>
               <div
                 css={css`
-                  font-size: 18px;
                   width: 100%;
                   text-overflow: ellipsis;
                   overflow: hidden;
@@ -85,7 +91,8 @@ function PlaylistCard({ currentMusic }: PlaylistCardProps) {
 
 const S = {
   Container: styled.div`
-    height: 313px;
+    width: 220px;
+    height: 314px;
     display: flex;
     flex-direction: column;
     /* flex-shrink: 0; */
@@ -118,6 +125,7 @@ const S = {
     align-items: center;
   `,
   LowerCard: styled.div`
+    cursor: pointer;
     height: 20%;
     background: #ff5100;
     backdrop-filter: blur(20px);

@@ -67,16 +67,16 @@ function NowPlayingCard({
           <Image
             src="/images/play-back.svg"
             alt="play-back"
-            width={36}
-            height={36}
+            width={20}
+            height={20}
             onClick={playPrevMusic}
           />
           {playerState.isPlaying ? (
             <Image
               src="/images/pause-button.svg"
               alt="play-back"
-              width={80}
-              height={80}
+              width={60}
+              height={60}
               onClick={() => player.pauseVideo()}
             />
           ) : (
@@ -84,16 +84,16 @@ function NowPlayingCard({
               // 임시
               src="/images/play.svg"
               alt="play"
-              width={80}
-              height={80}
+              width={60}
+              height={60}
               onClick={() => player.playVideo()}
             />
           )}
           <Image
             src="/images/play-next.svg"
             alt="play-next"
-            width={36}
-            height={36}
+            width={20}
+            height={20}
             onClick={playNextMusic}
           />
         </S.Controller>
@@ -117,7 +117,8 @@ const S = {
   Container: styled.div<{ noPlaylist?: boolean }>`
     cursor: pointer;
     position: relative;
-    height: 313px;
+    width: 220px;
+    height: 314px;
 
     background: ${(p) => (p.noPlaylist ? "#007aff" : "#fff")};
     border-radius: 20px;
@@ -171,7 +172,7 @@ const S = {
     z-index: 1;
     position: absolute;
     font-weight: 600;
-    font-size: 20px;
+    font-size: 17px;
     line-height: 145%;
     letter-spacing: -0.544648px;
 

@@ -29,6 +29,7 @@ const S = {
     width: 100%;
     height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
     background: ${(p) => p.screenColor};
     color: #fff;
     position: relative;

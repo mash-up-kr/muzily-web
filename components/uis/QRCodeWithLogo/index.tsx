@@ -13,7 +13,7 @@ const logoSize = {
   height: 20,
 };
 const eyeRadius = 9;
-const qrSize = 170;
+const qrSize = 157;
 const qrStyle: QRStyleType = "dots";
 const qrCodeMarginAreaSize = 0;
 
