@@ -56,8 +56,8 @@ const S = {
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 16px;
     justify-content: center;
+    gap: 16px;
     align-items: center;
 
     border-bottom: 2px dashed #000000;
@@ -68,11 +68,13 @@ const S = {
   `,
 
   Title: styled.span`
+    /* text-align: left; */
+    align-self: flex-start;
     font-weight: 800;
-    font-size: 24px;
+    font-size: 14px;
     line-height: 17px;
     letter-spacing: -0.452636px;
-    color: #cccccc;
+    color: #7c7c7c;
   `,
 };
 
