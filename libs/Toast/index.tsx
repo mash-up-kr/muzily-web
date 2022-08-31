@@ -1,33 +1,26 @@
-import type { ComponentProps, FunctionComponent, ReactNode } from "react";
+import type {
+  ComponentPropsWithoutRef,
+  FunctionComponent,
+  ReactNode,
+} from "react";
 import { hydrateRoot } from "react-dom/client";
 import { Context } from "./context";
 import type DefaultTemplate from "./DefaultTemplate";
 import Manager from "./Manager";
 
-type ConstructorParameter = {
-  zIndex?: number;
-  portalId?: string;
-  Adapter?: FunctionComponent<{ children: ReactNode }>;
-  Template?: FunctionComponent<
-    { content: ReactNode } & Pick<
-      ComponentProps<typeof DefaultTemplate>,
-      "close" | "isShow" | "options"
-    >
-  >;
-  defaultOptions?: Partial<ComponentProps<typeof DefaultTemplate>["options"]>;
-};
-
-class Toast {
+class Toast<ExtraOptions extends { [x: string]: any }> {
   portal: HTMLElement | null = null;
 
-  createToast: Parameters<ComponentProps<typeof Manager>["bind"]>[0] | null =
-    null;
+  createToast:
+    | Parameters<ComponentPropsWithoutRef<typeof Manager>["bind"]>[0]
+    | null = null;
 
-  defaultOptions: ComponentProps<typeof DefaultTemplate>["options"] = {
-    duration: 2000,
-    delay: 200,
-    status: null,
-  };
+  defaultOptions: ComponentPropsWithoutRef<typeof DefaultTemplate>["options"] =
+    {
+      duration: 2000,
+      delay: 200,
+      status: null,
+    };
 
   constructor({
     zIndex = 9999,
@@ -35,7 +28,26 @@ class Toast {
     Template,
     Adapter = ({ children }) => <>{children}</>,
     defaultOptions,
-  }: ConstructorParameter = {}) {
+  }: {
+    zIndex?: number;
+    portalId?: string;
+    Adapter?: FunctionComponent<{ children: ReactNode }>;
+    Template?: FunctionComponent<
+      { content: ReactNode } & Pick<
+        ComponentPropsWithoutRef<typeof DefaultTemplate>,
+        "close" | "isShow"
+      > & {
+          options: Pick<
+            ComponentPropsWithoutRef<typeof DefaultTemplate>["options"],
+            "delay" | "duration" | "status"
+          > &
+            ExtraOptions;
+        }
+    >;
+    defaultOptions?: Partial<
+      ComponentPropsWithoutRef<typeof DefaultTemplate>["options"]
+    >;
+  } = {}) {
     this.defaultOptions = {
       ...this.defaultOptions,
       ...defaultOptions,
@@ -63,7 +75,13 @@ class Toast {
       hydrateRoot(
         this.portal,
         <Adapter>
-          <Context.Provider value={{ Template }}>
+          <Context.Provider
+            value={{
+              Template: Template as ComponentPropsWithoutRef<
+                typeof Context.Provider
+              >["value"]["Template"],
+            }}
+          >
             <Manager
               bind={(createToast) => {
                 this.createToast = createToast;
@@ -76,8 +94,9 @@ class Toast {
   }
 
   show(
-    content: ComponentProps<typeof DefaultTemplate>["content"],
-    options: Partial<ComponentProps<typeof DefaultTemplate>["options"]> = {}
+    content: ComponentPropsWithoutRef<typeof DefaultTemplate>["content"],
+    options?: ExtraOptions &
+      Partial<ComponentPropsWithoutRef<typeof DefaultTemplate>["options"]>
   ) {
     this.createToast?.(content, { ...this.defaultOptions, ...options });
   }

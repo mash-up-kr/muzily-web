@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@emotion/react";
+import { css, ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
 import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
 import Toast from "~/libs/Toast";
@@ -11,14 +11,23 @@ const badge = {
   info: "ⓘ",
 } as const;
 
-export default new Toast({
+interface ExtraOptions {
+  isShowClose?: boolean;
+}
+
+export default new Toast<ExtraOptions>({
   defaultOptions: { duration: 4000, delay: 100, status: "info" },
   Adapter: ({ children }) => (
     <ThemeProvider theme={emotionTheme}>
       <AnimateSharedLayout>{children}</AnimateSharedLayout>
     </ThemeProvider>
   ),
-  Template: ({ content, isShow, options: { delay, duration, status } }) => {
+  Template: ({
+    content,
+    isShow,
+    options: { delay, duration, status, isShowClose = true },
+    close,
+  }) => {
     return (
       <AnimatePresence>
         {isShow && (
@@ -43,6 +52,18 @@ export default new Toast({
               {status && badge[status]}
               <Wrapper>{content}</Wrapper>
             </div>
+            {isShowClose && (
+              <span
+                css={css`
+                  position: absolute;
+                  top: 4px;
+                  right: 4px;
+                `}
+                onClick={close}
+              >
+                ×
+              </span>
+            )}
           </Container>
         )}
       </AnimatePresence>
