@@ -6,7 +6,7 @@ interface Props {
   screenColor?: string;
 }
 
-function Layout({ children, screenColor = "#030303" }: Props) {
+function Layout({ children, screenColor = "#000000" }: Props) {
   return (
     <S.Container>
       <S.Screen screenColor={screenColor}>{children}</S.Screen>

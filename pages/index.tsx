@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import { AxiosError } from "axios";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   LoadingButton,
   Skeleton,
@@ -21,14 +21,24 @@ import {
   useRoomsQuery,
 } from "~/hooks/api";
 
+const typingTextList = [
+  "# 팀플에서 팀원과",
+  "# 여행에서 친구와",
+  "# 가게에서 손님과",
+];
+
 const HomePage: NextPage = withRouteGuard(
   { UNCONNECTED: true, CONNECTED: true },
   "/login",
   () => {
     const [isRouting, setIsRouting] = useState(false);
-    const [GIFImage, setGIFImage] = useState<"TEAM" | "TRAVEL" | "SHOP">(
-      "TEAM"
-    );
+
+    const [GIFImage, setGIFImage] = useState<
+      | "/images/main_animation_1_team.gif"
+      | "/images/main_animation_2_travel.gif"
+      | "/images/main_animation_3_shop.gif"
+      | ""
+    >("/images/main_animation_1_team.gif");
 
     const router = useRouter();
 
@@ -42,6 +52,33 @@ const HomePage: NextPage = withRouteGuard(
     );
 
     const postLogout = usePostLogoutMutation();
+
+    useEffect(() => {
+      if (
+        GIFImage === "/images/main_animation_1_team.gif" ||
+        GIFImage === "/images/main_animation_2_travel.gif" ||
+        GIFImage === "/images/main_animation_3_shop.gif"
+      ) {
+        setTimeout(() => {
+          setGIFImage("");
+        }, 1900);
+      }
+    }, [GIFImage]);
+
+    const handleTypingEnd = useCallback(
+      ({ textListIndex }: { textListIndex: number }) => {
+        if (textListIndex === 0) {
+          setGIFImage("/images/main_animation_2_travel.gif");
+        }
+        if (textListIndex === 1) {
+          setGIFImage("/images/main_animation_3_shop.gif");
+        }
+        if (textListIndex === 2) {
+          setGIFImage("/images/main_animation_1_team.gif");
+        }
+      },
+      []
+    );
 
     return (
       <>
@@ -105,13 +142,9 @@ const HomePage: NextPage = withRouteGuard(
           <S.InviteContainer>
             <div style={{ height: 46 }}>
               <TypingText
-                textList={[
-                  "# 팀플에서 팀원과",
-                  "# 여행에서 친구와",
-                  "# 가게에서 손님과",
-                ]}
+                textList={typingTextList}
                 typingTime={50}
-                typingEndDelay={1700}
+                typingEndDelay={1600}
                 style={{
                   fontSize: 22,
                   background: "#1F1D1F",
@@ -119,17 +152,7 @@ const HomePage: NextPage = withRouteGuard(
                   borderRadius: 8,
                   height: 43,
                 }}
-                onTypingEnd={({ textListIndex }) => {
-                  if (textListIndex === 0) {
-                    setGIFImage("TRAVEL");
-                  }
-                  if (textListIndex === 1) {
-                    setGIFImage("SHOP");
-                  }
-                  if (textListIndex === 2) {
-                    setGIFImage("TEAM");
-                  }
-                }}
+                onTypingEnd={handleTypingEnd}
               />
             </div>
             <S.Spacer></S.Spacer>
@@ -211,36 +234,8 @@ const HomePage: NextPage = withRouteGuard(
               )}
             </S.Header>
           </S.InviteContainer>
-          <AnimatePresence>
-            {GIFImage === "TEAM" && (
-              <S.BottomGifImage
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                src="/images/main_animation_1_team.gif"
-              />
-            )}
-          </AnimatePresence>
-          <AnimatePresence>
-            {GIFImage === "TRAVEL" && (
-              <S.BottomGifImage
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                src="/images/main_animation_2_travel.gif"
-              />
-            )}
-          </AnimatePresence>
-          <AnimatePresence>
-            {GIFImage === "SHOP" && (
-              <S.BottomGifImage
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                src="/images/main_animation_3_shop.gif"
-              />
-            )}
-          </AnimatePresence>
+
+          <S.BottomGifImage src={GIFImage} />
         </S.Wrapper>
       </>
     );
@@ -312,7 +307,7 @@ const S = {
     font-style: normal;
     font-weight: 500;
   `,
-  BottomGifImage: styled(motion.img)`
+  BottomGifImage: styled.img`
     position: absolute;
     object-fit: cover;
     height: 52vh;
