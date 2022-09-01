@@ -58,16 +58,12 @@ const Item = ({ item, onClick }: Props) => {
       id={`${item.playlistItemId}`}
       css={css`
         display: flex;
-        padding: 16px;
+        padding: 0 8px;
         border-radius: 16px;
-        background-color: ${isPlayingMusic
-          ? "rgba(255, 255, 255, 0.1)"
-          : "rgba(0, 0, 0, 0.5)"};
-        height: 90px;
+        height: 76px;
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        filter: ${isPlayingMusic ? "drop-shadow(0 0 16px #007bff8d)" : ""};
         transition: background-color 300ms;
       `}
       style={{ boxShadow, y, cursor: "pointer" }}
@@ -117,16 +113,26 @@ const Item = ({ item, onClick }: Props) => {
           />
         </>
       )}
-      <Image
-        src={item.thumbnail}
-        alt={item.title}
-        width={74}
-        height={74}
-        lazy
-        mode="cover"
-        placeholder="/images/play.svg"
-        style={{ borderRadius: 8 }}
-      />
+      <div
+        style={{
+          width: 74,
+          height: 74,
+          position: "relative",
+          overflow: "hidden",
+          borderRadius: 8,
+        }}
+      >
+        <Image
+          src={item.thumbnail}
+          alt={item.title}
+          width={74}
+          height={104}
+          lazy
+          mode="cover"
+          placeholder="/images/play.svg"
+          style={{ position: "absolute", top: -15 }}
+        />
+      </div>
       <Spacer
         type="vertical"
         gap={8}
@@ -138,7 +144,7 @@ const Item = ({ item, onClick }: Props) => {
           <S.Title
             css={css`
               width: 100%;
-              color: ${isPlayingMusic ? "#ffffff" : "#ffffff8a"};
+              color: ${isPlayingMusic ? "#007aff" : "#ffffff"};
               font-size: 14px;
               text-overflow: ellipsis;
               overflow: hidden;
@@ -146,9 +152,6 @@ const Item = ({ item, onClick }: Props) => {
               display: -webkit-box;
               -webkit-line-clamp: 2; // 원하는 라인수
               -webkit-box-orient: vertical;
-              filter: ${isPlayingMusic
-                ? "drop-shadow(0 0 4px #007aff) drop-shadow(0 0 1px #007aff)"
-                : "#ffffff8a"};
               transition: color 500ms;
             `}
             style={{ position: "relative" }}
@@ -191,9 +194,7 @@ const Item = ({ item, onClick }: Props) => {
           css={css`
             font-weight: 400;
             font-size: 12px;
-            color: ${isPlayingMusic
-              ? "rgba(255, 255, 255, 0.74)"
-              : "rgba(74, 74, 74, 0.74)"};
+            color: rgba(255, 255, 255, 0.74);
           `}
         >
           {getDurationText(item.duration || 0)}
@@ -206,11 +207,14 @@ const Item = ({ item, onClick }: Props) => {
             controls.start(e);
             setIsHandleActive(true);
           }}
+          onTap={(e) => {
+            setIsHandleActive(false);
+          }}
           css={css`
             touch-action: none;
             height: 36px;
             width: 46px;
-            border-radius: 12px;
+            border-radius: 8px;
             background-color: ${isHandleActive
               ? "#007AFF"
               : "rgba(255, 255, 255, 0.08)"};
@@ -226,9 +230,7 @@ const Item = ({ item, onClick }: Props) => {
           <div
             css={css`
               height: 3px;
-              background-color: ${isHandleActive
-                ? "white"
-                : "rgba(255, 255, 255, 0.14)"};
+              background-color: white;
               width: 24px;
               border-radius: 999px;
               transition: background-color 200ms;
@@ -237,9 +239,7 @@ const Item = ({ item, onClick }: Props) => {
           <div
             css={css`
               height: 3px;
-              background-color: ${isHandleActive
-                ? "white"
-                : "rgba(255, 255, 255, 0.14)"};
+              background-color: white;
               width: 24px;
               border-radius: 999px;
               transition: background-color 200ms;
