@@ -43,6 +43,7 @@ export const useAuthMember = () => {
 const MemberInfoContext = createContext({
   memberInfo: {} as Member | null,
   refetchMemberInfo: (() => {}) as ReturnType<typeof useAuthMember>["refetch"],
+  removeMemberInfo: (() => {}) as ReturnType<typeof useAuthMember>["remove"],
   isLoading: false,
   isFetching: false,
   error: null as unknown | null, // TODO: unknown 정의하기
@@ -55,7 +56,7 @@ interface Props {
 
 const MemberInfoProvider = ({ children }: Props) => {
   const router = useRouter();
-  const { isLoading, isFetching, error, isError, data, refetch } =
+  const { isLoading, isFetching, error, isError, data, refetch, remove } =
     useAuthMember();
 
   useEffect(() => {
@@ -74,6 +75,7 @@ const MemberInfoProvider = ({ children }: Props) => {
       value={{
         memberInfo: data || null,
         refetchMemberInfo: refetch,
+        removeMemberInfo: remove,
         isLoading,
         isFetching,
         isError,
@@ -92,18 +94,22 @@ interface MemberInfoOnlyProps {
     refetchMemberInfo: ReturnType<
       typeof useMemberInfoContext
     >["refetchMemberInfo"];
+    removeMemberInfo: ReturnType<
+      typeof useMemberInfoContext
+    >["removeMemberInfo"];
   }) => React.ReactElement;
 }
 
 const MemberInfoOnly = ({ fallback, children }: MemberInfoOnlyProps) => {
-  const { isLoading, memberInfo, refetchMemberInfo } = useMemberInfoContext();
+  const { isLoading, memberInfo, refetchMemberInfo, removeMemberInfo } =
+    useMemberInfoContext();
 
   if (isLoading) {
     return <>{fallback}</>;
   }
 
   if (memberInfo) {
-    return children({ memberInfo, refetchMemberInfo });
+    return children({ memberInfo, refetchMemberInfo, removeMemberInfo });
   }
 
   return null;

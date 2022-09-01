@@ -12,6 +12,7 @@ import {
   TopBarIconButton,
 } from "~/components/uis";
 import { useModal } from "~/components/uis/Modal";
+import { MemberInfo } from "~/contexts";
 import { useDeleteRoomMutation, usePostLogoutMutation } from "~/hooks/api";
 import type { Room } from "~/types";
 
@@ -122,12 +123,45 @@ function RoomSettingScreen({
             </S.MoodButtonGroup>
           </S.MoodContainer>
           <S.HorizontalLine></S.HorizontalLine>
-          <S.AnchorLink href="#" onClick={onClickDeleteRoom}>
-            방 삭제
-          </S.AnchorLink>
-          <S.AnchorLink href="#" onClick={onClickAuthLogout}>
-            로그아웃
-          </S.AnchorLink>
+
+          <MemberInfo.Only>
+            {({ memberInfo, removeMemberInfo }) => {
+              return memberInfo.accountConnectType === "CONNECTED" ? (
+                <S.TextButton
+                  onClick={() => {
+                    onClickDeleteRoom();
+                    removeMemberInfo();
+                    setTimeout(() => {
+                      close();
+                    }, 100);
+                  }}
+                >
+                  방 삭제
+                </S.TextButton>
+              ) : (
+                <></>
+              );
+            }}
+          </MemberInfo.Only>
+          <MemberInfo.Only>
+            {({ memberInfo, removeMemberInfo }) => {
+              return memberInfo.accountConnectType === "CONNECTED" ? (
+                <S.TextButton
+                  onClick={() => {
+                    onClickAuthLogout();
+                    removeMemberInfo();
+                    setTimeout(() => {
+                      close();
+                    }, 100);
+                  }}
+                >
+                  로그아웃
+                </S.TextButton>
+              ) : (
+                <></>
+              );
+            }}
+          </MemberInfo.Only>
         </S.Container>
         <BottomButton label="수정 완료" onClick={onClickEditComplete} />
       </Spacer>
@@ -202,7 +236,7 @@ const S = {
     border: 1px solid rgba(255, 255, 255, 0.2);
   `,
 
-  AnchorLink: styled.a`
+  TextButton: styled.div`
     font-size: 16px;
     font-weight: 500;
     line-height: 19px;
@@ -210,6 +244,7 @@ const S = {
     text-decoration-line: underline;
     color: rgba(255, 255, 255, 0.75);
     margin-top: 20px;
+    cursor: pointer;
   `,
 };
 
