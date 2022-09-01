@@ -1,6 +1,5 @@
 import React from "react";
 import type { NextPage } from "next";
-import Head from "next/head";
 import styled from "@emotion/styled";
 import { KakaoLoginButton } from "~/components/domains";
 import { Spacer, TopBar, TopBarIconButton } from "~/components/uis";

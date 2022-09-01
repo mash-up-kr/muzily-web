@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import axios from "axios";
-import { useQueryClient } from "react-query";
 import YouTube from "react-youtube";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import {
   BottomButton,
   Layout,
@@ -14,22 +13,16 @@ import {
   TopBarIconButton,
 } from "~/components/uis";
 import Modal, { useModal } from "~/components/uis/Modal";
-import { queryKeys } from "~/consts/react-query";
-import { useGetPlaylistPendingItems } from "~/hooks/api";
 import {
-  useAcceptPlaylistItemRequest,
   useAddPlaylistItemRequest,
-  useDeclinePlaylistItemRequest,
   useSendPlaylistItemRequest,
 } from "~/hooks/webSocket";
-import { proposedPlaylistAtomState } from "~/store/playlist";
 import {
   isHostAtomState,
   playlistIdAtomState,
   roomIdAtomState,
 } from "~/store/room";
-import { convertDurationToSecond, getDurationText } from "~/store/room/utils";
-import type { PlaylistItem } from "~/types";
+import { convertDurationToSecond } from "~/store/room/utils";
 import AddSongGuideScreen from "../AddSongGuideScreen";
 import RequestAccordion from "./RequestAccordion";
 
@@ -55,7 +48,7 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
   const [youtubeLink, setYoutubeLink] = useState("");
   const [youtubeId, setYoutubeId] = useState("");
   const [isValid, setIsValid] = useState(false);
-  const [isError, setIsError] = useState(false);
+  const [, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const roomId = useRecoilValue(roomIdAtomState);
   const playlistId = useRecoilValue(playlistIdAtomState);
@@ -112,12 +105,8 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
       setIsLoading(false);
       close();
     } catch (error: any) {
-      console.error(error);
       alert(error.response.data.message);
-      // MEMO(@Young-mason): 모달 위에서 Toast가 안뜨는 문제 있어서, 우선 alert 으로 대체하였음
-      // Toast.show(<Spacer>{error.response.data.message}</Spacer>, {
-      //   duration: 3000,
-      // });
+
       setIsLoading(false);
     }
   };
@@ -165,7 +154,6 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
                   },
                 }}
                 onError={() => {
-                  console.error("유효하지 않은 ID입니다");
                   setIsError(true);
                 }}
                 onReady={(e) => {
@@ -216,8 +204,6 @@ function parseYoutubeIdFromLink(link: string) {
 
     return pathname.slice(1);
   } catch (error) {
-    console.error("유효하지 않은 유튜브 링크입니다");
-
     return "";
   }
 }

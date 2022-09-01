@@ -12,7 +12,7 @@ const defaultEndPoint = process.env
   .NEXT_PUBLIC_SERVER_DEFAULT_END_POINT as string;
 
 export const useAuthRedirected = () => {
-  const [localToken, setLocalToken] = useLocalToken();
+  const [, setLocalToken] = useLocalToken();
   const router = useRouter();
   const { refetchMemberInfo } = MemberInfo.use();
 
@@ -49,7 +49,6 @@ export const useAuthRedirected = () => {
 
           router.replace(`/rooms/${roomId}?isHost=true`);
         } catch (error) {
-          console.error(error);
           router.replace("/");
         }
       },

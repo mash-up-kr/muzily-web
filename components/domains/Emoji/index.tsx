@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import type { Variant } from "framer-motion";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { Book, Heart, MirrorBall } from "~/assets/svgs";
 import { IconButton, Modal, Spacer, LongPress, Toast } from "~/components/uis";
 import { MemberInfo } from "~/contexts";
@@ -18,7 +18,7 @@ const Emoji = () => {
 
   return (
     <MemberInfo.Only fallback={<></>}>
-      {({ memberInfo }) => (
+      {() => (
         <>
           <Modal
             trigger={

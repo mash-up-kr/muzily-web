@@ -4,19 +4,12 @@ import styled from "@emotion/styled";
 import { motion } from "framer-motion";
 
 interface Props extends React.ComponentProps<typeof motion.div> {
-  type?: "round";
   iconName: string; // 파일명에서 .svg를 제거한 파일명
   onClick?: () => void;
   badgeValue?: number;
 }
 
-function IconButton({
-  type = "round",
-  badgeValue,
-  iconName,
-  onClick,
-  ...props
-}: Props) {
+function IconButton({ badgeValue, iconName, onClick, ...props }: Props) {
   const extension = ".svg";
 
   return (

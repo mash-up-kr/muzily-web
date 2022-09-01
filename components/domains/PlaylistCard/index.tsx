@@ -17,7 +17,7 @@ const NO_DATA_TEXT = [
 ];
 
 function PlaylistCard({ currentMusic }: PlaylistCardProps) {
-  const [playlist, setPlaylist] = useRecoilState(playlistAtomState);
+  const [playlist] = useRecoilState(playlistAtomState);
 
   const noData = !playlist || playlist.length === 0;
   const nextMusic =
