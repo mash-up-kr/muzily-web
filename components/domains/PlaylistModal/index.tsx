@@ -61,6 +61,7 @@ const ModalContent = () => {
   return (
     <Layout screenColor="rgba(0, 0, 0, 0.85)">
       <TopBar
+        backgroundColor="rgba(0,0,0,0.9)"
         leftIconButton={
           <Modal.Close as={TopBarIconButton} iconName="arrow-left" />
         }
