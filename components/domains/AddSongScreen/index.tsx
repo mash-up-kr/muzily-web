@@ -199,7 +199,7 @@ const QuestionButton = () => (
   />
 );
 
-const DOMAINS = ["www.youtube.com", "youtu.be"];
+const DOMAINS = ["www.youtube.com", "youtu.be", "music.youtube.com"];
 
 function parseYoutubeIdFromLink(link: string) {
   try {
