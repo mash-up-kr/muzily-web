@@ -171,6 +171,7 @@ const S = {
     color: #fff;
     background-color: transparent;
     border: none;
+    cursor: pointer;
   `,
   AccordionButtonTitle: styled.h4`
     font-size: 14px;

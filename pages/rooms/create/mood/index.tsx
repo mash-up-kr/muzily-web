@@ -280,6 +280,7 @@ const S = {
     background: ${(p) => (p.isActive ? "white" : "rgba(64, 73, 83, 0.85)")};
     color: ${(p) => (p.isActive ? "#007AFF" : "white")};
     border-radius: 20px;
+    cursor: pointer;
   `,
   ButtonText: styled.p`
     font-size: 16px;
