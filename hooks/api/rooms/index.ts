@@ -2,7 +2,6 @@ import { useQueryClient } from "react-query";
 import { useSetRecoilState } from "recoil";
 import { getPlaylist } from "~/api/playlist";
 import { deleteRoom, getRoom, getRooms, postRooms, putRoom } from "~/api/room";
-import { Toast } from "~/components/uis";
 import { queryKeys } from "~/consts/react-query";
 import { playlistAtomState } from "~/store/playlist";
 import {
@@ -50,35 +49,7 @@ export const useRoomQuery = (
         setPlaylistId(data.playlist.playlistId);
         setIsHost(data.currentUser.role === "CREATOR");
       },
-      onError: (error: any) => {
-        if (error?.response?.data?.code === "R004") {
-          Toast.show(error?.response.data.message, {
-            duration: 4000,
-            status: "error",
-          });
-        } else if (error?.response?.data?.code === "R001") {
-          Toast.show(error?.response.data.message, {
-            duration: 4000,
-            status: "error",
-          });
-        } else {
-          Toast.show("방에 입장할 수 없어요", {
-            status: "error",
-            duration: 10000,
-          });
-        }
-
-        setTimeout(() => {
-          Toast.show(
-            "방에 입장하려면 친구에게 QR코드나 초대링크를 받아 입장하세요",
-            {
-              status: "info",
-              duration: 10000,
-            }
-          );
-        }, 1400);
-      },
-      retry: 1,
+      retry: 0,
       ...options,
     }
   );

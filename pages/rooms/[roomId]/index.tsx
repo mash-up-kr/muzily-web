@@ -5,6 +5,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
+import type { AxiosError } from "axios";
 import { useQueryClient } from "react-query";
 import Slider from "react-slick";
 import YouTube from "react-youtube";
@@ -33,7 +34,6 @@ import { useRoomQuery } from "~/hooks/api/rooms";
 import { useIsMobile } from "~/hooks/commons";
 import usePlayerActions from "~/hooks/domains/usePlayerActions";
 import { useUpdatePlayerState } from "~/hooks/webSocket";
-import { useRoomStore } from "~/store";
 import { playlistAtomState, proposedPlaylistAtomState } from "~/store/playlist";
 import {
   isHostAtomState,
@@ -74,6 +74,7 @@ const RoomContentPage: NextPage<Props> = () => {
     isLoading: isLoadingRoomQuery,
     data: roomData,
     isError,
+    error,
   } = useRoomQuery(Number(roomId));
 
   const isHost = useRecoilValue(isHostAtomState);
@@ -100,7 +101,34 @@ const RoomContentPage: NextPage<Props> = () => {
 
   useEffect(() => {
     if (isError) {
-      router.replace("/");
+      if ((error as AxiosError<any>).response?.data?.code === "R004") {
+        Toast.show((error as AxiosError<any>).response?.data?.message, {
+          duration: 4000,
+          status: "error",
+        });
+      } else if ((error as AxiosError<any>).response?.data?.code === "R001") {
+        Toast.show((error as AxiosError<any>).response?.data?.message, {
+          duration: 4000,
+          status: "error",
+        });
+
+        router.replace("/");
+      } else {
+        Toast.show("방에 입장할 수 없어요", {
+          status: "error",
+          duration: 10000,
+        });
+      }
+
+      setTimeout(() => {
+        Toast.show(
+          "방에 입장하려면 친구에게 QR코드나 초대링크를 받아 입장하세요",
+          {
+            status: "info",
+            duration: 10000,
+          }
+        );
+      }, 1400);
     }
   }, [isError]);
 

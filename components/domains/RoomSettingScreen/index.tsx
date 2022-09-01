@@ -6,7 +6,6 @@ import {
   Image,
   Layout,
   Spacer,
-  Spinner,
   Toast,
   TopBar,
   TopBarIconButton,
@@ -15,9 +14,6 @@ import { useModal } from "~/components/uis/Modal";
 import { MemberInfo } from "~/contexts";
 import { useDeleteRoomMutation, usePostLogoutMutation } from "~/hooks/api";
 import type { Room } from "~/types";
-
-const defaultEndPoint = process.env
-  .NEXT_PUBLIC_SERVER_DEFAULT_END_POINT as string;
 
 interface RoomSettingScreenProps {
   onClickBackButton: () => void;
@@ -49,19 +45,17 @@ function RoomSettingScreen({
     deleteRoomMutation.mutate(room.roomId, {
       onSuccess: () => {
         window.alert("방이 삭제되었습니다.");
-        Toast.show(<Spacer>방이 삭제되었습니다.</Spacer>, {
+        Toast.show("방이 삭제되었습니다.", {
           duration: 3000,
         });
-        router.replace("/");
       },
       onError: (error: AxiosError) => {
         if (error instanceof AxiosError) {
-          Toast.show(<Spacer>error.response?.data.message</Spacer>, {
+          Toast.show(error.response?.data.message, {
             duration: 3000,
             status: "error",
           });
         }
-        console.error(error);
       },
     });
   };
@@ -130,7 +124,6 @@ function RoomSettingScreen({
                 <S.TextButton
                   onClick={() => {
                     onClickDeleteRoom();
-                    removeMemberInfo();
                     setTimeout(() => {
                       close();
                     }, 100);
