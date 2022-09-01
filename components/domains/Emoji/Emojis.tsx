@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useRecoilValue } from "recoil";
-import { Book, Heart, MirrorBall } from "~/assets/svgs";
+import { Book, Heart, MirrorBall, Note } from "~/assets/svgs";
 import { emojiAtomState } from "~/store/emoji";
 
 const Emojis = ({ stage }: { stage: 1 | 2 | 3 }) => {
@@ -27,8 +27,10 @@ export const EmojiScaled = ({ stage }: { stage: 1 | 2 | 3 }) => {
       ? Heart
       : emoji.emojiType === "BOOK"
       ? Book
-      : MirrorBall
-    : Heart;
+      : emoji.emojiType === "MIRROR_BALL"
+      ? MirrorBall
+      : Note
+    : Note;
 
   return (
     <motion.div
