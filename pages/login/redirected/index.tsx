@@ -45,12 +45,11 @@ export const useAuthRedirected = () => {
               },
             }
           );
-          console.log(data);
           const { roomId } = data;
 
           router.replace(`/rooms/${roomId}?isHost=true`);
         } catch (error) {
-          console.log(error);
+          console.error(error);
           router.replace("/");
         }
       },

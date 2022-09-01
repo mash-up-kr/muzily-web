@@ -27,7 +27,6 @@ function RequestAccordion() {
   const [proposedPlaylist, setProposedPlaylist] = useRecoilState(
     proposedPlaylistAtomState
   );
-  console.log("proposedPlaylist", proposedPlaylist);
   const roomId = useRecoilValue(roomIdAtomState);
   const playlistId = useRecoilValue(playlistIdAtomState);
   const isHost = useRecoilValue(isHostAtomState);
