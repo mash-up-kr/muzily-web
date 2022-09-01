@@ -200,10 +200,13 @@ const RoomCreateMoodPage: NextPage = withRouteGuard(
             )}
           </S.Container>
           <BottomButton
+            loading={postRoomMutation.isLoading}
             label="방 만들기"
             onClick={onClickCreateRoom}
             disabled={
-              selectedMood.moodDescription === "" && mood.moodDescription === ""
+              postRoomMutation.isLoading ||
+              (selectedMood.moodDescription === "" &&
+                mood.moodDescription === "")
             }
           />
         </Layout>

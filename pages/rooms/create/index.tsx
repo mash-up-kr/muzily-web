@@ -18,9 +18,12 @@ const RoomCreatePage: NextPage = withRouteGuard(
   { CONNECTED: true },
   "/login",
   () => {
+    const [isLoadingButton, setIsLoadingButton] = useState(false);
+
     const [value, setValue] = useState("");
     const router = useRouter();
     const handleClick = () => {
+      setIsLoadingButton(true);
       router.push({
         pathname: "/rooms/create/mood",
         query: { roomName: value },
@@ -70,8 +73,9 @@ const RoomCreatePage: NextPage = withRouteGuard(
             </S.NoticeTextWrapper>
           </S.Container>
           <BottomButton
+            loading={isLoadingButton}
             label="다음"
-            disabled={value.length === 0}
+            disabled={isLoadingButton || value.length === 0}
             onClick={handleClick}
           />
         </Layout>
