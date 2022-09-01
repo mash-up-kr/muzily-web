@@ -38,7 +38,7 @@ const TopBar = ({
       `}
     >
       <Spacer type="horizontal" justify="space-between" align="center">
-        {leftIconButton && <IconWrapper>{leftIconButton}</IconWrapper>}
+        <IconWrapper>{leftIconButton}</IconWrapper>
         <h2
           css={css`
             flex: 1;
@@ -46,11 +46,15 @@ const TopBar = ({
             line-height: 1;
             text-align: center;
             font-size: 16px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            pointer-events: none;
           `}
         >
           {children}
         </h2>
-        {rightIconButton && <IconWrapper>{rightIconButton}</IconWrapper>}
+        <IconWrapper>{rightIconButton}</IconWrapper>
       </Spacer>
     </div>
   );

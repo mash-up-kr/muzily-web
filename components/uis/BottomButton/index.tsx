@@ -16,7 +16,7 @@ function BottomButton({ loading, ...props }: BottomButtonProps) {
       {...props}
       css={css`
         cursor: pointer;
-        position: sticky;
+        position: fixed;
         bottom: 0;
         background-color: #007aff;
         color: #fff;

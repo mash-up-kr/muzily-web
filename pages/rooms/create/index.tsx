@@ -93,8 +93,10 @@ const S = {
     justify-content: center;
     align-items: center;
     position: relative;
-    height: calc(100% - 104px);
-    padding: 20px 0;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    bottom: 0;
   `,
   Title: styled.h3`
     font-size: 18px;
@@ -114,8 +116,7 @@ const S = {
   `,
   NoticeTextWrapper: styled(Spacer)`
     position: absolute;
-    bottom: 32px;
-    align-items: flex-start;
+    bottom: 90px;
   `,
   NoticeText: styled.span`
     font-size: 13px;

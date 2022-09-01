@@ -1,4 +1,3 @@
-import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import { AxiosError } from "axios";
 import {
@@ -25,8 +24,6 @@ function RoomSettingScreen({
   room,
 }: RoomSettingScreenProps) {
   const { close } = useModal();
-
-  const router = useRouter();
 
   const deleteRoomMutation = useDeleteRoomMutation(room.roomId);
   const postLogout = usePostLogoutMutation();
@@ -56,28 +53,6 @@ function RoomSettingScreen({
             status: "error",
           });
         }
-      },
-    });
-  };
-
-  const onClickAuthLogout = () => {
-    postLogout.mutate(null, {
-      onSuccess: () => {
-        Toast.show(<Spacer>로그아웃에 성공하였습니다.</Spacer>, {
-          duration: 3000,
-        });
-
-        localStorage.clear();
-        router.push("/");
-      },
-      onError: (error: AxiosError) => {
-        if (error instanceof AxiosError) {
-          Toast.show(<Spacer>error.response?.data.message</Spacer>, {
-            duration: 3000,
-            status: "error",
-          });
-        }
-        console.error(error);
       },
     });
   };
@@ -141,7 +116,7 @@ function RoomSettingScreen({
               return memberInfo.accountConnectType === "CONNECTED" ? (
                 <S.TextButton
                   onClick={() => {
-                    onClickAuthLogout();
+                    postLogout.mutate(null);
                     removeMemberInfo();
                     setTimeout(() => {
                       close();

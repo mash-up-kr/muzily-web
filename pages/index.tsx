@@ -3,7 +3,6 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
-import { AxiosError } from "axios";
 import { motion } from "framer-motion";
 import {
   LoadingButton,
@@ -99,20 +98,7 @@ const HomePage: NextPage = withRouteGuard(
                               return;
                             }
 
-                            postLogout.mutate(null, {
-                              onSuccess: () => {
-                                window.alert("로그아웃에 성공하였습니다.");
-
-                                localStorage.clear();
-                                router.replace("/");
-                              },
-                              onError: (error: AxiosError) => {
-                                if (error instanceof AxiosError) {
-                                  window.alert(error.response?.data.message);
-                                }
-                                console.error(error);
-                              },
-                            });
+                            postLogout.mutate(null);
                           }
                         : () => {
                             router.push({ pathname: "/login" });

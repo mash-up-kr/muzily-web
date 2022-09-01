@@ -118,6 +118,8 @@ const RoomContentPage: NextPage<Props> = () => {
           status: "error",
           duration: 10000,
         });
+
+        router.replace("/");
       }
 
       setTimeout(() => {
