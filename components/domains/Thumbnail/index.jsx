@@ -6,15 +6,7 @@ function Thumbnail({ src, color }) {
   return (
     <StyledContainer>
       <StyledThumbnail>
-        <img
-          css={css`
-            object-fit: cover;
-            object-position: center;
-            height: 100%;
-            border-radius: 20px;
-          `}
-          src={src}
-        />
+        <StyledImage src={src} />
         <StyledGradient color={color} />
       </StyledThumbnail>
 
@@ -42,6 +34,14 @@ const StyledContainer = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
+`;
+
+const StyledImage = styled.img`
+  object-fit: none;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  padding-bottom: 50px;
 `;
 
 const StyledThumbnail = styled.div`
