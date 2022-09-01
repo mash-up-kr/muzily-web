@@ -89,8 +89,8 @@ const Item = ({ item, onClick }: Props) => {
             {isDeletingItem && (
               <Image
                 src="/images/check-white.svg"
-                width={10}
-                height={10}
+                width={16}
+                height={12}
                 alt="check"
               />
             )}
