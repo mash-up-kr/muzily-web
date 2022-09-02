@@ -8,3 +8,5 @@ export { default as useLongPress } from "./useLongPress";
 export { default as useDisclosure } from "./useDisclosure";
 export { default as useThrottle } from "./useThrottle";
 export { default as useIsMobile } from "./useIsMobile";
+export { default as useElementSize } from "./useElementSize";
+export { default as useEventListener } from "./useEventListener";
