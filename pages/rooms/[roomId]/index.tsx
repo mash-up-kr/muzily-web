@@ -326,7 +326,7 @@ const Actions = {
         )}
         modal={({ close }) => <AddSongScreen onClickBackButton={close} />}
       />
-      <S.IconText>{isHost ? "곡추가" : "곡신청"}</S.IconText>
+      <S.IconText>{isHost ? "곡 추가" : "곡 신청"}</S.IconText>
     </Spacer>
   ),
   Emoji,
