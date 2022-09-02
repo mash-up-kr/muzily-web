@@ -25,7 +25,7 @@ const LoginPage: NextPage = withRouteGuard({ UNCONNECTED: true }, "/", () => {
             redirectUri={
               process.env.NEXT_PUBLIC_KAKAO_LOGIN_REDIRECT_URI as string
             }
-            style={{ marginTop: "42px" }}
+            style={{ marginTop: "42px", cursor: "pointer" }}
           />
         </Spacer>
         <S.BottomGifImage src={"/images/main_animation.gif"} />
