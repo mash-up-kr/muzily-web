@@ -421,6 +421,11 @@ const S = {
       z-index: 999;
     }
 
+    .slick-slide[data-index="${(p) => p.centerIdx - 2}"] {
+      transform: rotate(40deg)
+        translate(${(p) => (p.isMobile ? "-60%" : "-50%")}, -40px);
+    }
+
     .slick-slide[data-index="${(p) => p.centerIdx - 1}"] {
       transform: rotate(10deg)
         translate(${(p) => (p.isMobile ? "-40%" : "-20%")}, -20px);
@@ -435,6 +440,11 @@ const S = {
       transform: rotate(-20deg)
         translate(${(p) => (p.isMobile ? "20%" : "5%")}, -20px);
       filter: drop-shadow(0 0 48px rgba(0, 0, 0, 0.5));
+    }
+
+    .slick-slide[data-index="${(p) => p.centerIdx + 2}"] {
+      transform: rotate(-40deg)
+        translate(${(p) => (p.isMobile ? "40%" : "30%")}, -40px);
     }
   `,
 };
