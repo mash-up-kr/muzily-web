@@ -86,7 +86,7 @@ const ModalContent = () => {
       </TopBar>
       {isHost ? <Playlist.Host /> : <Playlist.Guest />}
 
-      {isHost && isDeletingMode ? (
+      {deletingIds.length > 0 && isHost && isDeletingMode ? (
         <S.DeleteButton
           disabled={deletingIds.length === 0}
           onClick={() => {
@@ -112,6 +112,7 @@ const ModalContent = () => {
                     justify-content: center;
                     cursor: pointer;
                     position: sticky;
+                    top: auto;
                     bottom: 16px;
                     left: 0;
                     right: 0;
@@ -160,8 +161,12 @@ const ModalContent = () => {
 export default PlaylistModal;
 
 const S = {
-  MusicList: styled.ul``,
   DeleteButton: styled.button`
+    position: sticky;
+    bottom: 16px;
+    top: auto;
+    border: none;
+
     cursor: pointer;
     display: flex;
     align-items: center;
