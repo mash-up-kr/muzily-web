@@ -68,7 +68,6 @@ const S = {
   `,
 
   Title: styled.span`
-    /* text-align: left; */
     align-self: flex-start;
     font-weight: 800;
     font-size: 14px;

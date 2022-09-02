@@ -243,14 +243,14 @@ const S = {
     align-items: center;
     justify-content: center;
 
-    margin-top: 29px;
+    margin-top: 37px;
   `,
 
   RoomStatusContainer: styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 24px;
+    gap: 10px;
 
     margin-top: 6px;
   `,

@@ -135,12 +135,12 @@ const S = {
     justify-content: center;
     align-items: center;
 
-    font-weight: 800;
+    font-weight: 600;
     font-size: 16px;
     line-height: 19px;
   `,
   Content: styled.div`
-    font-weight: 600;
+    font-weight: 500;
     font-size: 16px;
     line-height: 19px;
     letter-spacing: -0.02em;
@@ -151,7 +151,7 @@ const S = {
     line-height: 14px;
     color: rgba(255, 255, 255, 0.64);
     letter-spacing: -0.02em;
-    margin-top: 6px;
+    margin-top: 4px;
   `,
   NoDataText: styled.div`
     font-weight: 600;

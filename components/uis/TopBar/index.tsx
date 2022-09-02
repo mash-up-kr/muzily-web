@@ -27,7 +27,6 @@ const TopBar = ({
           z-index: 5;
         `}
         padding: 16px;
-        height: 80px;
         color: #fff;
         background: linear-gradient(
           ${backgroundColor},

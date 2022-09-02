@@ -59,7 +59,7 @@ const ModalContent = () => {
   useIsViewedPlaylistItemIds.IfUnmount(playlist);
 
   return (
-    <Layout screenColor="rgba(0, 0, 0, 0.85)">
+    <Layout screenColor="#000">
       <TopBar
         backgroundColor="rgba(0,0,0,0.9)"
         leftIconButton={

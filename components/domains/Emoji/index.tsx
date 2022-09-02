@@ -46,7 +46,8 @@ const Emoji = () => {
                     <p
                       style={{
                         fontSize: 20,
-                        fontWeight: 900,
+                        fontWeight: 700,
+                        lineHeight: "155%",
                         textAlign: "center",
                         color: "white",
                         filter: "drop-shadow(0px 0px 30px white)",

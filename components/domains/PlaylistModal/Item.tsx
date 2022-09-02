@@ -63,7 +63,7 @@ const Item = ({ item, onClick }: Props) => {
         height: 76px;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
+        gap: 14px;
         transition: background-color 300ms;
       `}
       style={{ boxShadow, y, cursor: "pointer" }}
@@ -115,17 +115,17 @@ const Item = ({ item, onClick }: Props) => {
       )}
       <div
         style={{
-          width: 74,
-          height: 74,
+          width: 65,
+          height: 65,
           position: "relative",
           overflow: "hidden",
-          borderRadius: 8,
+          borderRadius: 4,
         }}
       >
         <Image
           src={item.thumbnail}
           alt={item.title}
-          width={74}
+          width={65}
           height={104}
           lazy
           mode="cover"
@@ -173,28 +173,31 @@ const Item = ({ item, onClick }: Props) => {
               </>
             )}
             {item.title}{" "}
+            {isPlayingMusic && (
+              <span
+                style={{
+                  display: "inline-block",
+                  width: 30,
+                  height: 20,
+                  marginTop: "-100%",
+                  transform: "translateY(50%)",
+                }}
+              >
+                <LottieAnimation.Equalizer
+                  width={30}
+                  height={20}
+                  color="blue"
+                  isPaused={!playerState.isPlaying}
+                />
+              </span>
+            )}
           </S.Title>
-          {isPlayingMusic && (
-            <span
-              style={{
-                width: 30,
-                height: 20,
-              }}
-            >
-              <LottieAnimation.Equalizer
-                height={20}
-                width={30}
-                color="blue"
-                isPaused={!playerState.isPlaying}
-              />
-            </span>
-          )}
         </Spacer>
         <div
           css={css`
             font-weight: 400;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.74);
+            font-size: 14px;
+            color: #8c8c8c;
           `}
         >
           {getDurationText(item.duration || 0)}
@@ -212,8 +215,8 @@ const Item = ({ item, onClick }: Props) => {
           }}
           css={css`
             touch-action: none;
-            height: 36px;
-            width: 46px;
+            width: 37px;
+            height: 32px;
             border-radius: 8px;
             background-color: ${isHandleActive
               ? "#007AFF"
@@ -229,19 +232,17 @@ const Item = ({ item, onClick }: Props) => {
         >
           <div
             css={css`
-              height: 3px;
+              height: 2px;
               background-color: white;
-              width: 24px;
-              border-radius: 999px;
+              width: 16px;
               transition: background-color 200ms;
             `}
           />
           <div
             css={css`
-              height: 3px;
+              height: 2px;
               background-color: white;
-              width: 24px;
-              border-radius: 999px;
+              width: 16px;
               transition: background-color 200ms;
             `}
           />
@@ -253,9 +254,10 @@ const Item = ({ item, onClick }: Props) => {
 
 const S = {
   Title: styled.div`
-    font-weight: 600;
+    font-weight: 500;
     font-size: 14px;
     text-align: left;
+    line-height: 155%;
   `,
 };
 

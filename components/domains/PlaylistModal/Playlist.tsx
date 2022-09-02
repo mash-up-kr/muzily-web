@@ -59,7 +59,7 @@ const Host = () => {
         display: flex;
         flex-direction: column;
         gap: 16px;
-        margin: 0 8px;
+        margin: 19px 8px 0;
         padding-bottom: 60px;
       `}
     >

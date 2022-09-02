@@ -151,7 +151,7 @@ const RoomContentPage: NextPage<Props> = () => {
         justify="space-between"
         style={{ height: "100%" }}
       >
-        <Spacer type="vertical" gap={16}>
+        <Spacer type="vertical" gap={10}>
           <TopBar
             leftIconButton={<TopBarIconButton iconName="logo" boxSize={29} />}
             rightIconButton={
@@ -353,6 +353,7 @@ const S = {
     gap: 8.5px;
   `,
   Desc: styled.h4`
+    margin-top: 4px;
     font-weight: 500;
     font-size: 14px;
     color: #6b6b6b;
