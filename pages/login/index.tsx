@@ -28,6 +28,7 @@ const LoginPage: NextPage = withRouteGuard({ UNCONNECTED: true }, "/", () => {
             style={{ marginTop: "42px" }}
           />
         </Spacer>
+        <S.BottomGifImage src={"/images/main_animation.gif"} />
       </Spacer>
     </>
   );
@@ -47,6 +48,14 @@ const S = {
     line-height: 34.8px;
     letter-spacing: -0.25px;
     color: white;
+  `,
+  BottomGifImage: styled.img`
+    position: absolute;
+    object-fit: cover;
+    height: 52vh;
+    bottom: 0;
+    z-index: -1;
+    float: left;
   `,
 };
 
