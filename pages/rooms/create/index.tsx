@@ -94,6 +94,7 @@ const S = {
     align-items: center;
     position: relative;
     height: 100%;
+    width: 100%;
     position: fixed;
     top: 0;
     bottom: 0;
