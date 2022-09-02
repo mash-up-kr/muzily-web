@@ -106,7 +106,7 @@ const S = {
   UpperCard: styled.div`
     cursor: pointer;
     height: 50%;
-    background: #ff793a;
+    background: #6369dd44;
     backdrop-filter: blur(20px);
     border-radius: 20px;
     padding: 20px;
@@ -114,7 +114,7 @@ const S = {
   `,
   MiddleCard: styled.div`
     height: 30%;
-    background: #ff793a;
+    background: #6369dd44 linear-gradient(transparent, #585ff044);
 
     backdrop-filter: blur(20px);
     border-radius: 20px;
@@ -127,7 +127,7 @@ const S = {
   LowerCard: styled.div`
     cursor: pointer;
     height: 20%;
-    background: #ff5100;
+    background: #585ff0;
     backdrop-filter: blur(20px);
     padding: 20px;
     border-radius: 20px;
