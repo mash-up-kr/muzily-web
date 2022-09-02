@@ -5,6 +5,8 @@ import { Toast } from "~/components/uis";
 import { queryKeys } from "~/consts/react-query";
 import { useCoreMutation } from "~/hooks/api/core";
 
+const tokenKey = process.env.NEXT_PUBLIC_LOCAL_TOKEN_KEY as string;
+
 export const usePostAuthMutation = () => {
   const queryClient = useQueryClient();
 
@@ -31,7 +33,7 @@ export const usePostLogoutMutation = () => {
         duration: 3000,
       });
 
-      localStorage.clear();
+      localStorage.removeItem(tokenKey);
       queryClient.invalidateQueries(queryKeys.auth);
 
       router.replace("/");
