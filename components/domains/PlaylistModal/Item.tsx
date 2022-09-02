@@ -2,6 +2,7 @@ import type { ComponentPropsWithRef } from "react";
 import { useState } from "react";
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
+import dayjs from "dayjs";
 import {
   motion,
   Reorder,
@@ -28,7 +29,9 @@ const Item = ({ item, onClick }: Props) => {
   const controls = useDragControls();
   const { isViewedPlaylistItemIds } = useIsViewedPlaylistItemIds();
 
-  const isNew = !isViewedPlaylistItemIds[item.playlistItemId.toString()];
+  const isNotNew =
+    isViewedPlaylistItemIds[item.playlistItemId.toString()] || // playlistItemId이 localStorage에 추가된 이미 본 playlistItemId이거나
+    dayjs().diff(dayjs(item.updatedAt)) / (1000 * 60) > 1; // 추가된 시간이 1분이 넘어간 경우
 
   const y = useMotionValue(0);
   const boxShadow = useRaisedShadow(y);
@@ -156,7 +159,7 @@ const Item = ({ item, onClick }: Props) => {
             `}
             style={{ position: "relative" }}
           >
-            {isNew && (
+            {!isNotNew && (
               <>
                 <span
                   css={css`
