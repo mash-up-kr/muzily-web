@@ -75,20 +75,20 @@ function RoomSettingScreen({
           <S.Title>
             {room.name}
             <S.IconWrapper>
-              <Image
+              {/* <Image
                 src={`/images/edit.svg`}
                 placeholder={`/images/edit.svg`}
                 alt={"icon"}
                 width={18}
                 height={18}
-              />
+              /> */}
             </S.IconWrapper>
           </S.Title>
           <S.MoodContainer>
             내 방의 무드
             <S.MoodButtonGroup>
               <span>{room.mood.moodDescription}</span>
-              <S.ChangeMoodButton>변경</S.ChangeMoodButton>
+              {/* <S.ChangeMoodButton>변경</S.ChangeMoodButton> */}
             </S.MoodButtonGroup>
           </S.MoodContainer>
           <S.HorizontalLine></S.HorizontalLine>
