@@ -25,6 +25,7 @@ function BottomButton({ loading, ...props }: BottomButtonProps) {
         width: 100%;
         font-weight: 800;
         font-size: 18px;
+        transition: all 200ms;
 
         &:hover {
           opacity: 0.85;

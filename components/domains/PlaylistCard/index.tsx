@@ -138,6 +138,17 @@ const S = {
     font-weight: 600;
     font-size: 16px;
     line-height: 19px;
+
+    transition: all 200ms;
+
+    &:hover {
+      opacity: 0.85;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      filter: contrast(0.8);
+    }
   `,
   Content: styled.div`
     font-weight: 500;

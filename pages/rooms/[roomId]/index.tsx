@@ -4,6 +4,7 @@ import Image from "next/image";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useRouter } from "next/router";
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import type { AxiosError } from "axios";
 import { useQueryClient } from "react-query";
@@ -319,7 +320,23 @@ const Actions = {
     isHost?: boolean;
     value: number;
   }) => (
-    <Spacer type="vertical" align="center" gap={8}>
+    <Spacer
+      type="vertical"
+      align="center"
+      gap={8}
+      css={css`
+        transition: all 200ms;
+
+        &:hover {
+          opacity: 0.85;
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+          filter: contrast(0.8);
+        }
+      `}
+    >
       <Modal
         trigger={({ open }) => (
           <IconButton iconName="star" onClick={open} badgeValue={value} />
@@ -331,7 +348,23 @@ const Actions = {
   ),
   Emoji,
   Chat: () => (
-    <Spacer type="vertical" align="center" gap={8}>
+    <Spacer
+      type="vertical"
+      align="center"
+      gap={8}
+      css={css`
+        transition: all 200ms;
+
+        &:hover {
+          opacity: 0.85;
+        }
+
+        &:disabled {
+          cursor: not-allowed;
+          filter: contrast(0.8);
+        }
+      `}
+    >
       <IconButton
         iconName="icon-chat"
         onClick={() => Toast.show(<Spacer>준비중입니다</Spacer>)}

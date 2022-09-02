@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import type { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -8,7 +8,6 @@ import {
   BottomButton,
   Layout,
   Spacer,
-  Toast,
   TopBar,
   TopBarIconButton,
 } from "~/components/uis";
@@ -275,6 +274,16 @@ const S = {
     color: ${(p) => (p.isActive ? "#007AFF" : "white")};
     border-radius: 20px;
     cursor: pointer;
+    transition: all 200ms;
+
+    &:hover {
+      opacity: 0.85;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      filter: contrast(0.8);
+    }
   `,
   ButtonText: styled.p`
     font-size: 16px;

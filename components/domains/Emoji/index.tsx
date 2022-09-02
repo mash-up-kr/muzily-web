@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import type { Variant } from "framer-motion";
 import { motion } from "framer-motion";
@@ -22,7 +23,23 @@ const Emoji = () => {
         <>
           <Modal
             trigger={
-              <Spacer type="vertical" align="center" gap={8}>
+              <Spacer
+                type="vertical"
+                align="center"
+                gap={8}
+                css={css`
+                  transition: all 200ms;
+
+                  &:hover {
+                    opacity: 0.85;
+                  }
+
+                  &:disabled {
+                    cursor: not-allowed;
+                    filter: contrast(0.8);
+                  }
+                `}
+              >
                 <Modal.Open
                   as={IconButton}
                   iconName="heart"

@@ -86,6 +86,17 @@ const StyledButton = styled.button`
   border-radius: 20px;
   border: 2px solid rgba(255, 255, 255, 0.11);
   cursor: pointer;
+
+  transition: all 200ms;
+
+  &:hover {
+    opacity: 0.85;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    filter: contrast(0.8);
+  }
 `;
 
 export default WebShareButton;
