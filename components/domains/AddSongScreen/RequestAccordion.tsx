@@ -100,17 +100,22 @@ function RequestAccordion() {
           {proposedPlaylist.map((item, idx) => (
             <S.AccordionItem key={idx}>
               <Spacer gap={14} align="center">
-                <ComponentImage
-                  src={item.thumbnail}
-                  alt={item.title}
-                  width={64}
-                  height={64}
-                  lazy
-                  mode="cover"
-                  placeholder="/images/play.svg"
-                  style={{ borderRadius: 4 }}
-                />
-                <Spacer type="vertical" style={{ textAlign: "left" }}>
+                <S.ImageWrapper>
+                  <ComponentImage
+                    src={item.thumbnail}
+                    alt={item.title}
+                    width={65}
+                    height={104}
+                    lazy
+                    mode="cover"
+                    placeholder="/images/play.svg"
+                    style={{ position: "absolute", top: -15, left: 0 }}
+                  />
+                </S.ImageWrapper>
+                <Spacer
+                  type="vertical"
+                  style={{ marginRight: "10px", textAlign: "left" }}
+                >
                   <S.RequestTitle>{item.title}</S.RequestTitle>
                   <S.RequestDate>
                     {getDurationText(item.duration || 0)}
@@ -153,7 +158,7 @@ function RequestAccordion() {
 const S = {
   Accordion: styled.div<{ hidden: boolean }>`
     position: absolute;
-    bottom: 0;
+    bottom: 64px;
     left: 0;
     width: 100%;
     display: ${(p) => (p.hidden ? "none" : "")};
@@ -193,6 +198,14 @@ const S = {
     justify-content: space-between;
     align-items: center;
     margin-top: 16px;
+  `,
+  ImageWrapper: styled.div`
+    flex-shrink: 0;
+    width: 65px;
+    height: 65px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
   `,
   RequestTitle: styled.h5`
     line-clamp: 2;
