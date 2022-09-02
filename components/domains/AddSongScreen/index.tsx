@@ -169,9 +169,10 @@ function AddSongScreen({ onClickBackButton }: AddSongScreenProps) {
         </Spacer>
 
         <BottomButton
+          loading={isLoading}
           label={isHost ? "곡 추가하기" : "곡 신청하기"}
           onClick={handleSubmit}
-          disabled={!isValid}
+          disabled={!isValid || youtubeId === ""}
         />
       </Spacer>
       {isLoading && <Spinner.FullPage />}

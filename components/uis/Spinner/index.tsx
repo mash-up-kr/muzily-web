@@ -1,7 +1,19 @@
 import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 
-const Spinner = () => <Styled />;
+interface SpinnerProps {
+  width?: number | string;
+  height?: number | string;
+}
+
+const Spinner = ({ width, height }: SpinnerProps) => (
+  <Styled
+    css={{
+      width: typeof width === "number" ? `${width}px` : width,
+      height: typeof height === "number" ? `${height}px` : height,
+    }}
+  />
+);
 
 const Styled = styled.div`
   ${({ theme }) => css`

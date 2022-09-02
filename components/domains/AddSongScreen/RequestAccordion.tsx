@@ -124,26 +124,36 @@ function RequestAccordion() {
               </Spacer>
               <Spacer gap={8} align="center" style={{ flexShrink: 0 }}>
                 <S.Button
+                  disabled={isLoading}
                   color="#007aff"
                   onClick={() => handleAcceptPlaylist(item)}
                 >
-                  <Image
-                    src="/images/accept.svg"
-                    alt="신청곡 승인"
-                    width={15}
-                    height={12}
-                  />
+                  {isLoading ? (
+                    <Spinner width={15} height={15} />
+                  ) : (
+                    <Image
+                      src="/images/accept.svg"
+                      alt="신청곡 승인"
+                      width={15}
+                      height={12}
+                    />
+                  )}
                 </S.Button>
                 <S.Button
+                  disabled={isLoading}
                   color=" #2C2C2C"
                   onClick={() => handleDeclinePlaylist(item)}
                 >
-                  <Image
-                    src="/images/decline.svg"
-                    alt="신청곡 거절"
-                    width={12}
-                    height={12}
-                  />
+                  {isLoading ? (
+                    <Spinner width={15} height={15} />
+                  ) : (
+                    <Image
+                      src="/images/decline.svg"
+                      alt="신청곡 거절"
+                      width={12}
+                      height={12}
+                    />
+                  )}
                 </S.Button>
               </Spacer>
             </S.AccordionItem>
@@ -238,6 +248,15 @@ const S = {
     letter-spacing: -0.306564px;
     color: #fff;
     white-space: nowrap;
+
+    &:hover {
+      opacity: 0.85;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      filter: contrast(0.8);
+    }
   `,
 };
 
