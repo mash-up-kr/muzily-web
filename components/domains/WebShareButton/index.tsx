@@ -79,9 +79,9 @@ const StyledButton = styled.button`
   align-items: center;
   height: 67px;
   padding: 20px;
-  font-weight: 800;
+  font-weight: 600;
   font-size: 16px;
-  color: #9c9c9c;
+  color: #505050;
   background: #d9d9d9;
   border-radius: 20px;
   border: 2px solid rgba(255, 255, 255, 0.11);

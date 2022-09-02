@@ -93,7 +93,7 @@ function RequestAccordion() {
         animate={{
           overflowY: "scroll",
           opacity: isAccordionOpen ? 1 : 0,
-          height: isAccordionOpen ? "250px" : 0,
+          height: isAccordionOpen ? "300px" : 0,
         }}
       >
         <S.AccordionPanel>

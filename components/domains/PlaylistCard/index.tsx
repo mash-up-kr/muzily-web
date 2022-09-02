@@ -141,7 +141,7 @@ const S = {
   `,
   Content: styled.div`
     font-weight: 500;
-    font-size: 16px;
+    font-size: 15px;
     line-height: 19px;
     letter-spacing: -0.02em;
   `,
