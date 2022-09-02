@@ -27,6 +27,14 @@ class MyDocument extends Document {
             content="Muzily | 함께 만드는 모두의 플레이리스트"
           />
           <meta property="og:image" content="/images/og-image.png" />
+          {/* 상단바 컬러 */}
+          {/* Chrome, Firefox, Opera */}
+          <meta content="#000" name="theme-color" />
+          {/* Windows */}
+          <meta content="#000" name="msapplication-navbutton-color" />
+          {/* iOS Safari */}
+          <meta content="#000" name="apple-mobile-web-app-status-bar-style" />
+          <meta content="yes" name="apple-mobile-web-app-capable" />
         </Head>
 
         <body>
