@@ -413,6 +413,7 @@ const S = {
     .slick-slide {
       position: relative;
       transition: all 300ms;
+      backdrop-filter: blur(8px);
     }
 
     .slick-center {
