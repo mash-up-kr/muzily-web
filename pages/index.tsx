@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { css } from "@emotion/react";
@@ -32,13 +32,6 @@ const HomePage: NextPage = withRouteGuard(
   () => {
     const [isRouting, setIsRouting] = useState(false);
 
-    const [GIFImage, setGIFImage] = useState<
-      | "/images/main_animation_1_team.gif"
-      | "/images/main_animation_2_travel.gif"
-      | "/images/main_animation_3_shop.gif"
-      | ""
-    >("/images/main_animation_1_team.gif");
-
     const router = useRouter();
 
     const roomsQuery = useRoomsQuery();
@@ -51,33 +44,6 @@ const HomePage: NextPage = withRouteGuard(
     );
 
     const postLogout = usePostLogoutMutation();
-
-    useEffect(() => {
-      if (
-        GIFImage === "/images/main_animation_1_team.gif" ||
-        GIFImage === "/images/main_animation_2_travel.gif" ||
-        GIFImage === "/images/main_animation_3_shop.gif"
-      ) {
-        setTimeout(() => {
-          setGIFImage("");
-        }, 1900);
-      }
-    }, [GIFImage]);
-
-    const handleTypingEnd = useCallback(
-      ({ textListIndex }: { textListIndex: number }) => {
-        if (textListIndex === 0) {
-          setGIFImage("/images/main_animation_2_travel.gif");
-        }
-        if (textListIndex === 1) {
-          setGIFImage("/images/main_animation_3_shop.gif");
-        }
-        if (textListIndex === 2) {
-          setGIFImage("/images/main_animation_1_team.gif");
-        }
-      },
-      []
-    );
 
     return (
       <>
@@ -138,7 +104,6 @@ const HomePage: NextPage = withRouteGuard(
                   borderRadius: 8,
                   height: 43,
                 }}
-                onTypingEnd={handleTypingEnd}
               />
             </div>
             <S.Spacer></S.Spacer>
@@ -221,7 +186,7 @@ const HomePage: NextPage = withRouteGuard(
             </S.Header>
           </S.InviteContainer>
 
-          <S.BottomGifImage src={GIFImage} />
+          <S.BottomGifImage src={"/images/main_animation.gif"} />
         </S.Wrapper>
       </>
     );
