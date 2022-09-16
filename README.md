@@ -9,8 +9,8 @@ Muzily는 카페, 여행, 동아리 등 모두가 듣고 싶은 노래를 즐기
 
 지금 Muzily로 함께 플레이리스트를 만들어보세요!
 
-## 🏆 수상
-[🔗 Mash Up](https://mash-up.kr) 1등
+## 🏆 [Mash Up](https://mash-up.kr) 12기 프로젝트 1등 수상
+<img width="400px" src="https://user-images.githubusercontent.com/61593290/190533444-34b3550d-7282-45ce-b9bb-4ff19e5176b1.jpeg">
 
 ## ⭐️ 주요 기능
 | <img width="200px" src="https://user-images.githubusercontent.com/61593290/190440234-ad2622a3-fb19-4fc0-8d72-032cbd03fcb1.gif"> |<img width="200px" src="https://user-images.githubusercontent.com/61593290/190435528-16559e99-dca2-4dc9-9a5a-9e569b40cb64.gif"> |
